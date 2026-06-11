@@ -25,7 +25,7 @@ $cover_path = "assets/img/covers/" . $b['cover'];
 $has_cover = ($b['cover'] != "" && file_exists($cover_path));
 ?>
 
-    <div class="container py-5">
+    <div class="container py-5" data-aos="fade-up">
         <a href="katalog.php" class="btn btn-outline-dark rounded-0 mb-4 mt-3"><i class="bi bi-arrow-left"></i> Kembali ke Katalog</a>
         
         <div class="card border-0 shadow-sm rounded-0" style="background: white; border: 1px solid #e9e5db !important;">

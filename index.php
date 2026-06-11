@@ -27,13 +27,13 @@ $buku_populer = mysqli_query($koneksi, $query_populer);
 ?>
 
     <!-- Hero Section -->
-    <section id="beranda" class="hero">
+    <section id="beranda" class="hero" data-aos="fade-in" data-aos-duration="1500">
         <div class="container">
-            <h1 class="serif-font">Katalog Online Perpustakaan</h1>
-            <p class="lead mb-5" style="color: #e9ecef; max-width: 800px; margin: 0 auto;">
+            <h1 class="serif-font" data-aos="fade-down" data-aos-delay="300">Katalog Online Perpustakaan</h1>
+            <p class="lead mb-5" style="color: #e9ecef; max-width: 800px; margin: 0 auto;" data-aos="fade-up" data-aos-delay="500">
                 Cari koleksi buku kami dan pastikan status ketersediaannya secara <i>real-time</i> sebelum Anda berkunjung ke perpustakaan fisik kami.
             </p>
-            <div class="text-center">
+            <div class="text-center" data-aos="zoom-in" data-aos-delay="700">
                 <button class="btn btn-outline-light rounded-pill px-5 py-3 fs-5" style="border-width: 2px;" data-bs-toggle="modal" data-bs-target="#searchModal">
                     <i class="bi bi-search me-2"></i> Cek Ketersediaan Buku
                 </button>
@@ -45,21 +45,21 @@ $buku_populer = mysqli_query($koneksi, $query_populer);
     <section class="stats-section py-5" style="background-color: white; border-bottom: 1px solid #e9e5db;">
         <div class="container">
             <div class="row g-4">
-                <div class="col-md-4">
+                <div class="col-md-4" data-aos="fade-up" data-aos-delay="100">
                     <div class="text-center p-3">
-                        <div style="font-size: 3rem; font-weight: 700; color: #b8975a; font-family: 'Lora', serif; line-height: 1;"><?php echo number_format($jml_buku, 0, ',', '.'); ?></div>
+                        <div class="stat-number" data-target="<?php echo $jml_buku; ?>" style="font-size: 3rem; font-weight: 700; color: #b8975a; font-family: 'Lora', serif; line-height: 1;">0</div>
                         <div style="font-size: 1.1rem; color: #6c757d; font-weight: 500; margin-top: 10px; text-transform: uppercase; letter-spacing: 1px;">Total Buku Tersedia</div>
                     </div>
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-4" data-aos="fade-up" data-aos-delay="200">
                     <div class="text-center p-3 border-start border-end">
-                        <div style="font-size: 3rem; font-weight: 700; color: #b8975a; font-family: 'Lora', serif; line-height: 1;"><?php echo number_format($jml_anggota, 0, ',', '.'); ?></div>
+                        <div class="stat-number" data-target="<?php echo $jml_anggota; ?>" style="font-size: 3rem; font-weight: 700; color: #b8975a; font-family: 'Lora', serif; line-height: 1;">0</div>
                         <div style="font-size: 1.1rem; color: #6c757d; font-weight: 500; margin-top: 10px; text-transform: uppercase; letter-spacing: 1px;">Anggota Terdaftar</div>
                     </div>
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-4" data-aos="fade-up" data-aos-delay="300">
                     <div class="text-center p-3">
-                        <div style="font-size: 3rem; font-weight: 700; color: #b8975a; font-family: 'Lora', serif; line-height: 1;"><?php echo number_format($jml_pinjam, 0, ',', '.'); ?></div>
+                        <div class="stat-number" data-target="<?php echo $jml_pinjam; ?>" style="font-size: 3rem; font-weight: 700; color: #b8975a; font-family: 'Lora', serif; line-height: 1;">0</div>
                         <div style="font-size: 1.1rem; color: #6c757d; font-weight: 500; margin-top: 10px; text-transform: uppercase; letter-spacing: 1px;">Transaksi Peminjaman</div>
                     </div>
                 </div>
@@ -70,17 +70,19 @@ $buku_populer = mysqli_query($koneksi, $query_populer);
     <!-- Buku Terbaru Section -->
     <section id="terbaru" class="py-5 my-4">
         <div class="container">
-            <div class="text-center mb-5">
+            <div class="text-center mb-5" data-aos="fade-up">
                 <h2 class="serif-font fw-bold text-uppercase" style="letter-spacing: 2px;">Koleksi Terbaru</h2>
                 <div style="width: 80px; height: 3px; background-color: #b8975a; margin: 20px auto;"></div>
                 <p class="text-muted">Literatur yang baru saja ditambahkan ke rak perpustakaan kami.</p>
             </div>
             <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4 g-4">
-                <?php while($b = mysqli_fetch_array($buku_terbaru)): 
+                <?php 
+                $delay = 100;
+                while($b = mysqli_fetch_array($buku_terbaru)): 
                     $cover_path = "assets/img/covers/" . $b['cover'];
                     $has_cover = ($b['cover'] != "" && file_exists($cover_path));
                 ?>
-                <div class="col">
+                <div class="col" data-aos="fade-up" data-aos-delay="<?php echo $delay; ?>">
                     <a href="detail.php?id=<?php echo $b['id_buku']; ?>" class="book-card">
                         <div class="book-cover-container">
                             <?php if($has_cover): ?>
@@ -96,9 +98,9 @@ $buku_populer = mysqli_query($koneksi, $query_populer);
                         </div>
                     </a>
                 </div>
-                <?php endwhile; ?>
+                <?php $delay += 100; endwhile; ?>
             </div>
-            <div class="text-center mt-5">
+            <div class="text-center mt-5" data-aos="zoom-in">
                 <a href="katalog.php" class="btn btn-outline-dark rounded-0 px-4 py-2" style="border-color: #b8975a; color: #b8975a;">Lihat Semua Koleksi <i class="bi bi-arrow-right ms-2"></i></a>
             </div>
         </div>
@@ -107,17 +109,19 @@ $buku_populer = mysqli_query($koneksi, $query_populer);
     <!-- Buku Populer Section -->
     <section id="populer" class="py-5" style="background-color: #f1ede1;">
         <div class="container">
-            <div class="text-center mb-5">
+            <div class="text-center mb-5" data-aos="fade-up">
                 <h2 class="serif-font fw-bold text-uppercase" style="letter-spacing: 2px;">Paling Sering Dipinjam</h2>
                 <div style="width: 80px; height: 3px; background-color: #b8975a; margin: 20px auto;"></div>
                 <p class="text-muted">Buku-buku yang paling banyak diminati oleh anggota perpustakaan.</p>
             </div>
             <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4 g-4">
-                <?php while($b = mysqli_fetch_array($buku_populer)): 
+                <?php 
+                $delay = 100;
+                while($b = mysqli_fetch_array($buku_populer)): 
                     $cover_path = "assets/img/covers/" . $b['cover'];
                     $has_cover = ($b['cover'] != "" && file_exists($cover_path));
                 ?>
-                <div class="col">
+                <div class="col" data-aos="fade-up" data-aos-delay="<?php echo $delay; ?>">
                     <a href="detail.php?id=<?php echo $b['id_buku']; ?>" class="book-card">
                         <div class="book-cover-container">
                             <?php if($has_cover): ?>
@@ -136,9 +140,76 @@ $buku_populer = mysqli_query($koneksi, $query_populer);
                         </div>
                     </a>
                 </div>
-                <?php endwhile; ?>
+                <?php $delay += 100; endwhile; ?>
             </div>
         </div>
     </section>
+
+    <!-- Lokasi & Kontak Section -->
+    <section id="kontak" class="py-5" style="background-color: white;">
+        <div class="container">
+            <div class="text-center mb-5" data-aos="fade-up">
+                <h2 class="serif-font fw-bold text-uppercase" style="letter-spacing: 2px;">Kunjungi Kami</h2>
+                <div style="width: 80px; height: 3px; background-color: #b8975a; margin: 20px auto;"></div>
+                <p class="text-muted">Temukan kami di pusat keajaiban arsitektur dunia.</p>
+            </div>
+            <div class="row g-5 align-items-center">
+                <div class="col-lg-6" data-aos="fade-right">
+                    <div class="p-4 bg-light rounded" style="border: 1px solid #e9e5db;">
+                        <h4 class="serif-font mb-4">Informasi Perpustakaan</h4>
+                        <ul class="list-unstyled mb-0" style="font-size: 1.1rem; line-height: 2;">
+                            <li><i class="bi bi-geo-alt-fill text-warning me-3 fs-5"></i> <strong>Alamat:</strong> Downtown Dubai, Uni Emirat Arab</li>
+                            <li><i class="bi bi-telephone-fill text-warning me-3 fs-5"></i> <strong>Telepon:</strong> +971 4 366 1688</li>
+                            <li><i class="bi bi-envelope-fill text-warning me-3 fs-5"></i> <strong>Email:</strong> hello@perpusbayu.ae</li>
+                            <li><i class="bi bi-clock-fill text-warning me-3 fs-5"></i> <strong>Jam Buka:</strong> Senin - Jumat (08:00 - 18:00)</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-lg-6" data-aos="fade-left">
+                    <div class="rounded overflow-hidden shadow-sm" style="border: 1px solid #e9e5db;">
+                        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d115545.91890332822!2d55.20573932822432!3d25.176465403247065!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3e5f43496ad9c645%3A0xbde66e5084295162!2sDubai%20-%20United%20Arab%20Emirates!5e0!3m2!1sen!2sid!4v1700000000000!5m2!1sen!2sid" width="100%" height="350" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+    const counters = document.querySelectorAll('.stat-number');
+    const speed = 100; // Semakin kecil semakin cepat
+
+    const animateCounters = () => {
+        counters.forEach(counter => {
+            const updateCount = () => {
+                const target = +counter.getAttribute('data-target');
+                const count = +counter.innerText.replace(/\./g, '');
+                const inc = target / speed;
+
+                if (count < target) {
+                    counter.innerText = Math.ceil(count + inc).toLocaleString('id-ID');
+                    setTimeout(updateCount, 20);
+                } else {
+                    counter.innerText = target.toLocaleString('id-ID');
+                }
+            };
+            updateCount();
+        });
+    };
+
+    // Use Intersection Observer to trigger when visible
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if(entry.isIntersecting) {
+                animateCounters();
+                observer.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.5 });
+    
+    const statsSection = document.querySelector('.stats-section');
+    if(statsSection) observer.observe(statsSection);
+});
+</script>
 
 <?php include 'footer_public.php'; ?>

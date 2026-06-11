@@ -12,9 +12,10 @@ $current_page = basename($_SERVER['PHP_SELF']);
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Perpustakaan Akademik</title>
+    <title>Perpustakaan Bayu</title>
     <link href="assets/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;0,700;1,400&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
@@ -64,17 +65,16 @@ $current_page = basename($_SERVER['PHP_SELF']);
         }
         .nav-search-btn:hover { color: #b8975a; }
 
-        /* Modal Search Full Screen */
-        .modal-search { background-color: rgba(26, 37, 47, 0.98); }
-        .modal-search .modal-content { background: transparent; border: none; }
-        .modal-search input { 
-            background: transparent; border: none; border-bottom: 3px solid #b8975a; 
-            color: white; font-size: 2.5rem; border-radius: 0; padding-left: 0;
-            box-shadow: none !important; font-family: 'Lora', serif;
+        /* Splash Screen */
+        #splash-screen {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-color: #1a252f; z-index: 9999;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            transition: opacity 0.8s ease-out, visibility 0.8s ease-out;
         }
-        .modal-search input::placeholder { color: rgba(255,255,255,0.3); }
-        .modal-search input:focus { border-color: white; }
-        .btn-close-search { position: absolute; top: 30px; right: 30px; font-size: 2rem; color: white; cursor: pointer; z-index: 1060; }
+        .splash-logo i { font-size: 5rem; color: #b8975a; animation: pulse 1.5s infinite; }
+        .splash-text { font-family: 'Lora', serif; color: white; font-size: 2rem; margin-top: 15px; letter-spacing: 2px; }
+        @keyframes pulse { 0% { transform: scale(0.95); opacity: 0.8; } 50% { transform: scale(1.05); opacity: 1; } 100% { transform: scale(0.95); opacity: 0.8; } }
 
         /* Hero Section */
         .hero {
@@ -135,11 +135,17 @@ $current_page = basename($_SERVER['PHP_SELF']);
 </head>
 <body>
 
+    <!-- Splash Screen -->
+    <div id="splash-screen">
+        <div class="splash-logo"><i class="bi bi-book-half"></i></div>
+        <div class="splash-text">PERPUS BAYU</div>
+    </div>
+
     <!-- Sticky Navbar -->
     <nav class="navbar navbar-expand-lg navbar-dark navbar-custom py-3 fixed-top">
         <div class="container">
             <a class="navbar-brand fs-4" href="index.php">
-                <i class="bi bi-bank me-2" style="color: #b8975a;"></i>Perpus Akademik
+                <i class="bi bi-bank me-2" style="color: #b8975a;"></i>Perpus Bayu
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
@@ -169,20 +175,21 @@ $current_page = basename($_SERVER['PHP_SELF']);
         </div>
     </nav>
 
-    <!-- Modal Search Full Screen -->
-    <div class="modal fade modal-search" id="searchModal" tabindex="-1" aria-hidden="true">
-        <i class="bi bi-x-lg btn-close-search" data-bs-dismiss="modal"></i>
-        <div class="modal-dialog modal-fullscreen d-flex align-items-center justify-content-center">
-            <div class="modal-content">
-                <div class="modal-body d-flex align-items-center justify-content-center p-5">
-                    <form action="katalog.php" method="GET" style="width: 100%; max-width: 800px;">
-                        <h4 class="text-white opacity-75 mb-4 serif-font text-center">Cari ketersediaan buku di rak kami</h4>
-                        <div class="input-group">
-                            <input type="text" name="q" class="form-control text-center" placeholder="Ketik judul buku, nama pengarang, atau kode buku..." autofocus required>
+    <!-- Modal Search Normal -->
+    <div class="modal fade" id="searchModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content shadow-lg" style="background-color: #fdfbf7; border: 2px solid #b8975a; border-radius: 8px;">
+                <div class="modal-header border-0 pb-0">
+                    <h5 class="modal-title serif-font fw-bold" style="color: #1a252f;">Pencarian Cepat</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-4">
+                    <form action="katalog.php" method="GET">
+                        <div class="input-group mb-3 shadow-sm">
+                            <input type="text" name="q" class="form-control" placeholder="Judul / Pengarang..." autofocus required style="border-color: #ced4da;">
+                            <button type="submit" class="btn text-white px-4" style="background-color: #1a252f;"><i class="bi bi-search"></i></button>
                         </div>
-                        <div class="text-center mt-5">
-                            <button type="submit" class="btn btn-outline-light rounded-pill px-5 py-2 fs-5">Cari di Katalog</button>
-                        </div>
+                        <div class="text-muted small"><i class="bi bi-info-circle text-warning me-1"></i> Gunakan halaman <a href="katalog.php" class="text-dark fw-bold">Semua Katalog</a> untuk filter tingkat lanjut.</div>
                     </form>
                 </div>
             </div>

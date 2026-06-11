@@ -13,6 +13,7 @@ if(isset($_POST['simpan'])){
     $penerbit = mysqli_real_escape_string($koneksi, $_POST['penerbit']);
     $tahun = mysqli_real_escape_string($koneksi, $_POST['tahun']);
     $stok = mysqli_real_escape_string($koneksi, $_POST['stok']);
+    $sinopsis = mysqli_real_escape_string($koneksi, $_POST['sinopsis']);
     $genres = isset($_POST['genre']) ? $_POST['genre'] : [];
 
     // Proses Upload Cover
@@ -40,8 +41,8 @@ if(isset($_POST['simpan'])){
     }
 
     // Insert ke tabel buku
-    mysqli_query($koneksi, "INSERT INTO buku (kode_buku, judul_buku, pengarang, penerbit, tahun_terbit, stok, cover) 
-                            VALUES ('$kode', '$judul', '$pengarang', '$penerbit', '$tahun', '$stok', '$nama_file')");
+    mysqli_query($koneksi, "INSERT INTO buku (kode_buku, judul_buku, pengarang, penerbit, tahun_terbit, stok, cover, sinopsis) 
+                            VALUES ('$kode', '$judul', '$pengarang', '$penerbit', '$tahun', '$stok', '$nama_file', '$sinopsis')");
     
     // Ambil ID buku yang baru saja di-insert
     $id_buku = mysqli_insert_id($koneksi);
@@ -96,6 +97,10 @@ if(isset($_POST['simpan'])){
                 <div class="col-md-6 mb-3">
                     <label class="form-label">Jumlah Stok</label>
                     <input type="number" class="form-control" name="stok" min="0" required>
+                </div>
+                <div class="col-md-12 mb-3">
+                    <label class="form-label fw-bold">Sinopsis / Deskripsi Buku</label>
+                    <textarea class="form-control" name="sinopsis" rows="4" placeholder="Tuliskan sinopsis singkat buku ini..."></textarea>
                 </div>
             </div>
 

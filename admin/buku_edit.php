@@ -29,6 +29,7 @@ if(isset($_POST['update'])){
     $penerbit = mysqli_real_escape_string($koneksi, $_POST['penerbit']);
     $tahun = mysqli_real_escape_string($koneksi, $_POST['tahun']);
     $stok = mysqli_real_escape_string($koneksi, $_POST['stok']);
+    $sinopsis = mysqli_real_escape_string($koneksi, $_POST['sinopsis']);
     $genres = isset($_POST['genre']) ? $_POST['genre'] : [];
     
     $nama_file = $d['cover']; // Default pakai cover lama
@@ -68,6 +69,7 @@ if(isset($_POST['update'])){
                             penerbit='$penerbit', 
                             tahun_terbit='$tahun', 
                             stok='$stok',
+                            sinopsis='$sinopsis',
                             cover='$nama_file'
                             WHERE id_buku='$id'");
                             
@@ -122,6 +124,10 @@ if(isset($_POST['update'])){
                 <div class="col-md-6 mb-3">
                     <label class="form-label">Jumlah Stok</label>
                     <input type="number" class="form-control" name="stok" value="<?php echo $d['stok']; ?>" min="0" required>
+                </div>
+                <div class="col-md-12 mb-3">
+                    <label class="form-label fw-bold">Sinopsis / Deskripsi Buku</label>
+                    <textarea class="form-control" name="sinopsis" rows="4" placeholder="Tuliskan sinopsis singkat buku ini..."><?php echo htmlspecialchars($d['sinopsis']); ?></textarea>
                 </div>
             </div>
 

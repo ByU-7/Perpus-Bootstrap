@@ -1,6 +1,7 @@
 <style>
 .hover-gold { transition: all 0.3s ease; display: inline-block; color: #ced4da !important; }
 .hover-gold:hover { color: #b8975a !important; transform: translateX(8px); }
+.form-control::placeholder { color: rgba(255, 255, 255, 0.6) !important; font-style: italic; }
 </style>
     <!-- Footer -->
     <footer id="tentang" style="background: linear-gradient(rgba(17, 26, 34, 0.95), rgba(17, 26, 34, 0.98)), url('https://images.unsplash.com/photo-1507842217343-583bb7270b66?auto=format&fit=crop&w=2000&q=80') center/cover; padding: 60px 0 20px 0; border-top: 5px solid #b8975a; color: #f8f9fa;">

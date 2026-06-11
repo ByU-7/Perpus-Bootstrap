@@ -51,24 +51,24 @@ body.loaded { overflow: auto; }
     </div>
 
     <!-- Hero Section -->
-    <section id="beranda" class="hero" style="padding: 180px 0 140px 0;" data-aos="fade-in" data-aos-duration="1500">
+    <section id="beranda" class="hero" style="padding: 160px 0 160px 0; position: relative;" data-aos="fade-in" data-aos-duration="1500">
         <div class="container">
-            <h1 class="serif-font" data-aos="fade-down" data-aos-delay="300">Sirkulasi Perpustakaan Akademik</h1>
+            <h1 class="serif-font" data-aos="fade-down" data-aos-delay="300">Sistem Perpustakaan & Sirkulasi</h1>
             <p class="lead mb-5" style="color: #e9ecef; max-width: 800px; margin: 0 auto;" data-aos="fade-up" data-aos-delay="500">
-                Pusat sirkulasi dan pengelolaan literatur fisik. Cari koleksi buku kami dan pastikan status ketersediaannya di rak sebelum Anda berkunjung.
+                Pusat pengelolaan literatur cetak dan referensi fisik. Telusuri koleksi kami, temukan raknya, dan pastikan ketersediaannya sebelum Anda berkunjung.
             </p>
             <div class="text-center" data-aos="zoom-in" data-aos-delay="700">
                 <a href="#terbaru" class="btn btn-outline-light rounded-pill px-4 py-2 fw-bold" style="border-width: 2px;">
-                    Jelajahi Koleksi <i class="bi bi-arrow-down ms-2"></i>
+                    Eksplorasi Koleksi <i class="bi bi-arrow-down ms-2"></i>
                 </a>
             </div>
         </div>
     </section>
 
-    <!-- Statistik Section -->
-    <section id="statistik" class="stats-section py-5" style="background: linear-gradient(rgba(255,255,255,0.95), rgba(255,255,255,0.95)), url('https://www.transparenttextures.com/patterns/cream-paper.png'); border-bottom: 1px solid #e9e5db;">
+    <!-- Statistik Section (Floating Over Hero) -->
+    <section id="statistik" class="stats-section" style="margin-top: -60px; position: relative; z-index: 10;">
         <div class="container">
-            <div class="row g-4">
+            <div class="row g-0 shadow-lg rounded-4 overflow-hidden" style="background: linear-gradient(rgba(255,255,255,0.97), rgba(255,255,255,0.97)), url('https://www.transparenttextures.com/patterns/cream-paper.png'); border: 1px solid #e9e5db;">
                 <div class="col-md-4" data-aos="fade-up" data-aos-delay="100">
                     <div class="text-center p-3">
                         <div class="stat-number" data-target="<?php echo $jml_buku; ?>" style="font-size: 3rem; font-weight: 700; color: #b8975a; font-family: 'Lora', serif; line-height: 1;">0</div>
@@ -207,24 +207,31 @@ document.addEventListener("DOMContentLoaded", () => {
         AOS.init({ duration: 800, once: true, offset: 100 });
 
         const counters = document.querySelectorAll('.stat-number');
-        const speed = 40;
+        const duration = 2000; // 2 detik
 
         const animateCounters = () => {
             counters.forEach(counter => {
                 const target = +counter.getAttribute('data-target');
-                let count = 0;
-                const inc = target / speed;
+                let startTime = null;
 
-                const updateCount = () => {
-                    count += inc;
-                    if (count < target) {
-                        counter.innerText = Math.ceil(count).toLocaleString('id-ID');
+                const updateCount = (currentTime) => {
+                    if (!startTime) startTime = currentTime;
+                    const progress = currentTime - startTime;
+                    const percentage = Math.min(progress / duration, 1);
+                    
+                    // Easing out cubic
+                    const easeOut = 1 - Math.pow(1 - percentage, 3);
+                    const currentCount = Math.ceil(target * easeOut);
+                    
+                    counter.innerText = currentCount.toLocaleString('id-ID');
+
+                    if (progress < duration) {
                         requestAnimationFrame(updateCount);
                     } else {
                         counter.innerText = target.toLocaleString('id-ID');
                     }
                 };
-                updateCount();
+                requestAnimationFrame(updateCount);
             });
         };
 

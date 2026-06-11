@@ -25,8 +25,13 @@ $current_page = basename($_SERVER['PHP_SELF']);
         /* Navbar Kustom */
         .navbar-custom { background-color: rgba(26, 37, 47, 0.95) !important; backdrop-filter: blur(10px); transition: all 0.3s ease; border-bottom: 2px solid #b8975a; }
         .navbar-custom .navbar-brand { font-family: 'Lora', serif; font-weight: 700; color: #b8975a !important; font-size: 1.5rem; letter-spacing: 1px; }
-        .navbar-custom .nav-link { color: #e9ecef !important; font-weight: 500; text-transform: uppercase; font-size: 0.85rem; letter-spacing: 1px; padding: 10px 15px; transition: color 0.3s; }
+        .navbar-custom .nav-link { position: relative; color: #e9ecef !important; font-weight: 500; text-transform: uppercase; font-size: 0.85rem; letter-spacing: 1px; padding: 10px 15px; transition: color 0.3s; }
         .navbar-custom .nav-link:hover, .navbar-custom .nav-link.active { color: #b8975a !important; }
+        .navbar-custom .nav-link::after {
+            content: ''; position: absolute; bottom: 5px; left: 15px; right: 15px; height: 2px;
+            background-color: #b8975a; transform: scaleX(0); transition: transform 0.3s ease; transform-origin: left;
+        }
+        .navbar-custom .nav-link:hover::after, .navbar-custom .nav-link.active::after { transform: scaleX(1); }
         .navbar-toggler { border: none; color: #b8975a; }
         .navbar-toggler:focus { box-shadow: none; }
 
@@ -70,9 +75,9 @@ $current_page = basename($_SERVER['PHP_SELF']);
             display: flex; flex-direction: column; height: 100%; background: transparent;
         }
         .book-card:hover { transform: translateY(-10px); }
-        .book-cover-container { width: 100%; padding-top: 150%; position: relative; background-color: #f1ede1; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.05); transition: box-shadow 0.3s ease; }
+        .book-cover-container { width: 100%; padding-top: 150%; position: relative; background-color: transparent; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.05); transition: box-shadow 0.3s ease; }
         .book-card:hover .book-cover-container { box-shadow: 0 10px 25px rgba(184, 151, 90, 0.2); }
-        .book-cover-container img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease; }
+        .book-cover-container img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: contain; background-color: #f1ede1; transition: transform 0.5s ease; padding: 5px; }
         .book-card:hover .book-cover-container img { transform: scale(1.05); }
         
         .book-info { padding: 15px 5px 0 5px; flex-grow: 1; display: flex; flex-direction: column; }
@@ -99,23 +104,26 @@ $current_page = basename($_SERVER['PHP_SELF']);
                         <a class="nav-link <?php echo $current_page == 'index.php' ? 'active' : ''; ?>" href="index.php">Beranda</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link <?php echo $current_page == 'katalog.php' ? 'active' : ''; ?>" href="katalog.php">Katalog</a>
-                    </li>
-                    <li class="nav-item">
                         <a class="nav-link" href="index.php#terbaru">Koleksi</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="index.php#statistik">Statistik</a>
+                        <a class="nav-link" href="index.php#populer">Populer</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="#tentang">Tentang</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link <?php echo $current_page == 'katalog.php' ? 'active' : ''; ?>" href="katalog.php">Katalog</a>
                     </li>
                 </ul>
                 
                 <!-- Inline Expanding Search -->
                 <div class="nav-search-wrapper d-none d-lg-flex ms-3 me-3" id="navSearchWrapper">
                     <form action="katalog.php" method="GET" class="nav-search-form" id="navSearchForm">
-                        <input type="text" name="q" class="nav-search-input" id="navSearchInput" placeholder="Ketik judul buku...">
+                        <div class="input-group" style="flex-wrap: nowrap; border: 1px solid rgba(255,255,255,0.2); border-radius: 20px; background: rgba(255,255,255,0.1); width: 100%;">
+                            <input type="text" name="q" class="nav-search-input" id="navSearchInput" placeholder="Ketik judul buku..." style="border: none; background: transparent; border-top-right-radius: 0; border-bottom-right-radius: 0;">
+                            <button type="submit" class="btn" style="border: none; background: transparent; color: #b8975a; padding: 6px 15px;"><i class="bi bi-search"></i></button>
+                        </div>
                     </form>
                     <button class="nav-search-btn" id="navSearchToggle" title="Cari Buku" data-is-katalog="<?php echo $current_page == 'katalog.php' ? 'true' : 'false'; ?>">
                         <i class="bi bi-search" id="navSearchIcon"></i>

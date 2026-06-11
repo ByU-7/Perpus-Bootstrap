@@ -30,7 +30,10 @@ if(isset($_SESSION['status']) && $_SESSION['status'] == "login"){
             flex: 1; min-width: 300px; display: flex; align-items: center; justify-content: center; padding: 40px; background-color: #fdfbf7;
         }
         
-        .login-form-container { width: 100%; max-width: 400px; }
+        .login-form-container { width: 100%; max-width: 400px; margin: 0 auto; }
+        @keyframes floatIcon { 0% { transform: translateY(0); } 50% { transform: translateY(-15px); } 100% { transform: translateY(0); } }
+        .float-animation { animation: floatIcon 3s ease-in-out infinite; }
+        
         .form-control { border: 1px solid #ced4da; padding: 12px 15px; border-radius: 8px; }
         .form-control:focus { border-color: #b8975a; box-shadow: 0 0 0 0.25rem rgba(184, 151, 90, 0.25); }
         .btn-gold { background-color: #b8975a; color: white; border: none; padding: 12px; border-radius: 8px; font-weight: 600; transition: all 0.3s; }
@@ -42,7 +45,7 @@ if(isset($_SESSION['status']) && $_SESSION['status'] == "login"){
 <div class="login-split">
     <!-- Kolom Kiri: Gambar & Slogan -->
     <div class="login-left d-none d-lg-flex">
-        <i class="bi bi-book-half" style="font-size: 5rem; color: #b8975a; margin-bottom: 20px;"></i>
+        <i class="bi bi-book-half float-animation" style="font-size: 5rem; color: #b8975a; margin-bottom: 20px;"></i>
         <h1 class="serif-font fw-bold mb-3">Perpus Bayu</h1>
         <p class="lead" style="max-width: 400px; color: #e9ecef;">"Mengelola Pengetahuan, Membangun Masa Depan"</p>
         <div style="margin-top: 50px; width: 60px; height: 3px; background-color: #b8975a;"></div>
@@ -91,8 +94,8 @@ if(isset($_SESSION['status']) && $_SESSION['status'] == "login"){
                 <button type="submit" class="btn btn-gold w-100 shadow-sm"><i class="bi bi-box-arrow-in-right me-2"></i> MASUK KE DASHBOARD</button>
             </form>
             
-            <div class="text-center mt-5">
-                <a href="../index.php" class="text-decoration-none text-muted"><i class="bi bi-arrow-left me-1"></i> Kembali ke Beranda Publik</a>
+            <div class="text-center mt-4">
+                <a href="../index.php" class="btn btn-outline-secondary w-100 rounded-pill"><i class="bi bi-arrow-left me-2"></i> Kembali ke Beranda Publik</a>
             </div>
         </div>
     </div>

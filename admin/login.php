@@ -76,19 +76,19 @@ if(isset($_SESSION['status']) && $_SESSION['status'] == "login"){
             }
             ?>
 
-            <form action="login_proses.php" method="POST">
+            <form action="proses_login.php" method="POST">
                 <div class="mb-4">
                     <label class="form-label fw-bold text-muted small text-uppercase">Username</label>
                     <div class="input-group">
                         <span class="input-group-text bg-white border-end-0"><i class="bi bi-person text-muted"></i></span>
-                        <input type="text" name="username" class="form-control border-start-0 ps-0" placeholder="Masukkan username" required autofocus>
+                        <input type="text" name="username" class="form-control border-start-0" placeholder="Masukkan username" required autofocus>
                     </div>
                 </div>
                 <div class="mb-5">
                     <label class="form-label fw-bold text-muted small text-uppercase">Password</label>
                     <div class="input-group">
                         <span class="input-group-text bg-white border-end-0"><i class="bi bi-lock text-muted"></i></span>
-                        <input type="password" name="password" class="form-control border-start-0 ps-0" placeholder="Masukkan password" required>
+                        <input type="password" name="password" class="form-control border-start-0" placeholder="Masukkan password" required>
                     </div>
                 </div>
                 <button type="submit" class="btn btn-gold w-100 shadow-sm"><i class="bi bi-box-arrow-in-right me-2"></i> MASUK KE DASHBOARD</button>

@@ -69,21 +69,21 @@ body.loaded { overflow: auto; }
     <section id="statistik" class="stats-section" style="margin-top: -60px; position: relative; z-index: 10;">
         <div class="container">
             <div class="row g-0 shadow-lg rounded-4 overflow-hidden" style="background: linear-gradient(rgba(255,255,255,0.97), rgba(255,255,255,0.97)), url('https://www.transparenttextures.com/patterns/cream-paper.png'); border: 1px solid #e9e5db;">
-                <div class="col-md-4" data-aos="fade-up" data-aos-delay="100">
-                    <div class="text-center p-3">
-                        <div class="stat-number" data-target="<?php echo $jml_buku; ?>" style="font-size: 3rem; font-weight: 700; color: #b8975a; font-family: 'Lora', serif; line-height: 1;">0</div>
+                <div class="col-md-4">
+                    <div class="text-center p-4">
+                        <div class="stat-number" data-target="<?php echo $jml_buku; ?>" style="font-size: 3.5rem; font-weight: 700; color: #b8975a; font-family: 'Lora', serif; line-height: 1;">0</div>
                         <div style="font-size: 1.1rem; color: #6c757d; font-weight: 500; margin-top: 10px; text-transform: uppercase; letter-spacing: 1px;">Total Buku Tersedia</div>
                     </div>
                 </div>
-                <div class="col-md-4" data-aos="fade-up" data-aos-delay="200">
-                    <div class="text-center p-3 border-start border-end">
-                        <div class="stat-number" data-target="<?php echo $jml_anggota; ?>" style="font-size: 3rem; font-weight: 700; color: #b8975a; font-family: 'Lora', serif; line-height: 1;">0</div>
+                <div class="col-md-4">
+                    <div class="text-center p-4 border-start border-end">
+                        <div class="stat-number" data-target="<?php echo $jml_anggota; ?>" style="font-size: 3.5rem; font-weight: 700; color: #b8975a; font-family: 'Lora', serif; line-height: 1;">0</div>
                         <div style="font-size: 1.1rem; color: #6c757d; font-weight: 500; margin-top: 10px; text-transform: uppercase; letter-spacing: 1px;">Anggota Terdaftar</div>
                     </div>
                 </div>
-                <div class="col-md-4" data-aos="fade-up" data-aos-delay="300">
-                    <div class="text-center p-3">
-                        <div class="stat-number" data-target="<?php echo $jml_pinjam; ?>" style="font-size: 3rem; font-weight: 700; color: #b8975a; font-family: 'Lora', serif; line-height: 1;">0</div>
+                <div class="col-md-4">
+                    <div class="text-center p-4">
+                        <div class="stat-number" data-target="<?php echo $jml_pinjam; ?>" style="font-size: 3.5rem; font-weight: 700; color: #b8975a; font-family: 'Lora', serif; line-height: 1;">0</div>
                         <div style="font-size: 1.1rem; color: #6c757d; font-weight: 500; margin-top: 10px; text-transform: uppercase; letter-spacing: 1px;">Transaksi Peminjaman</div>
                     </div>
                 </div>

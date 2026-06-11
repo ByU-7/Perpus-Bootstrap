@@ -42,19 +42,30 @@ $current_page = basename($_SERVER['PHP_SELF']);
         
         .nav-search-form { 
             position: absolute; right: 0; display: flex; align-items: center; 
-            width: 0; opacity: 0; overflow: hidden; transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+            width: 0; opacity: 0; transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
             background: #1a252f; z-index: 1; padding-right: 35px; /* space for icon */
         }
-        .nav-search-wrapper.active .nav-search-form { width: 280px; opacity: 1; }
+        .nav-search-wrapper.active .nav-search-form { width: 320px; opacity: 1; }
         .nav-search-wrapper.active .nav-search-btn { color: #b8975a; }
         
         .nav-search-input {
-            background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2);
-            color: white; border-radius: 20px; padding: 6px 15px; width: 100%;
-            outline: none; font-size: 0.9rem; transition: border-color 0.3s;
+            background: transparent; border: none;
+            color: white; width: 100%;
+            outline: none; font-size: 0.9rem;
         }
         .nav-search-input::placeholder { color: rgba(255,255,255,0.5); font-style: italic; }
-        .nav-search-input:focus { border-color: #b8975a; background: rgba(255,255,255,0.15); }
+        .nav-search-input:focus { outline: none !important; box-shadow: none !important; background: transparent !important; color: white !important; }
+        
+        .nav-search-group {
+            display: flex; flex-wrap: nowrap; align-items: center;
+            border: 1px solid rgba(255,255,255,0.2); border-radius: 20px; 
+            background: rgba(255,255,255,0.1); width: 100%; overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        .nav-search-group:focus-within {
+            border-color: #b8975a; background: rgba(255,255,255,0.15);
+            box-shadow: 0 0 0 0.2rem rgba(184, 151, 90, 0.25);
+        }
         
         /* Nav Menu Transition (to fade when search is active) */
         #nav-links-menu { transition: opacity 0.3s ease; }
@@ -120,9 +131,12 @@ $current_page = basename($_SERVER['PHP_SELF']);
                 <!-- Inline Expanding Search -->
                 <div class="nav-search-wrapper d-none d-lg-flex ms-3 me-3" id="navSearchWrapper">
                     <form action="katalog.php" method="GET" class="nav-search-form" id="navSearchForm">
-                        <div class="input-group" style="flex-wrap: nowrap; border: 1px solid rgba(255,255,255,0.2); border-radius: 20px; background: rgba(255,255,255,0.1); width: 100%;">
-                            <input type="text" name="q" class="nav-search-input" id="navSearchInput" placeholder="Ketik judul buku..." style="border: none; background: transparent; border-top-right-radius: 0; border-bottom-right-radius: 0;">
-                            <button type="submit" class="btn" style="border: none; background: transparent; color: #b8975a; padding: 6px 15px;"><i class="bi bi-search"></i></button>
+                        <div class="nav-search-group">
+                            <input type="text" name="q" class="nav-search-input form-control border-0 ps-3" id="navSearchInput" placeholder="Ketik judul buku...">
+                            
+                            <a href="katalog.php" class="btn border-0 text-white-50 px-2" title="Filter Pencarian Lanjutan"><i class="bi bi-sliders"></i></a>
+                            
+                            <button type="submit" class="btn border-0 pe-3" style="color: #b8975a;"><i class="bi bi-search"></i></button>
                         </div>
                     </form>
                     <button class="nav-search-btn" id="navSearchToggle" title="Cari Buku" data-is-katalog="<?php echo $current_page == 'katalog.php' ? 'true' : 'false'; ?>">

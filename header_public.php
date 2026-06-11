@@ -1,10 +1,9 @@
 <?php
-if(session_status() == PHP_SESSION_NONE) {
+if (session_status() == PHP_SESSION_NONE) {
     session_start();
 }
 include 'config/koneksi.php';
 
-// Menentukan menu aktif
 $current_page = basename($_SERVER['PHP_SELF']);
 ?>
 <!DOCTYPE html>
@@ -20,178 +19,105 @@ $current_page = basename($_SERVER['PHP_SELF']);
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;0,700;1,400&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
     <style>
-        body {
-            font-family: 'Outfit', sans-serif;
-            background-color: #fdfbf7;
-            color: #333;
-            scroll-behavior: smooth;
-            padding-top: 76px; /* Offset for fixed navbar */
-        }
-        .serif-font {
-            font-family: 'Lora', serif;
-            color: #1a252f;
-        }
+        body { font-family: 'Outfit', sans-serif; background-color: #fdfbf7; color: #333; overflow-x: hidden; }
+        .serif-font { font-family: 'Lora', serif; }
         
-        /* Sticky Navbar */
-        .navbar-custom {
-            background-color: rgba(26, 37, 47, 0.98);
-            backdrop-filter: blur(10px);
-            border-bottom: 3px solid #b8975a;
-            transition: all 0.3s ease;
-        }
-        .navbar-brand { font-family: 'Lora', serif; font-weight: 700; letter-spacing: 0.5px; }
-        
-        /* Navigasi berjarak & Hover Underline */
-        .navbar-nav .nav-item { margin-left: 15px; }
-        .nav-link { 
-            color: #fdfbf7 !important; 
-            font-weight: 500; 
-            transition: all 0.3s ease;
-            position: relative;
-            padding-bottom: 5px;
-        }
-        .nav-link::after {
-            content: ''; position: absolute; width: 0; height: 2px;
-            bottom: 0; left: 50%; background-color: #b8975a;
-            transition: all 0.3s ease; transform: translateX(-50%);
-        }
-        .nav-link:hover::after, .nav-link.active::after { width: 80%; }
-        .nav-link:hover, .nav-link.active { color: #b8975a !important; }
+        /* Navbar Kustom */
+        .navbar-custom { background-color: rgba(26, 37, 47, 0.95) !important; backdrop-filter: blur(10px); transition: all 0.3s ease; border-bottom: 2px solid #b8975a; }
+        .navbar-custom .navbar-brand { font-family: 'Lora', serif; font-weight: 700; color: #b8975a !important; font-size: 1.5rem; letter-spacing: 1px; }
+        .navbar-custom .nav-link { color: #e9ecef !important; font-weight: 500; text-transform: uppercase; font-size: 0.85rem; letter-spacing: 1px; padding: 10px 15px; transition: color 0.3s; }
+        .navbar-custom .nav-link:hover, .navbar-custom .nav-link.active { color: #b8975a !important; }
+        .navbar-toggler { border: none; color: #b8975a; }
+        .navbar-toggler:focus { box-shadow: none; }
 
-        /* Icon Search di Navigasi */
-        .nav-search-btn {
-            background: transparent; border: none; color: white;
-            font-size: 1.2rem; cursor: pointer; transition: color 0.3s;
-        }
+        /* Inline Search Nav */
+        .nav-search-wrapper { position: relative; display: flex; align-items: center; justify-content: flex-end; margin-left: 15px; }
+        .nav-search-btn { background: transparent; border: none; color: white; font-size: 1.2rem; cursor: pointer; transition: color 0.3s; z-index: 2; }
         .nav-search-btn:hover { color: #b8975a; }
-
-        /* Splash Screen */
-        #splash-screen {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background-color: #1a252f; z-index: 9999;
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-            transition: opacity 0.8s ease-out, visibility 0.8s ease-out;
+        
+        .nav-search-form { 
+            position: absolute; right: 0; display: flex; align-items: center; 
+            width: 0; opacity: 0; overflow: hidden; transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+            background: #1a252f; z-index: 1; padding-right: 35px; /* space for icon */
         }
-        .splash-logo i { font-size: 5rem; color: #b8975a; animation: pulse 1.5s infinite; }
-        .splash-text { font-family: 'Lora', serif; color: white; font-size: 2rem; margin-top: 15px; letter-spacing: 2px; }
-        @keyframes pulse { 0% { transform: scale(0.95); opacity: 0.8; } 50% { transform: scale(1.05); opacity: 1; } 100% { transform: scale(0.95); opacity: 0.8; } }
+        .nav-search-wrapper.active .nav-search-form { width: 280px; opacity: 1; }
+        .nav-search-wrapper.active .nav-search-btn { color: #b8975a; }
+        
+        .nav-search-input {
+            background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2);
+            color: white; border-radius: 20px; padding: 6px 15px; width: 100%;
+            outline: none; font-size: 0.9rem; transition: border-color 0.3s;
+        }
+        .nav-search-input::placeholder { color: rgba(255,255,255,0.5); font-style: italic; }
+        .nav-search-input:focus { border-color: #b8975a; background: rgba(255,255,255,0.15); }
+        
+        /* Nav Menu Transition (to fade when search is active) */
+        #nav-links-menu { transition: opacity 0.3s ease; }
+        #nav-links-menu.fade-out { opacity: 0; pointer-events: none; }
 
         /* Hero Section */
         .hero {
-            background-color: #1a252f;
-            background-image: linear-gradient(rgba(26, 37, 47, 0.85), rgba(26, 37, 47, 0.95)), url('https://images.unsplash.com/photo-1481627834876-b7833e8f5570?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80');
-            background-size: cover;
-            background-position: center;
-            padding: 100px 0;
-            color: white;
-            text-align: center;
-            border-bottom: 5px solid #b8975a;
+            padding: 120px 0 80px 0;
+            background: linear-gradient(rgba(17, 26, 34, 0.85), rgba(17, 26, 34, 0.95)), url('https://images.unsplash.com/photo-1541963463532-d68292c34b19?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80') center/cover;
+            color: white; text-align: center; border-bottom: 5px solid #b8975a;
         }
-        .hero h1 { color: #fdfbf7; font-size: 3.5rem; margin-bottom: 20px; }
-        .book-card {
-            background: #ffffff; border: 1px solid #eaeaea; overflow: hidden; border-radius: 6px;
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
-            height: 100%; display: flex; flex-direction: column; cursor: pointer; text-decoration: none; color: inherit;
-        }
-        /* Hover Animation Ekstra */
-        .book-card:hover { 
-            transform: translateY(-12px); 
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1); 
-            border-color: #b8975a; 
-            color: inherit; 
-        }
-        /* Container cover disamakan warnanya dengan card (Putih) & Hilangkan border patah */
-        .book-cover-container { 
-            width: 100%; height: 280px; background-color: #ffffff; 
-            display: flex; align-items: center; justify-content: center; 
-            padding: 20px; border-bottom: none; 
-            transition: all 0.3s ease;
-        }
-        .book-card:hover .book-cover-container { padding: 15px; } /* Efek gambar membesar */
-        .book-cover-container img { max-height: 100%; max-width: 100%; object-fit: contain; box-shadow: 5px 5px 15px rgba(0,0,0,0.15); transition: all 0.3s ease; }
-        .book-card:hover .book-cover-container img { box-shadow: 8px 8px 25px rgba(0,0,0,0.25); }
+        .hero h1 { font-size: 3.5rem; font-weight: 700; margin-bottom: 20px; color: #fdfbf7; }
         
-        .book-info { padding: 0 20px 25px 20px; flex-grow: 1; display: flex; flex-direction: column; }
-        .book-title { font-size: 1.15rem; font-weight: 700; margin-bottom: 8px; line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-        .book-author { color: #6c757d; font-size: 0.9rem; margin-bottom: 15px; font-style: italic; }
-        .book-genre { font-size: 0.75rem; color: #b8975a; text-transform: uppercase; letter-spacing: 1px; font-weight: 700; margin-bottom: auto; }
-
-        /* Filter Genre (Pills) */
-        .filter-pill {
-            display: inline-block; padding: 8px 20px; margin: 0 5px 10px 0;
-            background-color: white; border: 1px solid #dee2e6; color: #495057;
-            border-radius: 50px; text-decoration: none; font-size: 0.9rem;
-            transition: all 0.3s ease;
+        /* Card Buku */
+        .book-card {
+            border: 1px solid transparent; border-radius: 8px; overflow: hidden;
+            transition: all 0.3s ease; text-decoration: none; color: inherit;
+            display: flex; flex-direction: column; height: 100%; background: transparent;
         }
-        .filter-pill:hover, .filter-pill.active { background-color: #1a252f; color: white; border-color: #1a252f; }
+        .book-card:hover { transform: translateY(-10px); }
+        .book-cover-container { width: 100%; padding-top: 150%; position: relative; background-color: #f1ede1; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.05); transition: box-shadow 0.3s ease; }
+        .book-card:hover .book-cover-container { box-shadow: 0 10px 25px rgba(184, 151, 90, 0.2); }
+        .book-cover-container img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease; }
+        .book-card:hover .book-cover-container img { transform: scale(1.05); }
+        
+        .book-info { padding: 15px 5px 0 5px; flex-grow: 1; display: flex; flex-direction: column; }
+        .book-title { font-size: 1.1rem; font-weight: 700; color: #1a252f; margin-bottom: 5px; line-height: 1.3; }
+        .book-card:hover .book-title { color: #b8975a; }
+        .book-author { font-size: 0.85rem; color: #6c757d; margin-bottom: 10px; font-weight: 500; }
+        .book-genre { font-size: 0.75rem; color: white; background-color: #1a252f; padding: 3px 10px; border-radius: 12px; display: inline-block; align-self: flex-start; margin-top: auto; }
 
-        /* Mega Footer */
-        footer { background-color: #111a22; color: #adb5bd; padding: 60px 0 20px 0; border-top: 5px solid #b8975a; }
-        .footer-heading { color: white; font-family: 'Lora', serif; margin-bottom: 25px; font-weight: 600; }
-        .footer-link { color: #adb5bd; text-decoration: none; transition: color 0.3s; display: block; margin-bottom: 10px; }
-        .footer-link:hover { color: #b8975a; padding-left: 5px; }
-        .contact-info i { color: #b8975a; width: 25px; }
+        body { padding-top: 76px; }
     </style>
 </head>
 <body>
 
-    <!-- Splash Screen -->
-    <div id="splash-screen">
-        <div class="splash-logo"><i class="bi bi-book-half"></i></div>
-        <div class="splash-text">PERPUS BAYU</div>
-    </div>
-
     <!-- Sticky Navbar -->
     <nav class="navbar navbar-expand-lg navbar-dark navbar-custom py-3 fixed-top">
         <div class="container">
-            <a class="navbar-brand fs-4" href="index.php">
-                <i class="bi bi-bank me-2" style="color: #b8975a;"></i>Perpus Bayu
-            </a>
+            <a class="navbar-brand" href="index.php"><i class="bi bi-book-half me-2"></i>Perpus Bayu</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
+                <i class="bi bi-list fs-2"></i>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto align-items-center">
-                    <li class="nav-item"><a class="nav-link <?php echo $current_page == 'index.php' ? 'active' : ''; ?>" href="index.php#beranda">Beranda</a></li>
-                    <li class="nav-item"><a class="nav-link" href="index.php#terbaru">Koleksi Terbaru</a></li>
-                    <li class="nav-item"><a class="nav-link" href="index.php#populer">Terpopuler</a></li>
-                    <li class="nav-item"><a class="nav-link <?php echo $current_page == 'katalog.php' ? 'active' : ''; ?>" href="katalog.php">Semua Katalog</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#tentang">Tentang</a></li>
-                    
-                    <!-- Search Icon Button -->
-                    <li class="nav-item ms-lg-3">
-                        <button class="nav-search-btn" data-bs-toggle="modal" data-bs-target="#searchModal">
-                            <i class="bi bi-search"></i>
-                        </button>
+                <ul class="navbar-nav ms-auto mb-2 mb-lg-0 align-items-lg-center" id="nav-links-menu">
+                    <li class="nav-item">
+                        <a class="nav-link <?php echo $current_page == 'index.php' ? 'active' : ''; ?>" href="index.php">Beranda</a>
                     </li>
-                    
-                    <li class="nav-item ms-lg-4 mt-3 mt-lg-0">
-                        <a class="btn btn-outline-light rounded-0 px-4 py-2" style="border-width: 2px;" href="admin/login.php">
-                            <i class="bi bi-person-lock me-1"></i> Admin
-                        </a>
+                    <li class="nav-item">
+                        <a class="nav-link <?php echo $current_page == 'katalog.php' ? 'active' : ''; ?>" href="katalog.php">Katalog</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#tentang">Tentang</a>
+                    </li>
+                    <li class="nav-item ms-lg-3 mt-3 mt-lg-0">
+                        <a class="btn btn-outline-warning btn-sm px-4 rounded-pill fw-bold" href="admin/login.php" style="border-color: #b8975a; color: #b8975a;">Admin</a>
                     </li>
                 </ul>
+                
+                <!-- Inline Expanding Search -->
+                <div class="nav-search-wrapper d-none d-lg-flex" id="navSearchWrapper">
+                    <form action="katalog.php" method="GET" class="nav-search-form" id="navSearchForm">
+                        <input type="text" name="q" class="nav-search-input" id="navSearchInput" placeholder="Ketik judul buku...">
+                    </form>
+                    <button class="nav-search-btn" id="navSearchToggle" title="Cari Buku" data-is-katalog="<?php echo $current_page == 'katalog.php' ? 'true' : 'false'; ?>">
+                        <i class="bi bi-search" id="navSearchIcon"></i>
+                    </button>
+                </div>
             </div>
         </div>
     </nav>
-
-    <!-- Modal Search Normal -->
-    <div class="modal fade" id="searchModal" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content shadow-lg" style="background-color: #fdfbf7; border: 2px solid #b8975a; border-radius: 8px;">
-                <div class="modal-header border-0 pb-0">
-                    <h5 class="modal-title serif-font fw-bold" style="color: #1a252f;">Pencarian Cepat</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body p-4">
-                    <form action="katalog.php" method="GET">
-                        <div class="input-group mb-3 shadow-sm">
-                            <input type="text" name="q" class="form-control" placeholder="Judul / Pengarang..." autofocus required style="border-color: #ced4da;">
-                            <button type="submit" class="btn text-white px-4" style="background-color: #1a252f;"><i class="bi bi-search"></i></button>
-                        </div>
-                        <div class="text-muted small"><i class="bi bi-info-circle text-warning me-1"></i> Gunakan halaman <a href="katalog.php" class="text-dark fw-bold">Semua Katalog</a> untuk filter tingkat lanjut.</div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>

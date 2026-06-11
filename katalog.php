@@ -40,57 +40,67 @@ $query = "SELECT b.*, GROUP_CONCAT(g.nama_genre SEPARATOR ', ') as daftar_genre
           ORDER BY b.judul_buku ASC";
 
 $data_buku = mysqli_query($koneksi, $query);
-
-// Mengambil semua genre untuk Filter Pills
-$data_genre_filter = mysqli_query($koneksi, "SELECT * FROM genre ORDER BY nama_genre ASC");
-
-// Helper untuk membuat URL filter
-function build_url($q, $genre, $status) {
-    $params = [];
-    if($q != "") $params[] = "q=" . urlencode($q);
-    if($genre != "") $params[] = "genre=" . urlencode($genre);
-    if($status != "") $params[] = "status=" . urlencode($status);
-    return "katalog.php" . (count($params) > 0 ? "?" . implode("&", $params) : "");
-}
 ?>
 
-    <section class="py-5 bg-light border-bottom" data-aos="fade-down">
+    <section class="py-5 bg-light border-bottom" data-aos="fade-down" id="catalogMainSearch">
         <div class="container pt-3">
-            <div class="row align-items-center mb-4">
-                <div class="col-md-6">
-                    <h2 class="serif-font mb-0">Eksplorasi Katalog Utama</h2>
-                    <p class="text-muted mt-2 mb-md-0">Temukan buku yang Anda butuhkan dan catat kode bukunya untuk dipinjam di meja sirkulasi.</p>
+            <div class="row align-items-center">
+                <div class="col-md-5">
+                    <h2 class="serif-font mb-0">Eksplorasi Katalog</h2>
+                    <p class="text-muted mt-2 mb-md-0">Temukan dan catat kode buku untuk dipinjam.</p>
                 </div>
-                <div class="col-md-6 mt-4 mt-md-0">
+                <div class="col-md-7 mt-4 mt-md-0">
                     <form action="katalog.php" method="GET">
                         <div class="input-group shadow-sm">
                             <input type="text" name="q" class="form-control py-3" placeholder="Pencarian spesifik..." value="<?php echo htmlspecialchars($keyword); ?>">
-                            <?php if($genre_filter != "") echo '<input type="hidden" name="genre" value="'.$genre_filter.'">'; ?>
-                            <?php if($status_filter != "") echo '<input type="hidden" name="status" value="'.$status_filter.'">'; ?>
+                            
+                            <button class="btn border" type="button" data-bs-toggle="collapse" data-bs-target="#filterArea" aria-expanded="false" aria-controls="filterArea" style="background-color: #f1ede1; border-color: #ced4da;">
+                                <i class="bi bi-funnel"></i> Filter
+                            </button>
+                            
                             <button type="submit" class="btn text-white px-4" style="background-color: #1a252f;"><i class="bi bi-search"></i> Cari</button>
                         </div>
-                    </form>
-                </div>
-            </div>
 
-            <!-- Filter Controls -->
-            <div class="row border-top pt-4">
-                <div class="col-md-8">
-                    <h6 class="text-muted mb-3 text-uppercase" style="letter-spacing: 1px; font-size: 0.8rem;">Filter Berdasarkan Genre:</h6>
-                    <a href="<?php echo build_url($keyword, "", $status_filter); ?>" class="filter-pill <?php echo $genre_filter == '' ? 'active' : ''; ?>">Semua Genre</a>
-                    <?php while($g = mysqli_fetch_array($data_genre_filter)): ?>
-                        <a href="<?php echo build_url($keyword, $g['id_genre'], $status_filter); ?>" class="filter-pill <?php echo $genre_filter == $g['id_genre'] ? 'active' : ''; ?>">
-                            <?php echo $g['nama_genre']; ?>
-                        </a>
-                    <?php endwhile; ?>
-                </div>
-                <div class="col-md-4 mt-3 mt-md-0">
-                    <h6 class="text-muted mb-3 text-uppercase" style="letter-spacing: 1px; font-size: 0.8rem;">Status Ketersediaan:</h6>
-                    <div class="btn-group w-100 shadow-sm">
-                        <a href="<?php echo build_url($keyword, $genre_filter, ""); ?>" class="btn btn-outline-secondary <?php echo $status_filter == '' ? 'active' : ''; ?>">Semua</a>
-                        <a href="<?php echo build_url($keyword, $genre_filter, "tersedia"); ?>" class="btn btn-outline-secondary <?php echo $status_filter == 'tersedia' ? 'active' : ''; ?>">Tersedia</a>
-                        <a href="<?php echo build_url($keyword, $genre_filter, "habis"); ?>" class="btn btn-outline-secondary <?php echo $status_filter == 'habis' ? 'active' : ''; ?>">Habis</a>
-                    </div>
+                        <!-- Collapse Filter Area -->
+                        <div class="collapse mt-3 <?php echo ($genre_filter != '' || $status_filter != '') ? 'show' : ''; ?>" id="filterArea">
+                            <div class="card card-body border-0 shadow-sm" style="background-color: #fdfbf7; border-top: 3px solid #b8975a !important;">
+                                <div class="row g-4">
+                                    <!-- Filter Genre (Dropdown) -->
+                                    <div class="col-md-6">
+                                        <label class="form-label text-muted small fw-bold text-uppercase"><i class="bi bi-bookmark-fill text-warning me-1"></i> Pilih Genre</label>
+                                        <select name="genre" class="form-select border-secondary">
+                                            <option value="">Semua Genre</option>
+                                            <?php 
+                                            $data_genre_filter = mysqli_query($koneksi, "SELECT * FROM genre ORDER BY nama_genre ASC");
+                                            while($g = mysqli_fetch_array($data_genre_filter)): 
+                                                $selected = ($genre_filter == $g['id_genre']) ? 'selected' : '';
+                                            ?>
+                                                <option value="<?php echo $g['id_genre']; ?>" <?php echo $selected; ?>><?php echo $g['nama_genre']; ?></option>
+                                            <?php endwhile; ?>
+                                        </select>
+                                    </div>
+                                    <!-- Filter Status (Radio Button) -->
+                                    <div class="col-md-6">
+                                        <label class="form-label text-muted small fw-bold text-uppercase"><i class="bi bi-check-circle-fill text-success me-1"></i> Status Ketersediaan</label>
+                                        <div class="d-flex flex-wrap gap-3 mt-2">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="status" id="statusSemua" value="" <?php echo $status_filter == '' ? 'checked' : ''; ?>>
+                                                <label class="form-check-label" for="statusSemua">Semua</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="status" id="statusTersedia" value="tersedia" <?php echo $status_filter == 'tersedia' ? 'checked' : ''; ?>>
+                                                <label class="form-check-label text-success" for="statusTersedia">Tersedia</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="status" id="statusHabis" value="habis" <?php echo $status_filter == 'habis' ? 'checked' : ''; ?>>
+                                                <label class="form-check-label text-danger" for="statusHabis">Sedang Dipinjam</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>

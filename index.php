@@ -25,6 +25,27 @@ $query_populer = "SELECT b.*, GROUP_CONCAT(g.nama_genre SEPARATOR ', ') as dafta
                   ORDER BY pinjam_count DESC LIMIT 4";
 $buku_populer = mysqli_query($koneksi, $query_populer);
 ?>
+<style>
+/* Splash Screen Modern */
+#splash-screen {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background-color: #fdfbf7; z-index: 9999;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    transition: opacity 0.8s ease-out, visibility 0.8s ease-out;
+}
+.splash-logo i { font-size: 5rem; color: #b8975a; animation: float 2s ease-in-out infinite; }
+.splash-text { font-family: 'Lora', serif; color: #1a252f; font-size: 2.5rem; font-weight: 700; margin-top: 20px; letter-spacing: 3px; opacity: 0; animation: fadeIn 1s forwards 0.5s; }
+@keyframes float { 0% { transform: translateY(0px); } 50% { transform: translateY(-15px); } 100% { transform: translateY(0px); } }
+@keyframes fadeIn { to { opacity: 1; } }
+body { overflow: hidden; } /* Cegah scroll saat splash aktif */
+body.loaded { overflow: auto; }
+</style>
+
+    <!-- Splash Screen -->
+    <div id="splash-screen">
+        <div class="splash-logo"><i class="bi bi-book-half"></i></div>
+        <div class="splash-text">PERPUS BAYU</div>
+    </div>
 
     <!-- Hero Section -->
     <section id="beranda" class="hero" data-aos="fade-in" data-aos-duration="1500">
@@ -176,39 +197,55 @@ $buku_populer = mysqli_query($koneksi, $query_populer);
 
 <script>
 document.addEventListener("DOMContentLoaded", () => {
-    const counters = document.querySelectorAll('.stat-number');
-    const speed = 100; // Semakin kecil semakin cepat
+    const splash = document.getElementById('splash-screen');
+    
+    const initAnimations = () => {
+        document.body.classList.add('loaded');
+        AOS.init({ duration: 800, once: true, offset: 100 });
 
-    const animateCounters = () => {
-        counters.forEach(counter => {
-            const updateCount = () => {
-                const target = +counter.getAttribute('data-target');
-                const count = +counter.innerText.replace(/\./g, '');
-                const inc = target / speed;
+        const counters = document.querySelectorAll('.stat-number');
+        const speed = 100;
 
-                if (count < target) {
-                    counter.innerText = Math.ceil(count + inc).toLocaleString('id-ID');
-                    setTimeout(updateCount, 20);
-                } else {
-                    counter.innerText = target.toLocaleString('id-ID');
+        const animateCounters = () => {
+            counters.forEach(counter => {
+                const updateCount = () => {
+                    const target = +counter.getAttribute('data-target');
+                    const count = +counter.innerText.replace(/\./g, '');
+                    const inc = target / speed;
+
+                    if (count < target) {
+                        counter.innerText = Math.ceil(count + inc).toLocaleString('id-ID');
+                        setTimeout(updateCount, 20);
+                    } else {
+                        counter.innerText = target.toLocaleString('id-ID');
+                    }
+                };
+                updateCount();
+            });
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if(entry.isIntersecting) {
+                    animateCounters();
+                    observer.unobserve(entry.target);
                 }
-            };
-            updateCount();
-        });
+            });
+        }, { threshold: 0.5 });
+        
+        const statsSection = document.querySelector('.stats-section');
+        if(statsSection) observer.observe(statsSection);
     };
 
-    // Use Intersection Observer to trigger when visible
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if(entry.isIntersecting) {
-                animateCounters();
-                observer.unobserve(entry.target);
-            }
-        });
-    }, { threshold: 0.5 });
-    
-    const statsSection = document.querySelector('.stats-section');
-    if(statsSection) observer.observe(statsSection);
+    if(splash) {
+        setTimeout(function() {
+            splash.style.opacity = '0';
+            splash.style.visibility = 'hidden';
+            setTimeout(initAnimations, 800);
+        }, 1500);
+    } else {
+        initAnimations();
+    }
 });
 </script>
 

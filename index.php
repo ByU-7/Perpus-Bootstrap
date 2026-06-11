@@ -28,10 +28,13 @@ $buku_populer = mysqli_query($koneksi, $query_populer);
 <style>
 /* Splash Screen Modern */
 #splash-screen {
-    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    position: fixed; top: 0; left: 0; width: 100%; height: 100vh;
     background-color: #fdfbf7; z-index: 9999;
     display: flex; flex-direction: column; align-items: center; justify-content: center;
-    transition: opacity 0.8s ease-out, visibility 0.8s ease-out;
+    transition: transform 0.8s cubic-bezier(0.77, 0, 0.175, 1);
+}
+#splash-screen.hide {
+    transform: translateY(-100%);
 }
 .splash-logo i { font-size: 5rem; color: #b8975a; animation: float 2s ease-in-out infinite; }
 .splash-text { font-family: 'Lora', serif; color: #1a252f; font-size: 2.5rem; font-weight: 700; margin-top: 20px; letter-spacing: 3px; opacity: 0; animation: fadeIn 1s forwards 0.5s; }
@@ -48,22 +51,22 @@ body.loaded { overflow: auto; }
     </div>
 
     <!-- Hero Section -->
-    <section id="beranda" class="hero" data-aos="fade-in" data-aos-duration="1500">
+    <section id="beranda" class="hero" style="padding: 180px 0 140px 0;" data-aos="fade-in" data-aos-duration="1500">
         <div class="container">
-            <h1 class="serif-font" data-aos="fade-down" data-aos-delay="300">Katalog Online Perpustakaan</h1>
+            <h1 class="serif-font" data-aos="fade-down" data-aos-delay="300">Sirkulasi Perpustakaan Akademik</h1>
             <p class="lead mb-5" style="color: #e9ecef; max-width: 800px; margin: 0 auto;" data-aos="fade-up" data-aos-delay="500">
-                Cari koleksi buku kami dan pastikan status ketersediaannya secara <i>real-time</i> sebelum Anda berkunjung ke perpustakaan fisik kami.
+                Pusat sirkulasi dan pengelolaan literatur fisik. Cari koleksi buku kami dan pastikan status ketersediaannya di rak sebelum Anda berkunjung.
             </p>
             <div class="text-center" data-aos="zoom-in" data-aos-delay="700">
-                <button class="btn btn-outline-light rounded-pill px-5 py-3 fs-5" style="border-width: 2px;" data-bs-toggle="modal" data-bs-target="#searchModal">
-                    <i class="bi bi-search me-2"></i> Cek Ketersediaan Buku
-                </button>
+                <a href="#terbaru" class="btn btn-outline-light rounded-pill px-4 py-2 fw-bold" style="border-width: 2px;">
+                    Jelajahi Koleksi <i class="bi bi-arrow-down ms-2"></i>
+                </a>
             </div>
         </div>
     </section>
 
     <!-- Statistik Section -->
-    <section class="stats-section py-5" style="background-color: white; border-bottom: 1px solid #e9e5db;">
+    <section id="statistik" class="stats-section py-5" style="background: linear-gradient(rgba(255,255,255,0.95), rgba(255,255,255,0.95)), url('https://www.transparenttextures.com/patterns/cream-paper.png'); border-bottom: 1px solid #e9e5db;">
         <div class="container">
             <div class="row g-4">
                 <div class="col-md-4" data-aos="fade-up" data-aos-delay="100">
@@ -204,18 +207,19 @@ document.addEventListener("DOMContentLoaded", () => {
         AOS.init({ duration: 800, once: true, offset: 100 });
 
         const counters = document.querySelectorAll('.stat-number');
-        const speed = 100;
+        const speed = 40;
 
         const animateCounters = () => {
             counters.forEach(counter => {
-                const updateCount = () => {
-                    const target = +counter.getAttribute('data-target');
-                    const count = +counter.innerText.replace(/\./g, '');
-                    const inc = target / speed;
+                const target = +counter.getAttribute('data-target');
+                let count = 0;
+                const inc = target / speed;
 
+                const updateCount = () => {
+                    count += inc;
                     if (count < target) {
-                        counter.innerText = Math.ceil(count + inc).toLocaleString('id-ID');
-                        setTimeout(updateCount, 20);
+                        counter.innerText = Math.ceil(count).toLocaleString('id-ID');
+                        requestAnimationFrame(updateCount);
                     } else {
                         counter.innerText = target.toLocaleString('id-ID');
                     }
@@ -239,8 +243,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if(splash) {
         setTimeout(function() {
-            splash.style.opacity = '0';
-            splash.style.visibility = 'hidden';
+            splash.classList.add('hide');
             setTimeout(initAnimations, 800);
         }, 1500);
     } else {

@@ -1,23 +1,27 @@
+<style>
+.hover-gold { transition: all 0.3s ease; display: inline-block; color: #ced4da !important; }
+.hover-gold:hover { color: #b8975a !important; transform: translateX(8px); }
+</style>
     <!-- Footer -->
-    <footer id="tentang" style="background: linear-gradient(rgba(17, 26, 34, 0.95), rgba(17, 26, 34, 0.98)), url('https://images.unsplash.com/photo-1507842217343-583bb7270b66?auto=format&fit=crop&w=2000&q=80') center/cover; padding: 60px 0 20px 0; border-top: 5px solid #b8975a; color: #adb5bd;">
+    <footer id="tentang" style="background: linear-gradient(rgba(17, 26, 34, 0.95), rgba(17, 26, 34, 0.98)), url('https://images.unsplash.com/photo-1507842217343-583bb7270b66?auto=format&fit=crop&w=2000&q=80') center/cover; padding: 60px 0 20px 0; border-top: 5px solid #b8975a; color: #f8f9fa;">
         <div class="container" data-aos="fade-up">
             <div class="row g-5 mb-4">
                 <div class="col-lg-4">
                     <h4 class="text-white serif-font mb-4"><i class="bi bi-book-half text-warning me-2"></i>Perpus Bayu</h4>
-                    <p style="line-height: 1.8;">Sistem Katalog Online (OPAC) Perpustakaan Akademik. Gunakan platform ini untuk mengeksplorasi koleksi rak kami dan memastikan status ketersediaan buku secara real-time.</p>
+                    <p style="line-height: 1.8; color: #ced4da;">Sistem Katalog Online (OPAC) Perpustakaan Akademik. Gunakan platform ini untuk mengeksplorasi koleksi rak kami dan memastikan status ketersediaan buku secara real-time.</p>
                     <div class="d-flex gap-3 mt-4">
-                        <a href="#" class="btn btn-outline-secondary rounded-circle"><i class="bi bi-instagram"></i></a>
-                        <a href="#" class="btn btn-outline-secondary rounded-circle"><i class="bi bi-twitter-x"></i></a>
-                        <a href="#" class="btn btn-outline-secondary rounded-circle"><i class="bi bi-youtube"></i></a>
+                        <a href="#" class="btn btn-outline-light rounded-circle"><i class="bi bi-instagram"></i></a>
+                        <a href="#" class="btn btn-outline-light rounded-circle"><i class="bi bi-twitter-x"></i></a>
+                        <a href="#" class="btn btn-outline-light rounded-circle"><i class="bi bi-youtube"></i></a>
                     </div>
                 </div>
                 
                 <div class="col-lg-3 col-md-6">
                     <h5 class="text-white serif-font mb-4">Tautan Cepat</h5>
                     <ul class="list-unstyled" style="line-height: 2.2;">
-                        <li><a href="index.php" class="text-decoration-none text-secondary hover-gold"><i class="bi bi-chevron-right me-2" style="font-size: 0.8rem;"></i>Beranda Utama</a></li>
-                        <li><a href="katalog.php" class="text-decoration-none text-secondary hover-gold"><i class="bi bi-chevron-right me-2" style="font-size: 0.8rem;"></i>Semua Katalog</a></li>
-                        <li><a href="admin/login.php" class="text-decoration-none text-secondary hover-gold"><i class="bi bi-chevron-right me-2" style="font-size: 0.8rem;"></i>Masuk Pustakawan</a></li>
+                        <li><a href="index.php#beranda" class="text-decoration-none hover-gold">Beranda Utama</a></li>
+                        <li><a href="katalog.php" class="text-decoration-none hover-gold">Semua Katalog</a></li>
+                        <li><a href="admin/login.php" class="text-decoration-none hover-gold">Masuk Pustakawan</a></li>
                     </ul>
                 </div>
                 

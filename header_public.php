@@ -102,15 +102,18 @@ $current_page = basename($_SERVER['PHP_SELF']);
                         <a class="nav-link <?php echo $current_page == 'katalog.php' ? 'active' : ''; ?>" href="katalog.php">Katalog</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#tentang">Tentang</a>
+                        <a class="nav-link" href="index.php#terbaru">Koleksi</a>
                     </li>
-                    <li class="nav-item ms-lg-3 mt-3 mt-lg-0">
-                        <a class="btn btn-outline-warning btn-sm px-4 rounded-pill fw-bold" href="admin/login.php" style="border-color: #b8975a; color: #b8975a;">Admin</a>
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.php#statistik">Statistik</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#tentang">Tentang</a>
                     </li>
                 </ul>
                 
                 <!-- Inline Expanding Search -->
-                <div class="nav-search-wrapper d-none d-lg-flex" id="navSearchWrapper">
+                <div class="nav-search-wrapper d-none d-lg-flex ms-3 me-3" id="navSearchWrapper">
                     <form action="katalog.php" method="GET" class="nav-search-form" id="navSearchForm">
                         <input type="text" name="q" class="nav-search-input" id="navSearchInput" placeholder="Ketik judul buku...">
                     </form>
@@ -118,6 +121,8 @@ $current_page = basename($_SERVER['PHP_SELF']);
                         <i class="bi bi-search" id="navSearchIcon"></i>
                     </button>
                 </div>
+
+                <a class="btn btn-outline-warning btn-sm px-4 rounded-pill fw-bold mt-3 mt-lg-0" href="admin/login.php" style="border-color: #b8975a; color: #b8975a; position: relative; z-index: 10;">Admin</a>
             </div>
         </div>
     </nav>

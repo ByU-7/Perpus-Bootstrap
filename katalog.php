@@ -49,13 +49,13 @@ $data_buku = mysqli_query($koneksi, $query);
                     <h2 class="serif-font mb-0">Eksplorasi Katalog</h2>
                     <p class="text-muted mt-2 mb-md-0">Temukan dan catat kode buku untuk dipinjam.</p>
                 </div>
-                <div class="col-md-7 mt-4 mt-md-0">
+                <div class="col-md-7 mt-4 mt-md-0" id="catalogMainSearch">
                     <form action="katalog.php" method="GET">
                         <div class="input-group shadow-sm">
-                            <input type="text" name="q" class="form-control py-3" placeholder="Pencarian spesifik..." value="<?php echo htmlspecialchars($keyword); ?>">
+                            <input type="text" name="q" class="form-control py-3 border-end-0" placeholder="Pencarian spesifik..." value="<?php echo htmlspecialchars($keyword); ?>">
                             
-                            <button class="btn border" type="button" data-bs-toggle="collapse" data-bs-target="#filterArea" aria-expanded="false" aria-controls="filterArea" style="background-color: #f1ede1; border-color: #ced4da;">
-                                <i class="bi bi-funnel"></i> Filter
+                            <button class="btn btn-white border border-start-0 text-muted" type="button" data-bs-toggle="collapse" data-bs-target="#filterArea" aria-expanded="false" aria-controls="filterArea" style="background-color: white;" title="Advanced Filter">
+                                <i class="bi bi-sliders"></i>
                             </button>
                             
                             <button type="submit" class="btn text-white px-4" style="background-color: #1a252f;"><i class="bi bi-search"></i> Cari</button>
@@ -79,22 +79,18 @@ $data_buku = mysqli_query($koneksi, $query);
                                             <?php endwhile; ?>
                                         </select>
                                     </div>
-                                    <!-- Filter Status (Radio Button) -->
+                                    <!-- Filter Status (Pills) -->
                                     <div class="col-md-6">
                                         <label class="form-label text-muted small fw-bold text-uppercase"><i class="bi bi-check-circle-fill text-success me-1"></i> Status Ketersediaan</label>
-                                        <div class="d-flex flex-wrap gap-3 mt-2">
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="radio" name="status" id="statusSemua" value="" <?php echo $status_filter == '' ? 'checked' : ''; ?>>
-                                                <label class="form-check-label" for="statusSemua">Semua</label>
-                                            </div>
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="radio" name="status" id="statusTersedia" value="tersedia" <?php echo $status_filter == 'tersedia' ? 'checked' : ''; ?>>
-                                                <label class="form-check-label text-success" for="statusTersedia">Tersedia</label>
-                                            </div>
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="radio" name="status" id="statusHabis" value="habis" <?php echo $status_filter == 'habis' ? 'checked' : ''; ?>>
-                                                <label class="form-check-label text-danger" for="statusHabis">Sedang Dipinjam</label>
-                                            </div>
+                                        <div class="d-flex flex-wrap gap-2 mt-1">
+                                            <input type="radio" class="btn-check" name="status" id="statusSemua" value="" <?php echo $status_filter == '' ? 'checked' : ''; ?>>
+                                            <label class="btn btn-outline-secondary rounded-pill btn-sm px-3" for="statusSemua">Semua</label>
+
+                                            <input type="radio" class="btn-check" name="status" id="statusTersedia" value="tersedia" <?php echo $status_filter == 'tersedia' ? 'checked' : ''; ?>>
+                                            <label class="btn btn-outline-success rounded-pill btn-sm px-3" for="statusTersedia">Tersedia</label>
+
+                                            <input type="radio" class="btn-check" name="status" id="statusHabis" value="habis" <?php echo $status_filter == 'habis' ? 'checked' : ''; ?>>
+                                            <label class="btn btn-outline-danger rounded-pill btn-sm px-3" for="statusHabis">Habis</label>
                                         </div>
                                     </div>
                                 </div>

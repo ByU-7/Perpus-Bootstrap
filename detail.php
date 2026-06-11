@@ -26,7 +26,7 @@ $has_cover = ($b['cover'] != "" && file_exists($cover_path));
 ?>
 
     <div class="container py-5" data-aos="fade-up">
-        <a href="katalog.php" class="btn btn-outline-dark rounded-0 mb-4 mt-3"><i class="bi bi-arrow-left"></i> Kembali ke Katalog</a>
+        <button onclick="history.back()" class="btn btn-outline-dark rounded-0 mb-4 mt-3"><i class="bi bi-arrow-left"></i> Kembali</button>
         
         <div class="card border-0 shadow-sm rounded-0" style="background: white; border: 1px solid #e9e5db !important;">
             <div class="card-body p-lg-5 p-4">

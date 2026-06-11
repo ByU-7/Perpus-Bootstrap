@@ -176,12 +176,12 @@ $current_page = basename($_SERVER['PHP_SELF']);
             <div class="modal-content">
                 <div class="modal-body d-flex align-items-center justify-content-center p-5">
                     <form action="katalog.php" method="GET" style="width: 100%; max-width: 800px;">
-                        <h4 class="text-white opacity-75 mb-4 serif-font text-center">Apa yang ingin Anda baca hari ini?</h4>
+                        <h4 class="text-white opacity-75 mb-4 serif-font text-center">Cari ketersediaan buku di rak kami</h4>
                         <div class="input-group">
-                            <input type="text" name="q" class="form-control text-center" placeholder="Ketik judul buku, pengarang, atau penerbit..." autofocus required>
+                            <input type="text" name="q" class="form-control text-center" placeholder="Ketik judul buku, nama pengarang, atau kode buku..." autofocus required>
                         </div>
                         <div class="text-center mt-5">
-                            <button type="submit" class="btn btn-outline-light rounded-pill px-5 py-2 fs-5">Telusuri Katalog</button>
+                            <button type="submit" class="btn btn-outline-light rounded-pill px-5 py-2 fs-5">Cari di Katalog</button>
                         </div>
                     </form>
                 </div>

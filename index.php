@@ -29,13 +29,13 @@ $buku_populer = mysqli_query($koneksi, $query_populer);
     <!-- Hero Section -->
     <section id="beranda" class="hero">
         <div class="container">
-            <h1 class="serif-font">Jendela Menuju Keabadian Ilmu</h1>
+            <h1 class="serif-font">Katalog Online Perpustakaan</h1>
             <p class="lead mb-5" style="color: #e9ecef; max-width: 800px; margin: 0 auto;">
-                Sistem Informasi Perpustakaan Akademik menyediakan akses cepat ke ribuan literatur klasik dan modern untuk menunjang riset dan pengetahuan Anda.
+                Cari koleksi buku kami dan pastikan status ketersediaannya secara <i>real-time</i> sebelum Anda berkunjung ke perpustakaan fisik kami.
             </p>
             <div class="text-center">
                 <button class="btn btn-outline-light rounded-pill px-5 py-3 fs-5" style="border-width: 2px;" data-bs-toggle="modal" data-bs-target="#searchModal">
-                    <i class="bi bi-search me-2"></i> Mulai Mencari Buku
+                    <i class="bi bi-search me-2"></i> Cek Ketersediaan Buku
                 </button>
             </div>
         </div>

@@ -41,7 +41,7 @@ $data_genre_filter = mysqli_query($koneksi, "SELECT * FROM genre ORDER BY nama_g
             <div class="row align-items-center">
                 <div class="col-md-6">
                     <h2 class="serif-font mb-0">Eksplorasi Katalog Utama</h2>
-                    <p class="text-muted mt-2 mb-md-0">Telusuri ribuan judul buku di perpustakaan kami.</p>
+                    <p class="text-muted mt-2 mb-md-0">Temukan buku yang Anda butuhkan dan catat kode bukunya untuk dipinjam di meja sirkulasi.</p>
                 </div>
             </div>
 

@@ -5,7 +5,7 @@
                 <!-- Kolom 1: Tentang -->
                 <div class="col-lg-4">
                     <h4 class="footer-heading"><i class="bi bi-bank text-warning me-2"></i>Perpus Akademik</h4>
-                    <p style="line-height: 1.8;">Menyediakan akses cepat ke ribuan literatur berkualitas. Kami berkomitmen menjembatani setiap insan akademis dengan jendela pengetahuan dunia melalui platform digital yang modern dan efisien.</p>
+                    <p style="line-height: 1.8;">Sistem Katalog Online (OPAC) Perpustakaan Akademik. Gunakan platform ini untuk mengeksplorasi koleksi rak kami dan memastikan status ketersediaan buku secara <i>real-time</i> sebelum Anda berkunjung.</p>
                 </div>
                 
                 <!-- Kolom 2: Tautan Cepat -->

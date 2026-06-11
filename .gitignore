@@ -1,0 +1,12 @@
+# Ignore gambar uploadan dari user, tapi pertahankan foldernya
+assets/img/covers/*.jpg
+assets/img/covers/*.jpeg
+assets/img/covers/*.png
+
+# Ignore file konfigurasi koneksi jika ini adalah template public (Opsi: biasanya orang melakukan ini, 
+# tapi karena ini untuk portofolio, biarkan saja agar orang tahu cara Anda mengatur koneksi)
+# config/koneksi.php 
+
+# File temporary atau system
+.DS_Store
+Thumbs.db

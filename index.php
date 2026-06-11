@@ -27,7 +27,7 @@ $buku_populer = mysqli_query($koneksi, $query_populer);
 ?>
 
     <!-- Hero Section -->
-    <section id="beranda" class="hero mt-5">
+    <section id="beranda" class="hero">
         <div class="container">
             <h1 class="serif-font">Jendela Menuju Keabadian Ilmu</h1>
             <p class="lead mb-5" style="color: #e9ecef; max-width: 800px; margin: 0 auto;">

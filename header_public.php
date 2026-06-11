@@ -24,6 +24,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
             background-color: #fdfbf7;
             color: #333;
             scroll-behavior: smooth;
+            padding-top: 76px; /* Offset for fixed navbar */
         }
         .serif-font {
             font-family: 'Lora', serif;
@@ -75,7 +76,18 @@ $current_page = basename($_SERVER['PHP_SELF']);
         .modal-search input:focus { border-color: white; }
         .btn-close-search { position: absolute; top: 30px; right: 30px; font-size: 2rem; color: white; cursor: pointer; z-index: 1060; }
 
-        /* Book Card (Estetika Satu Warna Putih) */
+        /* Hero Section */
+        .hero {
+            background-color: #1a252f;
+            background-image: linear-gradient(rgba(26, 37, 47, 0.85), rgba(26, 37, 47, 0.95)), url('https://images.unsplash.com/photo-1481627834876-b7833e8f5570?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80');
+            background-size: cover;
+            background-position: center;
+            padding: 100px 0;
+            color: white;
+            text-align: center;
+            border-bottom: 5px solid #b8975a;
+        }
+        .hero h1 { color: #fdfbf7; font-size: 3.5rem; margin-bottom: 20px; }
         .book-card {
             background: #ffffff; border: 1px solid #eaeaea; overflow: hidden; border-radius: 6px;
             transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); 

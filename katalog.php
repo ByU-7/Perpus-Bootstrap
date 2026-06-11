@@ -36,7 +36,7 @@ $data_buku = mysqli_query($koneksi, $query);
 $data_genre_filter = mysqli_query($koneksi, "SELECT * FROM genre ORDER BY nama_genre ASC");
 ?>
 
-    <section class="py-5 mt-5 bg-light border-bottom">
+    <section class="py-5 bg-light border-bottom">
         <div class="container pt-3">
             <div class="row align-items-center">
                 <div class="col-md-6">

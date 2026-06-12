@@ -32,6 +32,14 @@
 .book-transition-wrapper.active .book-right-page { opacity: 1; }
 
 /* Flipping Cover */
+.flipper-paper {
+    top: 0; left: 50vw; width: 50vw; height: 100vh;
+    transform: rotateY(0deg); /* Start on RIGHT */
+    opacity: 0; 
+}
+.book-transition-wrapper.active .flipper-paper {
+    opacity: 1; transition: transform 0.8s cubic-bezier(0.645, 0.045, 0.355, 1), opacity 0.4s ease;
+}
 .page-flipper {
     position: absolute; top: 5vh; left: 50vw; width: 45vw; height: 90vh;
     transform-style: preserve-3d;

@@ -4,97 +4,155 @@ document.addEventListener('DOMContentLoaded', () => {
     const wrapper = document.createElement('div');
     wrapper.className = 'book-transition-wrapper';
     wrapper.id = 'book-transition';
-    wrapper.innerHTML = `
-        <div class="desk-bg"></div>
-        <div class="book-right-page"></div>
-        <div class="page-flipper">
-            <div class="cover-outside">
-                <i class="bi bi-book-half" style="font-size: 5rem; color: white;"></i>
-                <h2 style="font-family: 'Lora', serif; font-weight: bold; color: white; margin-top: 1rem; text-align: center;">Perpus Bayu</h2>
-            </div>
-            <div class="cover-inside"></div>
-        </div>
-    `;
     document.body.appendChild(wrapper);
 
-    // Incoming transition (Opening the book)
-    if (sessionStorage.getItem('bookTransitionOpen') === 'true') {
-        wrapper.classList.add('instant');
-        wrapper.classList.add('active');
-        wrapper.classList.add('closing'); // Book starts closed
-        wrapper.style.pointerEvents = 'auto'; 
-        
-        // Force reflow so it renders instantly in 'closed' state
-        void wrapper.offsetWidth;
-        
-        wrapper.classList.remove('instant');
-        
-        // Open the book
-        setTimeout(() => {
-            wrapper.classList.remove('closing');
-            
-            // After turn is done, fade out everything
-            setTimeout(() => {
-                wrapper.classList.remove('active');
-                wrapper.style.pointerEvents = 'none';
-            }, 800);
-        }, 50);
-        
-        sessionStorage.removeItem('bookTransitionOpen');
-    }
-
-    // Outgoing transition (Closing the book)
-    window.triggerBookTransition = function(action) {
-        const book = document.getElementById('book-transition');
-        book.classList.add('active'); 
-        book.style.pointerEvents = 'auto';
-        
-        setTimeout(() => {
-            book.classList.add('closing'); 
-            
-            setTimeout(() => {
-                sessionStorage.setItem('bookTransitionOpen', 'true');
-                if(typeof action === 'string') {
-                    window.location.href = action;
-                } else {
-                    action();
-                }
-            }, 800); // Wait for cover to close
-        }, 100); // Wait a bit for desk to fade in
+    const HTML_TEMPLATES = {
+        'public-cover': `
+            <div class="desk-bg"></div>
+            <div class="book-right-page"></div>
+            <div class="page-flipper flipper-cover">
+                <div class="face-front cover-gold">
+                    <i class="bi bi-book-half" style="font-size: 5rem; color: white;"></i>
+                    <h2 style="font-family: 'Lora', serif; font-weight: bold; color: white; margin-top: 1rem; text-align: center;">Buku Pengunjung</h2>
+                </div>
+                <div class="face-back cover-inside"></div>
+            </div>
+        `,
+        'admin-cover': `
+            <div class="desk-bg"></div>
+            <div class="book-right-page"></div>
+            <div class="page-flipper flipper-cover">
+                <div class="face-front cover-dark">
+                    <i class="bi bi-shield-lock" style="font-size: 5rem; color: #b8975a;"></i>
+                    <h2 style="font-family: 'Lora', serif; font-weight: bold; color: #b8975a; margin-top: 1rem; text-align: center;">Area Admin</h2>
+                </div>
+                <div class="face-back cover-inside"></div>
+            </div>
+        `,
+        'paper-page': `
+            <div class="paper-bg"></div>
+            <div class="page-flipper flipper-paper">
+                <div class="face-front paper-front"></div>
+                <div class="face-back paper-back"></div>
+            </div>
+        `
     };
 
-    // Attach to specific links
-    const adminLinks = document.querySelectorAll('a[href*="admin/login.php"], a[href="login.php"]');
-    adminLinks.forEach(link => {
-        link.addEventListener('click', (e) => {
+    // INCOMING TRANSITION LOGIC
+    const incomingType = sessionStorage.getItem('incomingTransition');
+    if (incomingType) {
+        sessionStorage.removeItem('incomingTransition');
+        wrapper.className = 'book-transition-wrapper instant active';
+        
+        if (incomingType === 'public-book-open') {
+            wrapper.innerHTML = HTML_TEMPLATES['public-cover'];
+            wrapper.classList.add('closed');
+            void wrapper.offsetWidth;
+            wrapper.classList.remove('instant');
+            setTimeout(() => {
+                wrapper.classList.remove('closed'); // Opens
+                setTimeout(() => wrapper.classList.remove('active'), 800);
+            }, 50);
+        } 
+        else if (incomingType === 'admin-book-open') {
+            wrapper.innerHTML = HTML_TEMPLATES['admin-cover'];
+            wrapper.classList.add('closed');
+            void wrapper.offsetWidth;
+            wrapper.classList.remove('instant');
+            setTimeout(() => {
+                wrapper.classList.remove('closed');
+                setTimeout(() => wrapper.classList.remove('active'), 800);
+            }, 50);
+        }
+        else if (incomingType === 'page-forward-in') {
+            wrapper.innerHTML = HTML_TEMPLATES['paper-page'];
+            // starts at 0deg (right)
+            void wrapper.offsetWidth;
+            wrapper.classList.remove('instant');
+            setTimeout(() => {
+                wrapper.classList.add('turning-left'); // flips right to left
+                setTimeout(() => wrapper.classList.remove('active'), 800);
+            }, 50);
+        }
+        else if (incomingType === 'page-backward-in') {
+            wrapper.innerHTML = HTML_TEMPLATES['paper-page'];
+            wrapper.classList.add('turned-left'); // starts at left (-180deg)
+            void wrapper.offsetWidth;
+            wrapper.classList.remove('instant');
+            setTimeout(() => {
+                wrapper.classList.remove('turned-left'); // flips left to right
+                setTimeout(() => wrapper.classList.remove('active'), 800);
+            }, 50);
+        }
+    } 
+    // SPLASH SCREEN (If first time on index.php and no incoming transition)
+    else if (!sessionStorage.getItem('splashShown') && (window.location.pathname.endsWith('/') || window.location.pathname.includes('index.php'))) {
+        sessionStorage.setItem('splashShown', 'true');
+        wrapper.className = 'book-transition-wrapper instant active closed';
+        wrapper.innerHTML = HTML_TEMPLATES['public-cover'];
+        void wrapper.offsetWidth;
+        wrapper.classList.remove('instant');
+        
+        // Wait 1 second before opening
+        setTimeout(() => {
+            wrapper.classList.remove('closed');
+            setTimeout(() => wrapper.classList.remove('active'), 800);
+        }, 1200);
+    }
+
+    // OUTGOING TRANSITION LOGIC
+    window.triggerBookTransition = function(url, outType, inType) {
+        const book = document.getElementById('book-transition');
+        
+        if (outType === 'public-book-close') {
+            book.innerHTML = HTML_TEMPLATES['public-cover'];
+        }
+        else if (outType === 'admin-book-close') {
+            book.innerHTML = HTML_TEMPLATES['admin-cover'];
+        }
+        else if (outType === 'page-forward-out' || outType === 'page-backward-out') {
+            book.innerHTML = HTML_TEMPLATES['paper-page'];
+        }
+
+        // Force reflow so inner elements start with opacity: 0
+        void book.offsetWidth;
+
+        book.className = 'book-transition-wrapper active';
+        book.style.pointerEvents = 'auto';
+        
+        if (outType === 'public-book-close' || outType === 'admin-book-close') {
+            setTimeout(() => book.classList.add('closed'), 50);
+        }
+
+        setTimeout(() => {
+            if (inType) sessionStorage.setItem('incomingTransition', inType);
+            if(typeof url === 'string') {
+                window.location.href = url;
+            } else if (typeof url === 'function') {
+                url();
+            }
+        }, 900);
+    };
+
+    // Link Interceptor
+    document.addEventListener('click', (e) => {
+        const link = e.target.closest('a[data-out]');
+        if (link) {
             e.preventDefault();
-            triggerBookTransition(link.href);
-        });
+            const outType = link.getAttribute('data-out');
+            const inType = link.getAttribute('data-in');
+            triggerBookTransition(link.href, outType, inType);
+        }
     });
 
     const loginForm = document.querySelector('form[action="proses_login.php"]');
     if(loginForm) {
         loginForm.addEventListener('submit', (e) => {
             e.preventDefault();
+            // Form submit is going to Dashboard (page forward)
             triggerBookTransition(() => {
                 loginForm.submit();
-            });
-        });
-    }
-
-    const logoutLinks = document.querySelectorAll('a[href="logout.php"], a[href*="admin/logout.php"]');
-    logoutLinks.forEach(link => {
-        link.addEventListener('click', (e) => {
-            e.preventDefault();
-            triggerBookTransition(link.href);
-        });
-    });
-    
-    const backToPublic = document.querySelector('a[href="../index.php"]');
-    if(backToPublic && window.location.href.includes('admin/login.php')) {
-        backToPublic.addEventListener('click', (e) => {
-            e.preventDefault();
-            triggerBookTransition(backToPublic.href);
+            }, 'page-forward-out', 'page-forward-in');
         });
     }
 });

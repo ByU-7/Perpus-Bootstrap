@@ -25,6 +25,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
     <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;0,700;1,400&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="assets/css/book-transition.css">
     <style>
+        html { scroll-behavior: smooth; }
         body { font-family: 'Outfit', sans-serif; background-color: #fdfbf7; color: #333; overflow-x: hidden; }
         .serif-font { font-family: 'Lora', serif; }
         
@@ -112,14 +113,14 @@ $current_page = basename($_SERVER['PHP_SELF']);
     <!-- Sticky Navbar -->
     <nav class="navbar navbar-expand-lg navbar-dark navbar-custom py-3 fixed-top">
         <div class="container">
-            <a class="navbar-brand" href="index.php" data-out="page-backward-out" data-in="splash-screen-in"><i class="bi bi-book-half me-2"></i>Perpus Bayu</a>
+            <a class="navbar-brand" href="<?php echo $current_page == 'index.php' ? '#' : 'index.php'; ?>" <?php echo $current_page == 'index.php' ? '' : 'data-out="page-backward-out" data-in="splash-screen-in"'; ?>><i class="bi bi-book-half me-2"></i>Perpus Bayu</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <i class="bi bi-list fs-2"></i>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto mb-2 mb-lg-0 align-items-lg-center" id="nav-links-menu">
                     <li class="nav-item">
-                        <a class="nav-link <?php echo $current_page == 'index.php' ? 'active' : ''; ?>" href="index.php" data-out="page-backward-out" data-in="page-backward-in">Beranda<br>Utama</a>
+                        <a class="nav-link <?php echo $current_page == 'index.php' ? 'active' : ''; ?>" href="<?php echo $current_page == 'index.php' ? '#' : 'index.php'; ?>" <?php echo $current_page == 'index.php' ? '' : 'data-out="page-backward-out" data-in="page-backward-in"'; ?>>Beranda<br>Utama</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="index.php#terbaru">Koleksi<br>Terbaru</a>

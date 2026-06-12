@@ -71,14 +71,15 @@
     -webkit-transform-style: preserve-3d;
     transform-style: preserve-3d;
     transform-origin: left center; 
-    transform: rotateY(0deg); /* Start on RIGHT */
+    transform: rotateY(0deg) translateZ(2px); /* Start on RIGHT */
     transition: transform 0.8s cubic-bezier(0.645, 0.045, 0.355, 1);
     z-index: 2;
     will-change: transform;
 }
 .book-transition-wrapper.turning-left .flipper-paper,
 .book-transition-wrapper.turned-left .flipper-paper {
-    transform: rotateY(-180deg);
+    transform: rotateY(-180deg) translateZ(-2px);
+    z-index: 3; /* Overrides cover's z-index: 2 when on the left side */
 }
 
 .face-front, .face-back {
@@ -110,13 +111,14 @@
     -webkit-transform-style: preserve-3d;
     transform-style: preserve-3d;
     transform-origin: left center; 
-    transform: rotateY(0deg); /* Start on RIGHT */
+    transform: rotateY(0deg) translateZ(2px); /* Start on RIGHT, slightly above cover */
     transition: transform 0.8s cubic-bezier(0.645, 0.045, 0.355, 1);
     z-index: 1; /* Below the cover */
     will-change: transform;
 }
 .book-transition-wrapper.turning-left .flipper-title-page {
-    transform: rotateY(-180deg);
+    transform: rotateY(-180deg) translateZ(-2px);
+    z-index: 3; /* Overrides cover's z-index: 2 when on the left side */
 }
 
 /* Flipping Cover */

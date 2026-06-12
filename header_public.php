@@ -25,10 +25,11 @@ $current_page = basename($_SERVER['PHP_SELF']);
         /* Navbar Kustom */
         .navbar-custom { background-color: rgba(26, 37, 47, 0.95) !important; backdrop-filter: blur(10px); transition: all 0.3s ease; border-bottom: 2px solid #b8975a; }
         .navbar-custom .navbar-brand { font-family: 'Lora', serif; font-weight: 700; color: #b8975a !important; font-size: 1.5rem; letter-spacing: 1px; }
-        .navbar-custom .nav-link { position: relative; color: #e9ecef !important; font-weight: 500; text-transform: uppercase; font-size: 0.85rem; letter-spacing: 1px; padding: 10px 15px; transition: color 0.3s; }
+        .navbar-custom .nav-item { display: flex; align-items: center; }
+        .navbar-custom .nav-link { position: relative; color: #e9ecef !important; font-weight: 500; text-transform: uppercase; font-size: 0.8rem; letter-spacing: 1px; padding: 10px 15px; transition: color 0.3s; text-align: center; line-height: 1.4; }
         .navbar-custom .nav-link:hover, .navbar-custom .nav-link.active { color: #b8975a !important; }
         .navbar-custom .nav-link::after {
-            content: ''; position: absolute; bottom: 5px; left: 15px; right: 15px; height: 2px;
+            content: ''; position: absolute; bottom: 0; left: 15px; right: 15px; height: 2px;
             background-color: #b8975a; transform: scaleX(0); transition: transform 0.3s ease; transform-origin: left;
         }
         .navbar-custom .nav-link:hover::after, .navbar-custom .nav-link.active::after { transform: scaleX(1); }
@@ -81,17 +82,17 @@ $current_page = basename($_SERVER['PHP_SELF']);
         
         /* Card Buku */
         .book-card {
-            border: 1px solid transparent; border-radius: 8px; overflow: hidden;
+            border: 1px solid #e9e5db; border-radius: 12px; overflow: hidden;
             transition: all 0.3s ease; text-decoration: none; color: inherit;
-            display: flex; flex-direction: column; height: 100%; background: transparent;
+            display: flex; flex-direction: column; height: 100%; background: #ffffff;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.03);
         }
-        .book-card:hover { transform: translateY(-10px); }
-        .book-cover-container { width: 100%; padding-top: 150%; position: relative; background-color: #ffffff; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.05); transition: box-shadow 0.3s ease; border: 1px solid #e9e5db; }
-        .book-card:hover .book-cover-container { box-shadow: 0 10px 25px rgba(184, 151, 90, 0.2); }
-        .book-cover-container img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: contain; transition: transform 0.5s ease; }
+        .book-card:hover { transform: translateY(-10px); box-shadow: 0 15px 30px rgba(184, 151, 90, 0.15); }
+        .book-cover-container { width: 100%; padding-top: 140%; position: relative; background-color: #fdfbf7; overflow: hidden; border-bottom: 1px solid #f1ede1; }
+        .book-cover-container img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: contain; transition: transform 0.5s ease; padding: 15px; }
         .book-card:hover .book-cover-container img { transform: scale(1.05); }
         
-        .book-info { padding: 15px 5px 0 5px; flex-grow: 1; display: flex; flex-direction: column; }
+        .book-info { padding: 20px 15px; flex-grow: 1; display: flex; flex-direction: column; }
         .book-title { font-size: 1.1rem; font-weight: 700; color: #1a252f; margin-bottom: 5px; line-height: 1.3; }
         .book-card:hover .book-title { color: #b8975a; }
         .book-author { font-size: 0.85rem; color: #6c757d; margin-bottom: 10px; font-weight: 500; }
@@ -112,19 +113,19 @@ $current_page = basename($_SERVER['PHP_SELF']);
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto mb-2 mb-lg-0 align-items-lg-center" id="nav-links-menu">
                     <li class="nav-item">
-                        <a class="nav-link <?php echo $current_page == 'index.php' ? 'active' : ''; ?>" href="index.php">Beranda Utama</a>
+                        <a class="nav-link <?php echo $current_page == 'index.php' ? 'active' : ''; ?>" href="index.php">Beranda<br>Utama</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="index.php#terbaru">Koleksi Terbaru</a>
+                        <a class="nav-link" href="index.php#terbaru">Koleksi<br>Terbaru</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="index.php#populer">Buku Populer</a>
+                        <a class="nav-link" href="index.php#populer">Buku<br>Populer</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#tentang">Tentang Kami</a>
+                        <a class="nav-link" href="#tentang">Tentang<br>Kami</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link <?php echo $current_page == 'katalog.php' ? 'active' : ''; ?>" href="katalog.php">Katalog Lengkap</a>
+                        <a class="nav-link <?php echo $current_page == 'katalog.php' ? 'active' : ''; ?>" href="katalog.php">Katalog<br>Lengkap</a>
                     </li>
                 </ul>
                 

@@ -127,7 +127,7 @@ $data_buku = mysqli_query($koneksi, $query);
                     $has_cover = ($b['cover'] != "" && file_exists($cover_path));
                 ?>
                 <div class="col" data-aos="fade-up" data-aos-delay="<?php echo $delay; ?>">
-                    <a href="detail.php?id=<?php echo $b['id_buku']; ?>" class="book-card">
+                    <a href="javascript:void(0)" onclick="openBookModal(<?php echo $b['id_buku']; ?>)" class="book-card">
                         <div class="book-cover-container">
                             <?php if($has_cover): ?>
                                 <img src="<?php echo $cover_path; ?>" alt="<?php echo $b['judul_buku']; ?>">
@@ -156,5 +156,58 @@ $data_buku = mysqli_query($koneksi, $query);
             </div>
         </div>
     </section>
+
+    <!-- Modal Detail Buku -->
+    <div class="modal fade" id="detailBukuModal" tabindex="-1" aria-labelledby="detailBukuModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg" style="border-radius: 8px; background-color: #fdfbf7;">
+          <div class="modal-header border-0 pb-0">
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body p-4 p-md-5 pt-0" id="detailBukuContent">
+            <!-- Konten akan dimuat via AJAX -->
+            <div class="text-center py-5">
+                <div class="spinner-border text-warning" role="status" style="color: #b8975a !important;">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+                <p class="mt-3 text-muted">Memuat detail buku...</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+    function openBookModal(id_buku) {
+        var modalEl = document.getElementById('detailBukuModal');
+        var modal = bootstrap.Modal.getInstance(modalEl);
+        if (!modal) {
+            modal = new bootstrap.Modal(modalEl);
+        }
+        var contentDiv = document.getElementById('detailBukuContent');
+        
+        // Tampilkan loading state
+        contentDiv.innerHTML = `
+            <div class="text-center py-5">
+                <div class="spinner-border text-warning" role="status" style="color: #b8975a !important;">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+                <p class="mt-3 text-muted">Memuat detail buku...</p>
+            </div>
+        `;
+        
+        modal.show();
+        
+        // Fetch data
+        fetch('api_detail_buku.php?id=' + id_buku)
+            .then(response => response.text())
+            .then(html => {
+                contentDiv.innerHTML = html;
+            })
+            .catch(error => {
+                contentDiv.innerHTML = '<div class="alert alert-danger">Terjadi kesalahan saat memuat data.</div>';
+            });
+    }
+    </script>
 
 <?php include 'footer_public.php'; ?>

@@ -3,18 +3,10 @@
 
 <div class="d-flex justify-content-between align-items-center mb-3">
     <h2>Data Buku</h2>
-    <a href="buku_tambah.php" class="btn btn-primary"><i class="bi bi-journal-plus"></i> Tambah Buku</a>
+    <button onclick="openModalTambah()" class="btn btn-primary"><i class="bi bi-journal-plus"></i> Tambah Buku</button>
 </div>
 
-<?php 
-if(isset($_GET['pesan'])){
-    if($_GET['pesan'] == "simpan"){
-        echo "<div class='alert alert-success'>Data buku berhasil disimpan!</div>";
-    } else if($_GET['pesan'] == "hapus"){
-        echo "<div class='alert alert-success'>Data buku berhasil dihapus!</div>";
-    }
-}
-?>
+<div id="alertContainer"></div>
 
 <div class="card shadow-sm">
     <div class="card-body">
@@ -61,7 +53,7 @@ if(isset($_GET['pesan'])){
                         <th width="12%">Aksi</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody id="bukuTableBody">
                     <?php 
                     $no = 1;
                     $kondisi = [];
@@ -133,8 +125,8 @@ if(isset($_GET['pesan'])){
                             <?php endif; ?>
                         </td>
                         <td>
-                            <a href="buku_edit.php?id=<?php echo $d['id_buku']; ?>" class="btn btn-sm btn-warning mb-1"><i class="bi bi-pencil-square"></i> Edit</a>
-                            <a href="buku_hapus.php?id=<?php echo $d['id_buku']; ?>" class="btn btn-sm btn-danger mb-1" onclick="return confirm('Yakin ingin menghapus data buku ini?')"><i class="bi bi-trash"></i> Hapus</a>
+                            <button onclick="openModalEdit(<?php echo $d['id_buku']; ?>)" class="btn btn-sm btn-warning mb-1"><i class="bi bi-pencil-square"></i> Edit</button>
+                            <button onclick="hapusBuku(<?php echo $d['id_buku']; ?>)" class="btn btn-sm btn-danger mb-1"><i class="bi bi-trash"></i> Hapus</button>
                         </td>
                     </tr>
                     <?php } ?>
@@ -143,5 +135,227 @@ if(isset($_GET['pesan'])){
         </div>
     </div>
 </div>
+
+<!-- Modal Form Buku -->
+<div class="modal fade" id="modalFormBuku" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalFormBukuTitle">Tambah Data Buku</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <form id="formBuku" onsubmit="simpanBuku(event)" enctype="multipart/form-data">
+          <div class="modal-body">
+                <input type="hidden" name="id_buku" id="id_buku">
+                
+                <div class="row">
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label">Kode Buku</label>
+                        <input type="text" class="form-control" name="kode_buku" id="kode_buku" placeholder="Contoh: BK-001" required>
+                    </div>
+                    <div class="col-md-8 mb-3">
+                        <label class="form-label">Judul Buku</label>
+                        <input type="text" class="form-control" name="judul" id="judul" required>
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Pengarang</label>
+                        <input type="text" class="form-control" name="pengarang" id="pengarang" required>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Penerbit</label>
+                        <input type="text" class="form-control" name="penerbit" id="penerbit" required>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Tahun Terbit</label>
+                        <input type="number" class="form-control" name="tahun" id="tahun" min="1900" max="2099" required>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Jumlah Stok</label>
+                        <input type="number" class="form-control" name="stok" id="stok" min="0" required>
+                    </div>
+                    <div class="col-md-12 mb-3">
+                        <label class="form-label fw-bold">Sinopsis / Deskripsi Buku</label>
+                        <textarea class="form-control" name="sinopsis" id="sinopsis" rows="4" placeholder="Tuliskan sinopsis singkat buku ini..."></textarea>
+                    </div>
+                </div>
+
+                <div class="row border-top pt-4 mt-3">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label fw-bold">Daftar Genre Buku</label>
+                        <select class="form-select select2" name="genre[]" id="genre_select" multiple="multiple" required style="width: 100%;">
+                            <?php 
+                            $q_genre2 = mysqli_query($koneksi, "SELECT * FROM genre ORDER BY nama_genre ASC");
+                            while($g = mysqli_fetch_array($q_genre2)): 
+                            ?>
+                                <option value="<?php echo $g['id_genre']; ?>"><?php echo $g['nama_genre']; ?></option>
+                            <?php endwhile; ?>
+                        </select>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label fw-bold">Cover Buku (Max 2MB)</label>
+                        <div class="mb-2">
+                            <img id="previewCover" src="#" alt="Preview" class="img-thumbnail shadow-sm d-none" style="max-height: 150px;">
+                        </div>
+                        <input type="file" class="form-control" name="cover" id="cover" accept=".jpg,.jpeg,.png" onchange="previewImage(this);">
+                        <small class="text-muted" id="coverHelp">Biarkan kosong jika tidak ada cover.</small>
+                    </div>
+                </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+            <button type="submit" class="btn btn-primary" id="btnSimpan"><i class="bi bi-save"></i> Simpan Buku</button>
+          </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script>
+let modalBuku;
+
+document.addEventListener('DOMContentLoaded', function() {
+    modalBuku = new bootstrap.Modal(document.getElementById('modalFormBuku'));
+    // Initialize Select2 in modal
+    $('#genre_select').select2({
+        dropdownParent: $('#modalFormBuku')
+    });
+});
+
+function previewImage(input) {
+    if (input.files && input.files[0]) {
+        var reader = new FileReader();
+        reader.onload = function(e) {
+            document.getElementById('previewCover').src = e.target.result;
+            document.getElementById('previewCover').classList.remove('d-none');
+        }
+        reader.readAsDataURL(input.files[0]);
+    } else {
+        document.getElementById('previewCover').classList.add('d-none');
+    }
+}
+
+function showAlert(type, message) {
+    const alertHtml = \`<div class="alert alert-\${type} alert-dismissible fade show">
+        \${message}
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>\`;
+    document.getElementById('alertContainer').innerHTML = alertHtml;
+}
+
+function reloadTableData() {
+    fetch(window.location.href)
+        .then(res => res.text())
+        .then(html => {
+            const doc = new DOMParser().parseFromString(html, 'text/html');
+            const newTbody = doc.getElementById('bukuTableBody');
+            if(newTbody) {
+                document.getElementById('bukuTableBody').innerHTML = newTbody.innerHTML;
+            }
+        });
+}
+
+function openModalTambah() {
+    document.getElementById('formBuku').reset();
+    document.getElementById('id_buku').value = '';
+    document.getElementById('modalFormBukuTitle').innerText = 'Tambah Data Buku';
+    document.getElementById('btnSimpan').innerText = 'Simpan Buku';
+    document.getElementById('btnSimpan').className = 'btn btn-primary';
+    document.getElementById('previewCover').classList.add('d-none');
+    document.getElementById('coverHelp').innerText = 'Biarkan kosong jika tidak ada cover.';
+    $('#genre_select').val(null).trigger('change');
+    modalBuku.show();
+}
+
+function openModalEdit(id) {
+    fetch('api_buku.php?action=get&id=' + id)
+        .then(res => res.json())
+        .then(res => {
+            if(res.status === 'success') {
+                const data = res.data;
+                document.getElementById('id_buku').value = data.id_buku;
+                document.getElementById('kode_buku').value = data.kode_buku;
+                document.getElementById('judul').value = data.judul_buku;
+                document.getElementById('pengarang').value = data.pengarang;
+                document.getElementById('penerbit').value = data.penerbit;
+                document.getElementById('tahun').value = data.tahun_terbit;
+                document.getElementById('stok').value = data.stok;
+                document.getElementById('sinopsis').value = data.sinopsis;
+                
+                $('#genre_select').val(data.genres).trigger('change');
+                
+                if(data.cover) {
+                    document.getElementById('previewCover').src = '../assets/img/covers/' + data.cover;
+                    document.getElementById('previewCover').classList.remove('d-none');
+                } else {
+                    document.getElementById('previewCover').classList.add('d-none');
+                }
+                
+                document.getElementById('modalFormBukuTitle').innerText = 'Edit Data Buku';
+                document.getElementById('btnSimpan').innerHTML = '<i class="bi bi-save"></i> Update Buku';
+                document.getElementById('btnSimpan').className = 'btn btn-warning';
+                document.getElementById('coverHelp').innerText = 'Biarkan kosong jika tidak ingin mengganti cover.';
+                
+                modalBuku.show();
+            } else {
+                showAlert('danger', res.message);
+            }
+        });
+}
+
+function simpanBuku(e) {
+    e.preventDefault();
+    const form = document.getElementById('formBuku');
+    const formData = new FormData(form);
+    
+    // Select2 multiple values
+    const genres = $('#genre_select').val();
+    formData.set('genre', genres);
+
+    fetch('api_buku.php?action=save', {
+        method: 'POST',
+        body: formData
+    })
+    .then(res => res.json())
+    .then(res => {
+        if(res.status === 'success') {
+            modalBuku.hide();
+            showAlert('success', res.message);
+            reloadTableData();
+        } else {
+            showAlert('danger', res.message);
+        }
+    })
+    .catch(err => {
+        showAlert('danger', 'Terjadi kesalahan sistem.');
+    });
+}
+
+function hapusBuku(id) {
+    if(confirm('Yakin ingin menghapus data buku ini?')) {
+        const formData = new FormData();
+        formData.append('id', id);
+        
+        fetch('api_buku.php?action=delete', {
+            method: 'POST',
+            body: formData
+        })
+        .then(res => res.json())
+        .then(res => {
+            if(res.status === 'success') {
+                showAlert('success', res.message);
+                reloadTableData();
+            } else {
+                showAlert('danger', res.message);
+            }
+        });
+    }
+}
+</script>
 
 <?php include 'footer.php'; ?>

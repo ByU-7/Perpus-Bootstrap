@@ -18,6 +18,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const triggerAnimations = () => {
         window.bookTransitionFinished = true;
+        if (typeof AOS !== 'undefined') {
+            AOS.init({ duration: 800, once: true, offset: 100 });
+        }
         if (typeof window.triggerInitAnimations === 'function') {
             window.triggerInitAnimations();
         }

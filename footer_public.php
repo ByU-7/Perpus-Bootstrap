@@ -117,11 +117,8 @@
             }
         });
 
-        // Trigger AOS manually will be handled by index.php if splash screen exists
-        // Otherwise, init immediately
-        if(!document.getElementById('splash-screen')) {
-            AOS.init({ duration: 800, once: true, offset: 100 });
-        }
+        // AOS initialization is now handled by book-transition.js 
+        // to ensure it only runs after page transitions are complete.
     </script>
 </body>
 </html>

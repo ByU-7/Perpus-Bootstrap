@@ -112,7 +112,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
     <!-- Sticky Navbar -->
     <nav class="navbar navbar-expand-lg navbar-dark navbar-custom py-3 fixed-top">
         <div class="container">
-            <a class="navbar-brand" href="index.php" data-out="page-backward-out" data-in="splash-screen-in"><i class="bi bi-book-half me-2"></i>Perpus Bayu</a>
+            <a class="navbar-brand" href="index.php" data-out="page-backward-out" data-in="page-backward-in"><i class="bi bi-book-half me-2"></i>Perpus Bayu</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <i class="bi bi-list fs-2"></i>
             </button>

@@ -179,7 +179,6 @@ $buku_populer = mysqli_query($koneksi, $query_populer);
 document.addEventListener("DOMContentLoaded", () => {
     const initAnimations = () => {
         document.body.classList.add('loaded');
-        AOS.init({ duration: 800, once: true, offset: 100 });
 
         const counters = document.querySelectorAll('.stat-number');
         const duration = 2000; // 2 detik

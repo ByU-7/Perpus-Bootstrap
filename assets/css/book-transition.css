@@ -29,7 +29,7 @@
     will-change: transform;
 }
 .book-transition-wrapper.zoomed-out .book-scaler {
-    transform: scale(0.75);
+    transform: scale(0.85);
 }
 
 /* Static Right Page */

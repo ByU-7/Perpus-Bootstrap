@@ -109,10 +109,14 @@ document.addEventListener('DOMContentLoaded', () => {
             nextFrame(() => {
                 wrapper.classList.remove('instant');
                 
-                // No flip needed here! Just zoom in and fade out
+                // No flip needed here! Just zoom in
                 setTimeout(() => {
                     wrapper.classList.remove('zoomed-out'); // Zoom back in
-                    wrapper.classList.remove('active'); // Fade out wrapper
+                    
+                    // Wait for zoom to play before fading out
+                    setTimeout(() => {
+                        wrapper.classList.remove('active'); // Fade out wrapper
+                    }, 400);
                 }, 100); // Small delay to let the page settle
             });
         }
@@ -124,10 +128,14 @@ document.addEventListener('DOMContentLoaded', () => {
             nextFrame(() => {
                 wrapper.classList.remove('instant');
                 
-                // No flip needed here! Just zoom in and fade out
+                // No flip needed here! Just zoom in
                 setTimeout(() => {
                     wrapper.classList.remove('zoomed-out'); // Zoom back in
-                    wrapper.classList.remove('active'); // Fade out wrapper
+                    
+                    // Wait for zoom to play before fading out
+                    setTimeout(() => {
+                        wrapper.classList.remove('active'); // Fade out wrapper
+                    }, 400);
                 }, 100);
             });
         }
@@ -158,9 +166,13 @@ document.addEventListener('DOMContentLoaded', () => {
                         wrapper.classList.add('turning-left');
                         
                         setTimeout(() => {
-                            // Zoom back in and fade out
+                            // Zoom back in
                             wrapper.classList.remove('zoomed-out');
-                            wrapper.classList.remove('active');
+                            
+                            // Fade out after zoom plays
+                            setTimeout(() => {
+                                wrapper.classList.remove('active');
+                            }, 400);
                         }, 850); // After flip finishes
                     }, 400); // After zoom out finishes
                 };

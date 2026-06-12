@@ -79,13 +79,55 @@ document.addEventListener('DOMContentLoaded', () => {
         `
     };
 
+    // Helper function for splash screen entry
+    const attachEnterSiteListener = () => {
+        const enterSite = () => {
+            document.removeEventListener('click', enterSite);
+            wrapper.style.pointerEvents = 'none'; // Prevent further clicks
+            
+            // Cinematic Zoom Out & Flip for Splash
+            wrapper.classList.add('zoomed-out');
+            
+            setTimeout(() => {
+                // Turn the title page!
+                wrapper.classList.add('turning-left');
+                
+                setTimeout(() => {
+                    // Zoom back in
+                    wrapper.classList.remove('zoomed-out');
+                    
+                    // Fade out after zoom plays
+                    setTimeout(() => {
+                        wrapper.classList.remove('active');
+                    }, 400);
+                }, 850); // After flip finishes
+            }, 400); // After zoom out finishes
+        };
+
+        // Delay to prevent accidental instant clicks
+        setTimeout(() => {
+            document.addEventListener('click', enterSite);
+        }, 500);
+    };
+
     // INCOMING TRANSITION LOGIC
     const incomingType = sessionStorage.getItem('incomingTransition');
     if (incomingType) {
         sessionStorage.removeItem('incomingTransition');
         wrapper.className = 'book-transition-wrapper instant active';
         
-        if (incomingType === 'public-book-open') {
+        if (incomingType === 'splash-screen-in') {
+            sessionStorage.removeItem('splashShown');
+            wrapper.innerHTML = HTML_TEMPLATES['public-cover'];
+            wrapper.classList.add('zoomed-out');
+            
+            nextFrame(() => {
+                wrapper.classList.remove('instant');
+                // Book is already open and zoomed out. Wait for click.
+                attachEnterSiteListener();
+            });
+        }
+        else if (incomingType === 'public-book-open') {
             wrapper.innerHTML = HTML_TEMPLATES['public-cover'];
             wrapper.classList.add('closed');
             wrapper.classList.add('slide-in-start'); // Start below screen
@@ -190,33 +232,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 wrapper.classList.remove('closed'); // Opens book, revealing splash content
                 
                 // Add one-time click listener to enter site
-                const enterSite = () => {
-                    document.removeEventListener('click', enterSite);
-                    wrapper.style.pointerEvents = 'none'; // Prevent further clicks
-                    
-                    // Cinematic Zoom Out & Flip for Splash
-                    wrapper.classList.add('zoomed-out');
-                    
-                    setTimeout(() => {
-                        // Turn the title page!
-                        wrapper.classList.add('turning-left');
-                        
-                        setTimeout(() => {
-                            // Zoom back in
-                            wrapper.classList.remove('zoomed-out');
-                            
-                            // Fade out after zoom plays
-                            setTimeout(() => {
-                                wrapper.classList.remove('active');
-                            }, 400);
-                        }, 850); // After flip finishes
-                    }, 400); // After zoom out finishes
-                };
-
-                // Wait for the open animation to finish before allowing click
-                setTimeout(() => {
-                    document.addEventListener('click', enterSite);
-                }, 850);
+                attachEnterSiteListener();
                 
             }, 800); // 800ms delay before opening
         });

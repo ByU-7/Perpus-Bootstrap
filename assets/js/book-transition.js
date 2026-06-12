@@ -15,18 +15,24 @@ document.addEventListener('DOMContentLoaded', () => {
     const HTML_TEMPLATES = {
         'public-cover': `
             <div class="desk-bg"></div>
-            <div class="book-right-page d-flex flex-column justify-content-center align-items-center text-center p-4 p-md-5">
-                <div class="splash-content w-100 h-100 d-flex flex-column justify-content-center align-items-center">
-                    <h3 style="font-family: 'Lora', serif; color: #1a252f; margin-bottom: 20px; font-weight: bold; letter-spacing: 1px;">Selamat Datang di<br>Jendela Dunia</h3>
-                    <p style="color: #495057; font-style: italic; max-width: 90%; line-height: 1.8; font-size: 1.05rem;">
-                        "Setiap halaman yang Anda balik adalah sebuah langkah menuju petualangan baru. 
-                        Temukan inspirasi, pelajari hal baru, dan wujudkan imajinasi Anda bersama koleksi literatur terbaik kami."
-                    </p>
-                    <div class="mt-auto pulse-text" style="color: #b8975a; font-weight: bold; cursor: pointer; user-select: none;">
-                        [ Klik di mana saja untuk mulai membaca... ]
+            <div class="book-right-page"></div>
+            
+            <div class="page-flipper flipper-title-page">
+                <div class="face-front paper-front d-flex flex-column justify-content-center align-items-center text-center p-4 p-md-5">
+                    <div class="splash-content w-100 h-100 d-flex flex-column justify-content-center align-items-center">
+                        <h3 style="font-family: 'Lora', serif; color: #1a252f; margin-bottom: 20px; font-weight: bold; letter-spacing: 1px;">Selamat Datang di<br>Jendela Dunia</h3>
+                        <p style="color: #495057; font-style: italic; max-width: 90%; line-height: 1.8; font-size: 1.05rem;">
+                            "Setiap halaman yang Anda balik adalah sebuah langkah menuju petualangan baru. 
+                            Temukan inspirasi, pelajari hal baru, dan wujudkan imajinasi Anda bersama koleksi literatur terbaik kami."
+                        </p>
+                        <div class="mt-auto pulse-text" style="color: #b8975a; font-weight: bold; cursor: pointer; user-select: none;">
+                            [ Klik di mana saja untuk mulai membaca... ]
+                        </div>
                     </div>
                 </div>
+                <div class="face-back paper-back"></div>
             </div>
+
             <div class="page-flipper flipper-cover">
                 <div class="face-front cover-gold">
                     <i class="bi bi-book-half" style="font-size: 5rem; color: white;"></i>
@@ -125,8 +131,13 @@ document.addEventListener('DOMContentLoaded', () => {
                     document.removeEventListener('click', enterSite);
                     wrapper.style.pointerEvents = 'none'; // Prevent further clicks
                     
-                    // Fade out everything to reveal the actual website
-                    wrapper.classList.remove('active');
+                    // Turn the title page!
+                    wrapper.classList.add('turning-left');
+                    
+                    // Fade out everything to reveal the actual website after the page turns
+                    setTimeout(() => {
+                        wrapper.classList.remove('active');
+                    }, 850);
                 };
 
                 // Wait for the open animation to finish before allowing click

@@ -64,12 +64,33 @@
     background: #fdfbf7;
 }
 .paper-front {
-    /* Shadow inside to show fold */
-    background: linear-gradient(90deg, rgba(0,0,0,0.05) 0%, rgba(255,255,255,0) 10%);
+    background: linear-gradient(90deg, rgba(0,0,0,0.08) 0%, rgba(255,255,255,0) 10%), #fdfbf7;
+    box-shadow: 10px 5px 30px rgba(0,0,0,0.15); /* Drop shadow to show paper edge */
+    border-right: 1px solid #e9e5db;
 }
 .paper-back {
     transform: rotateY(180deg);
-    background: linear-gradient(-90deg, rgba(0,0,0,0.05) 0%, rgba(255,255,255,0) 10%);
+    background: linear-gradient(-90deg, rgba(0,0,0,0.08) 0%, rgba(255,255,255,0) 10%), #fdfbf7;
+    box-shadow: -10px 5px 30px rgba(0,0,0,0.15); /* Drop shadow to show paper edge */
+    border-left: 1px solid #e9e5db;
+}
+
+/* Flipper for Title Page inside the Book */
+.flipper-title-page {
+    position: absolute; top: 5vh; left: 50vw; width: 45vw; height: 90vh;
+    transform-style: preserve-3d;
+    transform-origin: left center; 
+    transform: rotateY(0deg); /* Start on RIGHT */
+    transition: transform 0.8s cubic-bezier(0.645, 0.045, 0.355, 1);
+    z-index: 1; /* Below the cover */
+    opacity: 0; 
+    will-change: transform, opacity;
+}
+.book-transition-wrapper.active .flipper-title-page {
+    opacity: 1; transition: transform 0.8s cubic-bezier(0.645, 0.045, 0.355, 1), opacity 0.4s ease;
+}
+.book-transition-wrapper.turning-left .flipper-title-page {
+    transform: rotateY(-180deg);
 }
 
 /* Flipping Cover */
@@ -138,6 +159,7 @@
 @media (max-width: 768px) {
     .book-right-page { right: 2vw; width: 48vw; top: 15vh; height: 70vh; }
     .flipper-cover { left: 50vw; width: 48vw; top: 15vh; height: 70vh; }
+    .flipper-title-page { left: 50vw; width: 48vw; top: 15vh; height: 70vh; }
     .flipper-paper { left: 50vw; width: 50vw; height: 100vh; }
 }
 

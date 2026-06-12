@@ -41,11 +41,11 @@ $current_page = basename($_SERVER['PHP_SELF']);
         .nav-search-btn:hover { color: #b8975a; }
         
         .nav-search-form { 
-            position: absolute; right: 0; display: flex; align-items: center; 
+            position: absolute; right: 0; top: 50%; transform: translateY(-50%); display: flex; flex-direction: column; 
             width: 0; opacity: 0; transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
-            background: #1a252f; z-index: 1; padding-right: 35px; /* space for icon */
+            background: transparent; z-index: 1; padding-right: 35px; /* space for icon */
         }
-        .nav-search-wrapper.active .nav-search-form { width: 320px; opacity: 1; }
+        .nav-search-wrapper.active .nav-search-form { width: 340px; opacity: 1; }
         .nav-search-wrapper.active .nav-search-btn { color: #b8975a; }
         
         .nav-search-input {
@@ -86,9 +86,9 @@ $current_page = basename($_SERVER['PHP_SELF']);
             display: flex; flex-direction: column; height: 100%; background: transparent;
         }
         .book-card:hover { transform: translateY(-10px); }
-        .book-cover-container { width: 100%; padding-top: 150%; position: relative; background-color: transparent; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.05); transition: box-shadow 0.3s ease; }
+        .book-cover-container { width: 100%; padding-top: 150%; position: relative; background-color: #ffffff; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.05); transition: box-shadow 0.3s ease; border: 1px solid #e9e5db; }
         .book-card:hover .book-cover-container { box-shadow: 0 10px 25px rgba(184, 151, 90, 0.2); }
-        .book-cover-container img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: contain; background-color: #f1ede1; transition: transform 0.5s ease; padding: 5px; }
+        .book-cover-container img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: contain; transition: transform 0.5s ease; }
         .book-card:hover .book-cover-container img { transform: scale(1.05); }
         
         .book-info { padding: 15px 5px 0 5px; flex-grow: 1; display: flex; flex-direction: column; }
@@ -112,31 +112,62 @@ $current_page = basename($_SERVER['PHP_SELF']);
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto mb-2 mb-lg-0 align-items-lg-center" id="nav-links-menu">
                     <li class="nav-item">
-                        <a class="nav-link <?php echo $current_page == 'index.php' ? 'active' : ''; ?>" href="index.php">Beranda</a>
+                        <a class="nav-link <?php echo $current_page == 'index.php' ? 'active' : ''; ?>" href="index.php">Beranda Utama</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="index.php#terbaru">Koleksi</a>
+                        <a class="nav-link" href="index.php#terbaru">Koleksi Terbaru</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="index.php#populer">Populer</a>
+                        <a class="nav-link" href="index.php#populer">Buku Populer</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#tentang">Tentang</a>
+                        <a class="nav-link" href="#tentang">Tentang Kami</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link <?php echo $current_page == 'katalog.php' ? 'active' : ''; ?>" href="katalog.php">Katalog</a>
+                        <a class="nav-link <?php echo $current_page == 'katalog.php' ? 'active' : ''; ?>" href="katalog.php">Katalog Lengkap</a>
                     </li>
                 </ul>
                 
                 <!-- Inline Expanding Search -->
                 <div class="nav-search-wrapper d-none d-lg-flex ms-3 me-3" id="navSearchWrapper">
                     <form action="katalog.php" method="GET" class="nav-search-form" id="navSearchForm">
-                        <div class="nav-search-group">
+                        <div class="nav-search-group" style="background: #1a252f;">
                             <input type="text" name="q" class="nav-search-input form-control border-0 ps-3" id="navSearchInput" placeholder="Ketik judul buku...">
                             
-                            <a href="katalog.php" class="btn border-0 text-white-50 px-2" title="Filter Pencarian Lanjutan"><i class="bi bi-sliders"></i></a>
+                            <button type="button" class="btn border-0 text-white-50 px-2" title="Filter Pencarian Lanjutan" data-bs-toggle="collapse" data-bs-target="#navFilterCollapse"><i class="bi bi-sliders"></i></button>
                             
                             <button type="submit" class="btn border-0 pe-3" style="color: #b8975a;"><i class="bi bi-search"></i></button>
+                        </div>
+                        
+                        <!-- Advanced Filter Collapse -->
+                        <div class="collapse w-100 mt-2" id="navFilterCollapse" style="position: absolute; top: 100%;">
+                            <div class="card card-body border-0 shadow-lg" style="background-color: #fdfbf7; border-top: 3px solid #b8975a !important; border-radius: 8px;">
+                                <div class="mb-3">
+                                    <label class="form-label text-muted small fw-bold text-uppercase"><i class="bi bi-bookmark-fill text-warning me-1"></i> Pilih Genre</label>
+                                    <select name="genre" class="form-select border-secondary">
+                                        <option value="">Semua Genre</option>
+                                        <?php 
+                                        $nav_genre_filter = mysqli_query($koneksi, "SELECT * FROM genre ORDER BY nama_genre ASC");
+                                        while($ng = mysqli_fetch_array($nav_genre_filter)): 
+                                        ?>
+                                            <option value="<?php echo $ng['id_genre']; ?>"><?php echo $ng['nama_genre']; ?></option>
+                                        <?php endwhile; ?>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="form-label text-muted small fw-bold text-uppercase"><i class="bi bi-check-circle-fill text-success me-1"></i> Ketersediaan</label>
+                                    <div class="d-flex flex-wrap gap-2 mt-1">
+                                        <input type="radio" class="btn-check" name="status" id="navStatusSemua" value="" checked>
+                                        <label class="btn btn-outline-secondary rounded-pill btn-sm px-3" for="navStatusSemua">Semua</label>
+
+                                        <input type="radio" class="btn-check" name="status" id="navStatusTersedia" value="tersedia">
+                                        <label class="btn btn-outline-success rounded-pill btn-sm px-3" for="navStatusTersedia">Tersedia</label>
+
+                                        <input type="radio" class="btn-check" name="status" id="navStatusHabis" value="habis">
+                                        <label class="btn btn-outline-danger rounded-pill btn-sm px-3" for="navStatusHabis">Habis</label>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </form>
                     <button class="nav-search-btn" id="navSearchToggle" title="Cari Buku" data-is-katalog="<?php echo $current_page == 'katalog.php' ? 'true' : 'false'; ?>">

@@ -15,13 +15,30 @@ document.addEventListener('DOMContentLoaded', () => {
     const HTML_TEMPLATES = {
         'public-cover': `
             <div class="desk-bg"></div>
-            <div class="book-right-page"></div>
+            <div class="book-right-page d-flex flex-column justify-content-center align-items-center text-center p-4 p-md-5">
+                <div class="splash-content w-100 h-100 d-flex flex-column justify-content-center align-items-center">
+                    <h3 style="font-family: 'Lora', serif; color: #1a252f; margin-bottom: 20px; font-weight: bold; letter-spacing: 1px;">Selamat Datang di<br>Jendela Dunia</h3>
+                    <p style="color: #495057; font-style: italic; max-width: 90%; line-height: 1.8; font-size: 1.05rem;">
+                        "Setiap halaman yang Anda balik adalah sebuah langkah menuju petualangan baru. 
+                        Temukan inspirasi, pelajari hal baru, dan wujudkan imajinasi Anda bersama koleksi literatur terbaik kami."
+                    </p>
+                    <div class="mt-auto pulse-text" style="color: #b8975a; font-weight: bold; cursor: pointer; user-select: none;">
+                        [ Klik di mana saja untuk mulai membaca... ]
+                    </div>
+                </div>
+            </div>
             <div class="page-flipper flipper-cover">
                 <div class="face-front cover-gold">
                     <i class="bi bi-book-half" style="font-size: 5rem; color: white;"></i>
                     <h2 style="font-family: 'Lora', serif; font-weight: bold; color: white; margin-top: 1rem; text-align: center;">Buku Pengunjung</h2>
                 </div>
-                <div class="face-back cover-inside"></div>
+                <div class="face-back cover-inside d-flex flex-column justify-content-center align-items-center">
+                    <div class="splash-content text-center">
+                        <i class="bi bi-book-half" style="font-size: 6rem; color: #b8975a; opacity: 0.9;"></i>
+                        <h2 style="font-family: 'Lora', serif; font-weight: bold; color: #1a252f; margin-top: 1rem; letter-spacing: 2px; text-transform: uppercase;">Perpus Bayu</h2>
+                        <div style="width: 50px; height: 3px; background-color: #b8975a; margin: 15px auto;"></div>
+                    </div>
+                </div>
             </div>
         `,
         'admin-cover': `
@@ -98,11 +115,26 @@ document.addEventListener('DOMContentLoaded', () => {
         
         nextFrame(() => {
             wrapper.classList.remove('instant');
-            // Wait 1 second before opening
+            
+            // Wait a moment before automatically opening the book
             setTimeout(() => {
-                wrapper.classList.remove('closed');
-                setTimeout(() => wrapper.classList.remove('active'), 850);
-            }, 1000);
+                wrapper.classList.remove('closed'); // Opens book, revealing splash content
+                
+                // Add one-time click listener to enter site
+                const enterSite = () => {
+                    document.removeEventListener('click', enterSite);
+                    wrapper.style.pointerEvents = 'none'; // Prevent further clicks
+                    
+                    // Fade out everything to reveal the actual website
+                    wrapper.classList.remove('active');
+                };
+
+                // Wait for the open animation to finish before allowing click
+                setTimeout(() => {
+                    document.addEventListener('click', enterSite);
+                }, 850);
+                
+            }, 800); // 800ms delay before opening
         });
     }
 

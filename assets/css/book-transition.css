@@ -39,7 +39,7 @@
 /* Static Right Page */
 .book-right-page {
     position: absolute; top: 5vh; right: 5vw; width: 45vw; height: 90vh;
-    background: #fdfbf7;
+    background: radial-gradient(circle at center, transparent 40%, rgba(0,0,0,0.04) 100%), #fdfbf7;
     opacity: 0; transition: opacity 0.4s ease;
     border-radius: 0 10px 10px 0;
     border-left: 2px solid #e9e5db;
@@ -51,7 +51,7 @@
 /* Static Left Page */
 .book-left-page {
     position: absolute; top: 5vh; left: 5vw; width: 45vw; height: 90vh;
-    background: #fdfbf7;
+    background: radial-gradient(circle at center, transparent 40%, rgba(0,0,0,0.04) 100%), #fdfbf7;
     opacity: 0; transition: opacity 0.4s ease;
     border-radius: 10px 0 0 10px;
     border-right: 2px solid #e9e5db;
@@ -82,16 +82,16 @@
 .paper-front, .paper-back {
     position: absolute; top: 0; left: 0; width: 100%; height: 100%;
     backface-visibility: hidden;
-    background: #fdfbf7;
+    background: radial-gradient(circle at center, transparent 40%, rgba(0,0,0,0.04) 100%), #fdfbf7;
 }
 .paper-front {
-    background: linear-gradient(90deg, rgba(0,0,0,0.08) 0%, rgba(255,255,255,0) 10%), #fdfbf7;
+    background: linear-gradient(90deg, rgba(0,0,0,0.08) 0%, rgba(255,255,255,0) 10%), radial-gradient(circle at center, transparent 40%, rgba(0,0,0,0.04) 100%), #fdfbf7;
     box-shadow: 10px 5px 30px rgba(0,0,0,0.15); /* Drop shadow to show paper edge */
     border-right: 1px solid #e9e5db;
 }
 .paper-back {
     transform: rotateY(180deg);
-    background: linear-gradient(-90deg, rgba(0,0,0,0.08) 0%, rgba(255,255,255,0) 10%), #fdfbf7;
+    background: linear-gradient(-90deg, rgba(0,0,0,0.08) 0%, rgba(255,255,255,0) 10%), radial-gradient(circle at center, transparent 40%, rgba(0,0,0,0.04) 100%), #fdfbf7;
     box-shadow: -10px 5px 30px rgba(0,0,0,0.15); /* Drop shadow to show paper edge */
     border-left: 1px solid #e9e5db;
 }
@@ -159,7 +159,7 @@
 }
 
 .cover-inside {
-    background: #fdfbf7;
+    background: radial-gradient(circle at center, transparent 40%, rgba(0,0,0,0.04) 100%), #fdfbf7;
     border-radius: 10px 0 0 10px;
     transform: rotateY(180deg);
     box-shadow: inset -10px 0 20px rgba(0,0,0,0.05);
@@ -180,6 +180,29 @@
     content: ''; position: absolute; top: 0; right: 0; width: 100%; height: 100%;
     background: linear-gradient(-90deg, rgba(0,0,0,0.05) 0%, rgba(255,255,255,0) 10%);
     border-radius: 10px 0 0 10px;
+}
+
+/* Watermark styles */
+.paper-watermark {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 10rem;
+    color: rgba(184, 151, 90, 0.04);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+}
+.paper-watermark::after {
+    content: 'PERPUS BAYU';
+    font-family: 'Lora', serif;
+    font-size: 1.5rem;
+    font-weight: bold;
+    letter-spacing: 8px;
+    margin-top: 15px;
+    color: rgba(26, 37, 47, 0.05);
 }
 
 @media (max-width: 768px) {

@@ -69,11 +69,19 @@ document.addEventListener('DOMContentLoaded', () => {
         'paper-page': `
             <div class="desk-bg"></div>
             <div class="book-scaler">
-                <div class="book-left-page"></div>
-                <div class="book-right-page"></div>
+                <div class="book-left-page">
+                    <div class="paper-watermark"><i class="bi bi-book-half"></i></div>
+                </div>
+                <div class="book-right-page">
+                    <div class="paper-watermark"><i class="bi bi-book-half"></i></div>
+                </div>
                 <div class="page-flipper flipper-paper">
-                    <div class="face-front paper-front"></div>
-                    <div class="face-back paper-back"></div>
+                    <div class="face-front paper-front">
+                        <div class="paper-watermark"><i class="bi bi-book-half"></i></div>
+                    </div>
+                    <div class="face-back paper-back">
+                        <div class="paper-watermark"><i class="bi bi-book-half"></i></div>
+                    </div>
                 </div>
             </div>
         `

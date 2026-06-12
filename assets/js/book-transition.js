@@ -6,6 +6,12 @@ document.addEventListener('DOMContentLoaded', () => {
     wrapper.id = 'book-transition';
     document.body.appendChild(wrapper);
 
+    function nextFrame(callback) {
+        requestAnimationFrame(() => {
+            requestAnimationFrame(callback);
+        });
+    }
+
     const HTML_TEMPLATES = {
         'public-cover': `
             <div class="desk-bg"></div>
@@ -47,42 +53,41 @@ document.addEventListener('DOMContentLoaded', () => {
         if (incomingType === 'public-book-open') {
             wrapper.innerHTML = HTML_TEMPLATES['public-cover'];
             wrapper.classList.add('closed');
-            void wrapper.offsetWidth;
-            wrapper.classList.remove('instant');
-            setTimeout(() => {
+            
+            nextFrame(() => {
+                wrapper.classList.remove('instant');
                 wrapper.classList.remove('closed'); // Opens
-                setTimeout(() => wrapper.classList.remove('active'), 800);
-            }, 50);
+                setTimeout(() => wrapper.classList.remove('active'), 850);
+            });
         } 
         else if (incomingType === 'admin-book-open') {
             wrapper.innerHTML = HTML_TEMPLATES['admin-cover'];
             wrapper.classList.add('closed');
-            void wrapper.offsetWidth;
-            wrapper.classList.remove('instant');
-            setTimeout(() => {
+            
+            nextFrame(() => {
+                wrapper.classList.remove('instant');
                 wrapper.classList.remove('closed');
-                setTimeout(() => wrapper.classList.remove('active'), 800);
-            }, 50);
+                setTimeout(() => wrapper.classList.remove('active'), 850);
+            });
         }
         else if (incomingType === 'page-forward-in') {
             wrapper.innerHTML = HTML_TEMPLATES['paper-page'];
-            // starts at 0deg (right)
-            void wrapper.offsetWidth;
-            wrapper.classList.remove('instant');
-            setTimeout(() => {
+            
+            nextFrame(() => {
+                wrapper.classList.remove('instant');
                 wrapper.classList.add('turning-left'); // flips right to left
-                setTimeout(() => wrapper.classList.remove('active'), 800);
-            }, 50);
+                setTimeout(() => wrapper.classList.remove('active'), 850);
+            });
         }
         else if (incomingType === 'page-backward-in') {
             wrapper.innerHTML = HTML_TEMPLATES['paper-page'];
             wrapper.classList.add('turned-left'); // starts at left (-180deg)
-            void wrapper.offsetWidth;
-            wrapper.classList.remove('instant');
-            setTimeout(() => {
+            
+            nextFrame(() => {
+                wrapper.classList.remove('instant');
                 wrapper.classList.remove('turned-left'); // flips left to right
-                setTimeout(() => wrapper.classList.remove('active'), 800);
-            }, 50);
+                setTimeout(() => wrapper.classList.remove('active'), 850);
+            });
         }
     } 
     // SPLASH SCREEN (If first time on index.php and no incoming transition)
@@ -90,14 +95,15 @@ document.addEventListener('DOMContentLoaded', () => {
         sessionStorage.setItem('splashShown', 'true');
         wrapper.className = 'book-transition-wrapper instant active closed';
         wrapper.innerHTML = HTML_TEMPLATES['public-cover'];
-        void wrapper.offsetWidth;
-        wrapper.classList.remove('instant');
         
-        // Wait 1 second before opening
-        setTimeout(() => {
-            wrapper.classList.remove('closed');
-            setTimeout(() => wrapper.classList.remove('active'), 800);
-        }, 1200);
+        nextFrame(() => {
+            wrapper.classList.remove('instant');
+            // Wait 1 second before opening
+            setTimeout(() => {
+                wrapper.classList.remove('closed');
+                setTimeout(() => wrapper.classList.remove('active'), 850);
+            }, 1000);
+        });
     }
 
     // OUTGOING TRANSITION LOGIC
@@ -114,15 +120,17 @@ document.addEventListener('DOMContentLoaded', () => {
             book.innerHTML = HTML_TEMPLATES['paper-page'];
         }
 
-        // Force reflow so inner elements start with opacity: 0
-        void book.offsetWidth;
-
-        book.className = 'book-transition-wrapper active';
-        book.style.pointerEvents = 'auto';
-        
-        if (outType === 'public-book-close' || outType === 'admin-book-close') {
-            setTimeout(() => book.classList.add('closed'), 50);
-        }
+        // Use nextFrame to ensure elements are rendered before we animate them
+        nextFrame(() => {
+            book.className = 'book-transition-wrapper active';
+            book.style.pointerEvents = 'auto';
+            
+            if (outType === 'public-book-close' || outType === 'admin-book-close') {
+                nextFrame(() => {
+                    book.classList.add('closed');
+                });
+            }
+        });
 
         setTimeout(() => {
             if (inType) sessionStorage.setItem('incomingTransition', inType);

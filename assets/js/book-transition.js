@@ -4,47 +4,62 @@ document.addEventListener('DOMContentLoaded', () => {
     wrapper.className = 'book-transition-wrapper';
     wrapper.id = 'book-transition';
     wrapper.innerHTML = `
-        <div class="book-page-left">
-            <div class="book-page-content"><i class="bi bi-book-half" style="font-size: 5rem;"></i></div>
-        </div>
-        <div class="book-page-right">
-            <div class="book-page-content"><h2 style="font-family: 'Lora', serif; font-weight: bold; margin-top: 1rem;">Perpus Bayu</h2></div>
+        <div class="book-bg"></div>
+        <div class="book-spine"></div>
+        <div class="page-flipper">
+            <div class="page-front">
+                <div class="page-content"><i class="bi bi-book" style="font-size: 5rem; opacity: 0.2;"></i></div>
+            </div>
+            <div class="page-back">
+                <div class="page-content"><h2 style="font-family: 'Lora', serif; font-weight: bold; opacity: 0.8;">Perpus Bayu</h2></div>
+            </div>
         </div>
     `;
     document.body.appendChild(wrapper);
 
-    // If session storage has the flag, start closed and open it
     if (sessionStorage.getItem('bookTransitionOpen') === 'true') {
-        wrapper.classList.add('book-closed');
+        wrapper.classList.add('instant');
+        wrapper.classList.add('active');
+        wrapper.classList.add('turning'); 
         wrapper.style.pointerEvents = 'auto'; 
         
-        // Force reflow
+        // Force reflow so it renders instantly in 'turning' state
         void wrapper.offsetWidth;
         
-        // Open the book
+        // Now remove instant so transitions work again
+        wrapper.classList.remove('instant');
+        
+        // Open the page by removing turning
         setTimeout(() => {
-            wrapper.classList.remove('book-closed');
-            wrapper.style.pointerEvents = 'none';
+            wrapper.classList.remove('turning');
+            
+            // After turn is done, fade out background
+            setTimeout(() => {
+                wrapper.classList.remove('active');
+                wrapper.style.pointerEvents = 'none';
+            }, 800);
         }, 50);
         
         sessionStorage.removeItem('bookTransitionOpen');
-    } else {
-        wrapper.classList.remove('book-closed');
     }
 
     window.triggerBookTransition = function(action) {
         const book = document.getElementById('book-transition');
-        book.classList.add('book-closed');
+        book.classList.add('active'); // Fades in background
         book.style.pointerEvents = 'auto';
         
         setTimeout(() => {
-            sessionStorage.setItem('bookTransitionOpen', 'true');
-            if(typeof action === 'string') {
-                window.location.href = action;
-            } else {
-                action();
-            }
-        }, 800); 
+            book.classList.add('turning'); // Flips the page
+            
+            setTimeout(() => {
+                sessionStorage.setItem('bookTransitionOpen', 'true');
+                if(typeof action === 'string') {
+                    window.location.href = action;
+                } else {
+                    action();
+                }
+            }, 800); // Wait for page turn
+        }, 100); // Wait a bit for bg to fade in
     };
 
     // Attach to specific links

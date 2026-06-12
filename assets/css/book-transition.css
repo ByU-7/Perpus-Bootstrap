@@ -15,7 +15,7 @@
 /* Desk background */
 .desk-bg {
     position: absolute; top: 0; left: 0; width: 100vw; height: 100vh;
-    background: rgba(26, 37, 47, 0.98); 
+    background: #1a252f; 
     opacity: 0; transition: opacity 0.4s ease;
 }
 .book-transition-wrapper.active .desk-bg { opacity: 1; }

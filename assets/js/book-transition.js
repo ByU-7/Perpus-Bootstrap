@@ -6,6 +6,10 @@ document.addEventListener('DOMContentLoaded', () => {
     wrapper.id = 'book-transition';
     document.body.appendChild(wrapper);
 
+    // Remove anti-flicker overlay if it exists
+    const antiFlicker = document.getElementById('anti-flicker-overlay');
+    if (antiFlicker) antiFlicker.remove();
+
     function nextFrame(callback) {
         requestAnimationFrame(() => {
             requestAnimationFrame(callback);

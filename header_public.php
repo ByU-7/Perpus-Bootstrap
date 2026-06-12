@@ -9,6 +9,11 @@ $current_page = basename($_SERVER['PHP_SELF']);
 <!DOCTYPE html>
 <html lang="id">
 <head>
+    <script>
+        if (sessionStorage.getItem('incomingTransition') || (!sessionStorage.getItem('splashShown') && (window.location.pathname.endsWith('/') || window.location.pathname.includes('index.php')))) {
+            document.write('<div id="anti-flicker-overlay" style="position:fixed; top:0; left:0; width:100vw; height:100vh; background:#1a252f; z-index:9999999;"></div>');
+        }
+    </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Perpustakaan Bayu</title>

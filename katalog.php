@@ -132,7 +132,7 @@ $data_buku = mysqli_query($koneksi, $query);
                             <?php if($has_cover): ?>
                                 <img src="<?php echo $cover_path; ?>" alt="<?php echo $b['judul_buku']; ?>">
                             <?php else: ?>
-                                <div class="text-center text-muted"><i class="bi bi-book" style="font-size: 4rem; color: #d5d0c4;"></i></div>
+                                <div class="text-center text-muted" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center;"><i class="bi bi-book" style="font-size: 4rem; color: #d5d0c4;"></i></div>
                             <?php endif; ?>
                             
                             <?php if($b['stok'] == 0): ?>

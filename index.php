@@ -112,7 +112,7 @@ body.loaded { overflow: auto; }
                             <?php if($has_cover): ?>
                                 <img src="<?php echo $cover_path; ?>" alt="<?php echo $b['judul_buku']; ?>">
                             <?php else: ?>
-                                <div class="text-center text-muted"><i class="bi bi-book" style="font-size: 4rem; color: #d5d0c4;"></i></div>
+                                <div class="text-center text-muted" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center;"><i class="bi bi-book" style="font-size: 4rem; color: #d5d0c4;"></i></div>
                             <?php endif; ?>
                         </div>
                         <div class="book-info">
@@ -151,7 +151,7 @@ body.loaded { overflow: auto; }
                             <?php if($has_cover): ?>
                                 <img src="<?php echo $cover_path; ?>" alt="<?php echo $b['judul_buku']; ?>">
                             <?php else: ?>
-                                <div class="text-center text-muted"><i class="bi bi-book" style="font-size: 4rem; color: #d5d0c4;"></i></div>
+                                <div class="text-center text-muted" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center;"><i class="bi bi-book" style="font-size: 4rem; color: #d5d0c4;"></i></div>
                             <?php endif; ?>
                             <div style="position: absolute; top: 15px; right: -5px; background: #b8975a; color: white; padding: 5px 15px; font-weight: bold; font-size: 0.8rem; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
                                 <i class="bi bi-star-fill text-warning me-1"></i> Populer

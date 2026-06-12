@@ -54,6 +54,7 @@
 
     <script src="assets/js/bootstrap.bundle.min.js"></script>
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="assets/js/book-transition.js"></script>
     <script>
         // Inline Expanding Search Logic
         const searchToggle = document.getElementById('navSearchToggle');

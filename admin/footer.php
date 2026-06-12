@@ -17,5 +17,6 @@
         });
     });
 </script>
+<script src="../assets/js/book-transition.js"></script>
 </body>
 </html>

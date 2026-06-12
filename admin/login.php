@@ -15,6 +15,7 @@ if(isset($_SESSION['status']) && $_SESSION['status'] == "login"){
     <link href="../assets/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,700;1,400&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../assets/css/book-transition.css">
     <style>
         body { font-family: 'Outfit', sans-serif; background-color: #fdfbf7; color: #333; overflow-x: hidden; }
         .serif-font { font-family: 'Lora', serif; }
@@ -102,5 +103,6 @@ if(isset($_SESSION['status']) && $_SESSION['status'] == "login"){
 </div>
 
 <script src="../assets/js/bootstrap.bundle.min.js"></script>
+<script src="../assets/js/book-transition.js"></script>
 </body>
 </html>

@@ -110,6 +110,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     // Fade out after zoom plays
                     setTimeout(() => {
                         wrapper.classList.remove('active');
+                        document.dispatchEvent(new CustomEvent('bookTransitionComplete'));
                     }, 400);
                 }, 850); // After flip finishes
             }, 400); // After zoom out finishes
@@ -158,7 +159,10 @@ document.addEventListener('DOMContentLoaded', () => {
                         // 3. Zoom In & Fade Out
                         setTimeout(() => {
                             wrapper.classList.remove('zoomed-out');
-                            setTimeout(() => wrapper.classList.remove('active'), 400);
+                            setTimeout(() => {
+                                wrapper.classList.remove('active');
+                                document.dispatchEvent(new CustomEvent('bookTransitionComplete'));
+                            }, 400);
                         }, 850); // Wait for open
                     }, 600); // Wait for slide up
                 }, 50);
@@ -184,7 +188,10 @@ document.addEventListener('DOMContentLoaded', () => {
                         // 3. Zoom In & Fade Out
                         setTimeout(() => {
                             wrapper.classList.remove('zoomed-out');
-                            setTimeout(() => wrapper.classList.remove('active'), 400);
+                            setTimeout(() => {
+                                wrapper.classList.remove('active');
+                                document.dispatchEvent(new CustomEvent('bookTransitionComplete'));
+                            }, 400);
                         }, 850); // Wait for open
                     }, 600); // Wait for slide up
                 }, 50);
@@ -205,6 +212,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     // Wait for zoom to play before fading out
                     setTimeout(() => {
                         wrapper.classList.remove('active'); // Fade out wrapper
+                        document.dispatchEvent(new CustomEvent('bookTransitionComplete'));
                     }, 400);
                 }, 100); // Small delay to let the page settle
             });
@@ -224,6 +232,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     // Wait for zoom to play before fading out
                     setTimeout(() => {
                         wrapper.classList.remove('active'); // Fade out wrapper
+                        document.dispatchEvent(new CustomEvent('bookTransitionComplete'));
                     }, 400);
                 }, 100);
             });
@@ -247,6 +256,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 
             }, 800); // 800ms delay before opening
         });
+    }
+    else {
+        // No transition happening, fire immediately
+        document.dispatchEvent(new CustomEvent('bookTransitionComplete'));
     }
 
     // OUTGOING TRANSITION LOGIC

@@ -222,8 +222,10 @@ document.addEventListener("DOMContentLoaded", () => {
         if(statsSection) observer.observe(statsSection);
     };
 
-    // Initialize immediately, since book transition handles the visual cover
-    initAnimations();
+    // Wait for the book transition to complete before running animations
+    document.addEventListener('bookTransitionComplete', () => {
+        initAnimations();
+    });
 });
 </script>
 

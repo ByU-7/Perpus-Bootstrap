@@ -96,7 +96,7 @@ if(isset($_SESSION['status']) && $_SESSION['status'] == "login"){
             </form>
             
             <div class="text-center mt-4">
-                <a href="../index.php" class="btn btn-outline-secondary w-100 rounded-pill"><i class="bi bi-arrow-left me-2"></i> Kembali ke Beranda Publik</a>
+                <a href="../index.php" class="btn btn-outline-secondary w-100 rounded-pill" data-out="admin-book-close" data-in="public-book-open"><i class="bi bi-arrow-left me-2"></i> Kembali ke Beranda Publik</a>
             </div>
         </div>
     </div>

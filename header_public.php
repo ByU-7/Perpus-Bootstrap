@@ -114,7 +114,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto mb-2 mb-lg-0 align-items-lg-center" id="nav-links-menu">
                     <li class="nav-item">
-                        <a class="nav-link <?php echo $current_page == 'index.php' ? 'active' : ''; ?>" href="index.php">Beranda<br>Utama</a>
+                        <a class="nav-link <?php echo $current_page == 'index.php' ? 'active' : ''; ?>" href="index.php" data-out="page-backward-out" data-in="page-backward-in">Beranda<br>Utama</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="index.php#terbaru">Koleksi<br>Terbaru</a>
@@ -123,10 +123,10 @@ $current_page = basename($_SERVER['PHP_SELF']);
                         <a class="nav-link" href="index.php#populer">Buku<br>Populer</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#tentang">Tentang<br>Kami</a>
+                        <a class="nav-link" href="index.php#tentang">Tentang<br>Kami</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link <?php echo $current_page == 'katalog.php' ? 'active' : ''; ?>" href="katalog.php">Katalog<br>Lengkap</a>
+                        <a class="nav-link <?php echo $current_page == 'katalog.php' ? 'active' : ''; ?>" href="katalog.php" data-out="page-forward-out" data-in="page-forward-in">Katalog<br>Lengkap</a>
                     </li>
                 </ul>
                 
@@ -177,7 +177,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
                     </button>
                 </div>
 
-                <a class="btn btn-outline-warning btn-sm px-4 rounded-pill fw-bold mt-3 mt-lg-0" href="admin/login.php" style="border-color: #b8975a; color: #b8975a; position: relative; z-index: 10;">Admin</a>
+                <a class="btn btn-outline-warning btn-sm px-4 rounded-pill fw-bold mt-3 mt-lg-0" href="admin/login.php" data-out="public-book-close" data-in="admin-book-open" style="border-color: #b8975a; color: #b8975a; position: relative; z-index: 10;">Admin</a>
             </div>
         </div>
     </nav>

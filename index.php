@@ -25,30 +25,7 @@ $query_populer = "SELECT b.*, GROUP_CONCAT(g.nama_genre SEPARATOR ', ') as dafta
                   ORDER BY pinjam_count DESC LIMIT 4";
 $buku_populer = mysqli_query($koneksi, $query_populer);
 ?>
-<style>
-/* Splash Screen Modern */
-#splash-screen {
-    position: fixed; top: 0; left: 0; width: 100%; height: 100vh;
-    background-color: #fdfbf7; z-index: 9999;
-    display: flex; flex-direction: column; align-items: center; justify-content: center;
-    transition: transform 0.8s cubic-bezier(0.77, 0, 0.175, 1);
-}
-#splash-screen.hide {
-    transform: translateY(-100%);
-}
-.splash-logo i { font-size: 5rem; color: #b8975a; animation: float 2s ease-in-out infinite; }
-.splash-text { font-family: 'Lora', serif; color: #1a252f; font-size: 2.5rem; font-weight: 700; margin-top: 20px; letter-spacing: 3px; opacity: 0; animation: fadeIn 1s forwards 0.5s; }
-@keyframes float { 0% { transform: translateY(0px); } 50% { transform: translateY(-15px); } 100% { transform: translateY(0px); } }
-@keyframes fadeIn { to { opacity: 1; } }
-body { overflow: hidden; } /* Cegah scroll saat splash aktif */
-body.loaded { overflow: auto; }
-</style>
 
-    <!-- Splash Screen -->
-    <div id="splash-screen">
-        <div class="splash-logo"><i class="bi bi-book-half"></i></div>
-        <div class="splash-text">PERPUS BAYU</div>
-    </div>
 
     <!-- Hero Section -->
     <section id="beranda" class="hero" style="padding: 160px 0 160px 0; position: relative;" data-aos="fade-in" data-aos-duration="1500">
@@ -200,8 +177,6 @@ body.loaded { overflow: auto; }
 
 <script>
 document.addEventListener("DOMContentLoaded", () => {
-    const splash = document.getElementById('splash-screen');
-    
     const initAnimations = () => {
         document.body.classList.add('loaded');
         AOS.init({ duration: 800, once: true, offset: 100 });
@@ -219,7 +194,6 @@ document.addEventListener("DOMContentLoaded", () => {
                     const progress = currentTime - startTime;
                     const percentage = Math.min(progress / duration, 1);
                     
-                    // Easing out cubic
                     const easeOut = 1 - Math.pow(1 - percentage, 3);
                     const currentCount = Math.ceil(target * easeOut);
                     
@@ -248,14 +222,8 @@ document.addEventListener("DOMContentLoaded", () => {
         if(statsSection) observer.observe(statsSection);
     };
 
-    if(splash) {
-        setTimeout(function() {
-            splash.classList.add('hide');
-            setTimeout(initAnimations, 800);
-        }, 1500);
-    } else {
-        initAnimations();
-    }
+    // Initialize immediately, since book transition handles the visual cover
+    initAnimations();
 });
 </script>
 

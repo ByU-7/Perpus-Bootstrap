@@ -138,7 +138,9 @@ if($_SESSION['status'] != "login"){
                     <img src="https://github.com/mdo.png" alt="Admin" width="32" height="32" class="rounded-circle me-2">
                     <span class="text-truncate"><strong><?php echo $_SESSION['admin_nama']; ?></strong></span>
                 </div>
-                <a href="logout.php" class="btn btn-danger btn-sm w-100"><i class="bi bi-box-arrow-right"></i> Logout</a>
+                <div class="px-3 pb-3 mt-auto">
+                    <a href="logout.php" class="btn btn-danger btn-sm w-100" data-out="admin-book-close" data-in="public-book-open"><i class="bi bi-box-arrow-right"></i> Logout</a>
+                </div>
             </div>
         </div>
     </nav>

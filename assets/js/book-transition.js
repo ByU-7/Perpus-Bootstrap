@@ -16,6 +16,13 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    const triggerAnimations = () => {
+        window.bookTransitionFinished = true;
+        if (typeof window.triggerInitAnimations === 'function') {
+            window.triggerInitAnimations();
+        }
+    };
+
     const HTML_TEMPLATES = {
         'public-cover': `
             <div class="desk-bg"></div>
@@ -110,7 +117,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     // Fade out after zoom plays
                     setTimeout(() => {
                         wrapper.classList.remove('active');
-                        document.dispatchEvent(new CustomEvent('bookTransitionComplete'));
+                        triggerAnimations();
                     }, 400);
                 }, 850); // After flip finishes
             }, 400); // After zoom out finishes
@@ -161,7 +168,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             wrapper.classList.remove('zoomed-out');
                             setTimeout(() => {
                                 wrapper.classList.remove('active');
-                                document.dispatchEvent(new CustomEvent('bookTransitionComplete'));
+                                triggerAnimations();
                             }, 400);
                         }, 850); // Wait for open
                     }, 600); // Wait for slide up
@@ -190,7 +197,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             wrapper.classList.remove('zoomed-out');
                             setTimeout(() => {
                                 wrapper.classList.remove('active');
-                                document.dispatchEvent(new CustomEvent('bookTransitionComplete'));
+                                triggerAnimations();
                             }, 400);
                         }, 850); // Wait for open
                     }, 600); // Wait for slide up
@@ -212,7 +219,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     // Wait for zoom to play before fading out
                     setTimeout(() => {
                         wrapper.classList.remove('active'); // Fade out wrapper
-                        document.dispatchEvent(new CustomEvent('bookTransitionComplete'));
+                        triggerAnimations();
                     }, 400);
                 }, 100); // Small delay to let the page settle
             });
@@ -232,7 +239,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     // Wait for zoom to play before fading out
                     setTimeout(() => {
                         wrapper.classList.remove('active'); // Fade out wrapper
-                        document.dispatchEvent(new CustomEvent('bookTransitionComplete'));
+                        triggerAnimations();
                     }, 400);
                 }, 100);
             });
@@ -259,7 +266,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     else {
         // No transition happening, fire immediately
-        document.dispatchEvent(new CustomEvent('bookTransitionComplete'));
+        triggerAnimations();
     }
 
     // OUTGOING TRANSITION LOGIC

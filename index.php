@@ -222,10 +222,13 @@ document.addEventListener("DOMContentLoaded", () => {
         if(statsSection) observer.observe(statsSection);
     };
 
-    // Wait for the book transition to complete before running animations
-    document.addEventListener('bookTransitionComplete', () => {
+    if (window.bookTransitionFinished) {
         initAnimations();
-    });
+    } else {
+        window.triggerInitAnimations = () => {
+            initAnimations();
+        };
+    }
 });
 </script>
 

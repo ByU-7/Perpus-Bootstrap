@@ -88,21 +88,53 @@ document.addEventListener('DOMContentLoaded', () => {
         if (incomingType === 'public-book-open') {
             wrapper.innerHTML = HTML_TEMPLATES['public-cover'];
             wrapper.classList.add('closed');
+            wrapper.classList.add('slide-in-start'); // Start below screen
+            wrapper.classList.add('zoomed-out');
             
             nextFrame(() => {
                 wrapper.classList.remove('instant');
-                wrapper.classList.remove('closed'); // Opens
-                setTimeout(() => wrapper.classList.remove('active'), 850);
+                
+                // 1. Slide Up
+                setTimeout(() => {
+                    wrapper.classList.remove('slide-in-start');
+                    
+                    // 2. Open Cover
+                    setTimeout(() => {
+                        wrapper.classList.remove('closed'); 
+                        
+                        // 3. Zoom In & Fade Out
+                        setTimeout(() => {
+                            wrapper.classList.remove('zoomed-out');
+                            setTimeout(() => wrapper.classList.remove('active'), 400);
+                        }, 850); // Wait for open
+                    }, 600); // Wait for slide up
+                }, 50);
             });
         } 
         else if (incomingType === 'admin-book-open') {
             wrapper.innerHTML = HTML_TEMPLATES['admin-cover'];
             wrapper.classList.add('closed');
+            wrapper.classList.add('slide-in-start'); // Start below screen
+            wrapper.classList.add('zoomed-out');
             
             nextFrame(() => {
                 wrapper.classList.remove('instant');
-                wrapper.classList.remove('closed');
-                setTimeout(() => wrapper.classList.remove('active'), 850);
+                
+                // 1. Slide Up
+                setTimeout(() => {
+                    wrapper.classList.remove('slide-in-start');
+                    
+                    // 2. Open Cover
+                    setTimeout(() => {
+                        wrapper.classList.remove('closed');
+                        
+                        // 3. Zoom In & Fade Out
+                        setTimeout(() => {
+                            wrapper.classList.remove('zoomed-out');
+                            setTimeout(() => wrapper.classList.remove('active'), 400);
+                        }, 850); // Wait for open
+                    }, 600); // Wait for slide up
+                }, 50);
             });
         }
         else if (incomingType === 'page-forward-in') {
@@ -215,11 +247,15 @@ document.addEventListener('DOMContentLoaded', () => {
                     setTimeout(() => {
                         book.classList.add('closed');
                         setTimeout(() => { 
-                            if (inType) sessionStorage.setItem('incomingTransition', inType);
-                            if(typeof targetUrl === 'string') window.location.href = targetUrl;
-                            else if (typeof targetUrl === 'function') targetUrl();
-                        }, 850);
-                    }, 400);
+                            // Slide out down!
+                            wrapper.classList.add('slide-out');
+                            setTimeout(() => {
+                                if (inType) sessionStorage.setItem('incomingTransition', inType);
+                                if(typeof targetUrl === 'string') window.location.href = targetUrl;
+                                else if (typeof targetUrl === 'function') targetUrl();
+                            }, 600); // Wait for slide out
+                        }, 850); // Wait for close
+                    }, 400); // Wait for zoom out
                 });
             }
             else if (outType === 'page-forward-out' || outType === 'page-backward-out') {

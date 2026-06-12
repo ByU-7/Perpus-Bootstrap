@@ -16,9 +16,19 @@
 .desk-bg {
     position: absolute; top: 0; left: 0; width: 100vw; height: 100vh;
     background: #1a252f; 
-    opacity: 0; transition: opacity 0.4s ease;
+    opacity: 1; /* Always solid */
 }
-.book-transition-wrapper.active .desk-bg { opacity: 1; }
+
+/* Cinematic Curtain Overlay */
+.book-curtain {
+    position: absolute; top: 0; left: 0; width: 100vw; height: 100vh;
+    background: #1a252f;
+    z-index: 9999; pointer-events: none;
+    opacity: 1; transition: opacity 0.4s ease;
+}
+.book-transition-wrapper.active .book-curtain {
+    opacity: 0; /* Fades out to reveal the 3D book smoothly */
+}
 
 /* Scaler for Cinematic Zoom & Slide */
 .book-scaler {
@@ -41,25 +51,19 @@
 .book-right-page {
     position: absolute; top: 5vh; right: 5vw; width: 45vw; height: 90vh;
     background: radial-gradient(circle at center, transparent 40%, rgba(0,0,0,0.04) 100%), #fdfbf7;
-    opacity: 0; transition: opacity 0.4s ease;
     border-radius: 0 10px 10px 0;
     border-left: 2px solid #e9e5db;
     box-shadow: 15px 15px 40px rgba(0,0,0,0.3); /* Outer shadow for 3D depth on desk */
-    will-change: opacity;
 }
-.book-transition-wrapper.active .book-right-page { opacity: 1; }
 
 /* Static Left Page */
 .book-left-page {
     position: absolute; top: 5vh; left: 5vw; width: 45vw; height: 90vh;
     background: radial-gradient(circle at center, transparent 40%, rgba(0,0,0,0.04) 100%), #fdfbf7;
-    opacity: 0; transition: opacity 0.4s ease;
     border-radius: 10px 0 0 10px;
     border-right: 2px solid #e9e5db;
     box-shadow: -15px 15px 40px rgba(0,0,0,0.3); /* Outer shadow for 3D depth on desk */
-    will-change: opacity;
 }
-.book-transition-wrapper.active .book-left-page { opacity: 1; }
 
 /* Flipping Paper Page */
 .flipper-paper {
@@ -70,11 +74,7 @@
     transform: rotateY(0deg); /* Start on RIGHT */
     transition: transform 0.8s cubic-bezier(0.645, 0.045, 0.355, 1);
     z-index: 2;
-    opacity: 0; 
-    will-change: transform, opacity;
-}
-.book-transition-wrapper.active .flipper-paper {
-    opacity: 1; transition: transform 0.8s cubic-bezier(0.645, 0.045, 0.355, 1), opacity 0.4s ease;
+    will-change: transform;
 }
 .book-transition-wrapper.turning-left .flipper-paper,
 .book-transition-wrapper.turned-left .flipper-paper {
@@ -113,11 +113,7 @@
     transform: rotateY(0deg); /* Start on RIGHT */
     transition: transform 0.8s cubic-bezier(0.645, 0.045, 0.355, 1);
     z-index: 1; /* Below the cover */
-    opacity: 0; 
-    will-change: transform, opacity;
-}
-.book-transition-wrapper.active .flipper-title-page {
-    opacity: 1; transition: transform 0.8s cubic-bezier(0.645, 0.045, 0.355, 1), opacity 0.4s ease;
+    will-change: transform;
 }
 .book-transition-wrapper.turning-left .flipper-title-page {
     transform: rotateY(-180deg);
@@ -132,12 +128,7 @@
     transform: rotateY(-180deg); /* Start OPEN */
     transition: transform 0.8s cubic-bezier(0.645, 0.045, 0.355, 1);
     z-index: 2;
-    opacity: 0; 
-    will-change: transform, opacity;
-}
-.book-transition-wrapper.active .flipper-cover { 
-    opacity: 1; 
-    transition: transform 0.8s cubic-bezier(0.645, 0.045, 0.355, 1), opacity 0.4s ease; 
+    will-change: transform;
 }
 
 /* When closing the book */

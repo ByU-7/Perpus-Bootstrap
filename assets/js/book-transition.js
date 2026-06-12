@@ -19,6 +19,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const HTML_TEMPLATES = {
         'public-cover': `
             <div class="desk-bg"></div>
+            <div class="book-curtain"></div>
             <div class="book-scaler">
                 <div class="book-right-page"></div>
                 
@@ -55,6 +56,7 @@ document.addEventListener('DOMContentLoaded', () => {
         `,
         'admin-cover': `
             <div class="desk-bg"></div>
+            <div class="book-curtain"></div>
             <div class="book-scaler">
                 <div class="book-right-page"></div>
                 <div class="page-flipper flipper-cover">
@@ -68,6 +70,7 @@ document.addEventListener('DOMContentLoaded', () => {
         `,
         'paper-page': `
             <div class="desk-bg"></div>
+            <div class="book-curtain"></div>
             <div class="book-scaler">
                 <div class="book-left-page">
                     <div class="paper-watermark"><i class="bi bi-book-half"></i></div>

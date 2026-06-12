@@ -23,6 +23,7 @@
 /* Scaler for Cinematic Zoom & Slide */
 .book-scaler {
     position: absolute; top: 0; left: 0; width: 100vw; height: 100vh;
+    -webkit-transform-style: preserve-3d;
     transform-style: preserve-3d;
     transform: scale(1.0) translateY(0);
     transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
@@ -63,6 +64,7 @@
 /* Flipping Paper Page */
 .flipper-paper {
     position: absolute; top: 5vh; left: 50vw; width: 45vw; height: 90vh;
+    -webkit-transform-style: preserve-3d;
     transform-style: preserve-3d;
     transform-origin: left center; 
     transform: rotateY(0deg); /* Start on RIGHT */
@@ -79,10 +81,17 @@
     transform: rotateY(-180deg);
 }
 
-.paper-front, .paper-back {
+.face-front, .face-back {
     position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    -webkit-backface-visibility: hidden;
     backface-visibility: hidden;
     background: radial-gradient(circle at center, transparent 40%, rgba(0,0,0,0.04) 100%), #fdfbf7;
+}
+.face-front {
+    transform: rotateY(0deg) translateZ(1px);
+}
+.face-back {
+    transform: rotateY(180deg) translateZ(1px);
 }
 .paper-front {
     background: linear-gradient(90deg, rgba(0,0,0,0.08) 0%, rgba(255,255,255,0) 10%), radial-gradient(circle at center, transparent 40%, rgba(0,0,0,0.04) 100%), #fdfbf7;
@@ -90,7 +99,6 @@
     border-right: 1px solid #e9e5db;
 }
 .paper-back {
-    transform: rotateY(180deg);
     background: linear-gradient(-90deg, rgba(0,0,0,0.08) 0%, rgba(255,255,255,0) 10%), radial-gradient(circle at center, transparent 40%, rgba(0,0,0,0.04) 100%), #fdfbf7;
     box-shadow: -10px 5px 30px rgba(0,0,0,0.15); /* Drop shadow to show paper edge */
     border-left: 1px solid #e9e5db;
@@ -99,6 +107,7 @@
 /* Flipper for Title Page inside the Book */
 .flipper-title-page {
     position: absolute; top: 5vh; left: 50vw; width: 45vw; height: 90vh;
+    -webkit-transform-style: preserve-3d;
     transform-style: preserve-3d;
     transform-origin: left center; 
     transform: rotateY(0deg); /* Start on RIGHT */
@@ -117,6 +126,7 @@
 /* Flipping Cover */
 .flipper-cover {
     position: absolute; top: 5vh; left: 50vw; width: 45vw; height: 90vh;
+    -webkit-transform-style: preserve-3d;
     transform-style: preserve-3d;
     transform-origin: left center; 
     transform: rotateY(-180deg); /* Start OPEN */
@@ -136,10 +146,7 @@
     transform: rotateY(0deg);
 }
 
-.face-front, .face-back {
-    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-    backface-visibility: hidden;
-}
+/* (Removed duplicated face-front, face-back block) */
 
 .cover-gold {
     background: linear-gradient(90deg, #8e7240 0%, #a0814a 3%, #b8975a 12%, #b8975a 100%);
@@ -161,7 +168,6 @@
 .cover-inside {
     background: radial-gradient(circle at center, transparent 40%, rgba(0,0,0,0.04) 100%), #fdfbf7;
     border-radius: 10px 0 0 10px;
-    transform: rotateY(180deg);
     box-shadow: inset -10px 0 20px rgba(0,0,0,0.05);
     border-right: 2px solid #e9e5db;
 }

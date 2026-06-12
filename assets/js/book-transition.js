@@ -103,31 +103,32 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         else if (incomingType === 'page-forward-in') {
             wrapper.innerHTML = HTML_TEMPLATES['paper-page'];
+            wrapper.classList.add('turned-left'); // Starts at left (since it already flipped in outgoing)
             wrapper.classList.add('zoomed-out'); // Start zoomed out
             
             nextFrame(() => {
                 wrapper.classList.remove('instant');
-                wrapper.classList.add('turning-left'); // flips right to left
                 
+                // No flip needed here! Just zoom in and fade out
                 setTimeout(() => {
                     wrapper.classList.remove('zoomed-out'); // Zoom back in
                     wrapper.classList.remove('active'); // Fade out wrapper
-                }, 850);
+                }, 100); // Small delay to let the page settle
             });
         }
         else if (incomingType === 'page-backward-in') {
             wrapper.innerHTML = HTML_TEMPLATES['paper-page'];
-            wrapper.classList.add('turned-left'); // starts at left (-180deg)
+            // Starts at right (since it already flipped to right in outgoing)
             wrapper.classList.add('zoomed-out'); // Start zoomed out
             
             nextFrame(() => {
                 wrapper.classList.remove('instant');
-                wrapper.classList.remove('turned-left'); // flips left to right
                 
+                // No flip needed here! Just zoom in and fade out
                 setTimeout(() => {
                     wrapper.classList.remove('zoomed-out'); // Zoom back in
                     wrapper.classList.remove('active'); // Fade out wrapper
-                }, 850);
+                }, 100);
             });
         }
     } 
@@ -206,19 +207,27 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
             }
             else if (outType === 'page-forward-out' || outType === 'page-backward-out') {
+                if (outType === 'page-backward-out') {
+                    book.classList.add('instant');
+                    book.classList.add('turned-left'); // Start at left for backward nav
+                }
+
                 nextFrame(() => {
+                    book.classList.remove('instant');
                     wrapper.classList.add('zoomed-out'); // Zoom out before flipping
+                    
                     setTimeout(() => {
                         if (outType === 'page-forward-out') {
                             book.classList.add('turning-left'); // flips right to left
                         } else {
                             book.classList.remove('turned-left'); // flips left to right
                         }
+                        
                         setTimeout(() => { 
                             if (inType) sessionStorage.setItem('incomingTransition', inType);
                             if(typeof targetUrl === 'string') window.location.href = targetUrl;
                             else if (typeof targetUrl === 'function') targetUrl();
-                        }, 850);
+                        }, 850); // Wait for flip
                     }, 400); // Wait for zoom out
                 });
             }

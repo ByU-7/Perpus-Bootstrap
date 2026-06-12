@@ -1,39 +1,39 @@
+// book-transition.js
 document.addEventListener('DOMContentLoaded', () => {
     // Inject the HTML overlay
     const wrapper = document.createElement('div');
     wrapper.className = 'book-transition-wrapper';
     wrapper.id = 'book-transition';
     wrapper.innerHTML = `
-        <div class="book-bg"></div>
-        <div class="book-spine"></div>
+        <div class="desk-bg"></div>
+        <div class="book-right-page"></div>
         <div class="page-flipper">
-            <div class="page-front">
-                <div class="page-content"><i class="bi bi-book" style="font-size: 5rem; opacity: 0.2;"></i></div>
+            <div class="cover-outside">
+                <i class="bi bi-book-half" style="font-size: 5rem; color: white;"></i>
+                <h2 style="font-family: 'Lora', serif; font-weight: bold; color: white; margin-top: 1rem; text-align: center;">Perpus Bayu</h2>
             </div>
-            <div class="page-back">
-                <div class="page-content"><h2 style="font-family: 'Lora', serif; font-weight: bold; opacity: 0.8;">Perpus Bayu</h2></div>
-            </div>
+            <div class="cover-inside"></div>
         </div>
     `;
     document.body.appendChild(wrapper);
 
+    // Incoming transition (Opening the book)
     if (sessionStorage.getItem('bookTransitionOpen') === 'true') {
         wrapper.classList.add('instant');
         wrapper.classList.add('active');
-        wrapper.classList.add('turning'); 
+        wrapper.classList.add('closing'); // Book starts closed
         wrapper.style.pointerEvents = 'auto'; 
         
-        // Force reflow so it renders instantly in 'turning' state
+        // Force reflow so it renders instantly in 'closed' state
         void wrapper.offsetWidth;
         
-        // Now remove instant so transitions work again
         wrapper.classList.remove('instant');
         
-        // Open the page by removing turning
+        // Open the book
         setTimeout(() => {
-            wrapper.classList.remove('turning');
+            wrapper.classList.remove('closing');
             
-            // After turn is done, fade out background
+            // After turn is done, fade out everything
             setTimeout(() => {
                 wrapper.classList.remove('active');
                 wrapper.style.pointerEvents = 'none';
@@ -43,13 +43,14 @@ document.addEventListener('DOMContentLoaded', () => {
         sessionStorage.removeItem('bookTransitionOpen');
     }
 
+    // Outgoing transition (Closing the book)
     window.triggerBookTransition = function(action) {
         const book = document.getElementById('book-transition');
-        book.classList.add('active'); // Fades in background
+        book.classList.add('active'); 
         book.style.pointerEvents = 'auto';
         
         setTimeout(() => {
-            book.classList.add('turning'); // Flips the page
+            book.classList.add('closing'); 
             
             setTimeout(() => {
                 sessionStorage.setItem('bookTransitionOpen', 'true');
@@ -58,8 +59,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 } else {
                     action();
                 }
-            }, 800); // Wait for page turn
-        }, 100); // Wait a bit for bg to fade in
+            }, 800); // Wait for cover to close
+        }, 100); // Wait a bit for desk to fade in
     };
 
     // Attach to specific links
@@ -71,7 +72,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // For login form
     const loginForm = document.querySelector('form[action="proses_login.php"]');
     if(loginForm) {
         loginForm.addEventListener('submit', (e) => {
@@ -82,7 +82,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // For logout link
     const logoutLinks = document.querySelectorAll('a[href="logout.php"], a[href*="admin/logout.php"]');
     logoutLinks.forEach(link => {
         link.addEventListener('click', (e) => {
@@ -91,7 +90,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
     
-    // For return to public link
     const backToPublic = document.querySelector('a[href="../index.php"]');
     if(backToPublic && window.location.href.includes('admin/login.php')) {
         backToPublic.addEventListener('click', (e) => {

@@ -6,9 +6,15 @@ document.addEventListener('DOMContentLoaded', () => {
     wrapper.id = 'book-transition';
     document.body.appendChild(wrapper);
 
-    // Remove anti-flicker overlay if it exists
+    // Fade out anti-flicker overlay AFTER the book curtain is ready
     const antiFlicker = document.getElementById('anti-flicker-overlay');
-    if (antiFlicker) antiFlicker.remove();
+    function removeAntiFlicker() {
+        if (antiFlicker) {
+            antiFlicker.style.transition = 'opacity 0.3s ease';
+            antiFlicker.style.opacity = '0';
+            setTimeout(() => antiFlicker.remove(), 300);
+        }
+    }
 
     function nextFrame(callback) {
         requestAnimationFrame(() => {
@@ -17,12 +23,25 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     const triggerAnimations = () => {
+        const antiFlickerStyle = document.getElementById('anti-flicker-style');
+        if (antiFlickerStyle) antiFlickerStyle.remove();
+        
         window.bookTransitionFinished = true;
         if (typeof AOS !== 'undefined') {
             AOS.init({ duration: 800, once: true, offset: 100 });
         }
         if (typeof window.triggerInitAnimations === 'function') {
             window.triggerInitAnimations();
+        }
+
+        // Handle URL Hash Scroll
+        if (window.location.hash) {
+            const targetEl = document.querySelector(window.location.hash);
+            if (targetEl) {
+                setTimeout(() => {
+                    targetEl.scrollIntoView({ behavior: 'smooth' });
+                }, 100);
+            }
         }
     };
 
@@ -41,24 +60,26 @@ document.addEventListener('DOMContentLoaded', () => {
                                 "Setiap halaman yang Anda balik adalah sebuah langkah menuju petualangan baru. 
                                 Temukan inspirasi, pelajari hal baru, dan wujudkan imajinasi Anda bersama koleksi literatur terbaik kami."
                             </p>
-                            <div class="mt-auto pulse-text" style="color: #b8975a; font-weight: bold; cursor: pointer; user-select: none;">
+                            <div class="mt-auto pulse-text" style="color: #e6a756; font-weight: bold; cursor: pointer; user-select: none;">
                                 [ Klik di mana saja untuk mulai membaca... ]
                             </div>
                         </div>
                     </div>
-                    <div class="face-back paper-back"></div>
+                    <div class="face-back paper-back">
+                        <div class="paper-watermark"><i class="bi bi-book-half"></i></div>
+                    </div>
                 </div>
 
                 <div class="page-flipper flipper-cover">
-                    <div class="face-front cover-gold">
+                    <div class="face-front cover-public">
                         <i class="bi bi-book-half" style="font-size: 5rem; color: white;"></i>
                         <h2 style="font-family: 'Lora', serif; font-weight: bold; color: white; margin-top: 1rem; text-align: center;">Buku Pengunjung</h2>
                     </div>
                     <div class="face-back cover-inside d-flex flex-column justify-content-center align-items-center">
                         <div class="splash-content text-center">
-                            <i class="bi bi-book-half" style="font-size: 6rem; color: #b8975a; opacity: 0.9;"></i>
+                            <i class="bi bi-book-half" style="font-size: 6rem; color: #e6a756; opacity: 0.9;"></i>
                             <h2 style="font-family: 'Lora', serif; font-weight: bold; color: #1a252f; margin-top: 1rem; letter-spacing: 2px; text-transform: uppercase;">Perpus Bayu</h2>
-                            <div style="width: 50px; height: 3px; background-color: #b8975a; margin: 15px auto;"></div>
+                            <div style="width: 50px; height: 3px; background-color: #e6a756; margin: 15px auto;"></div>
                         </div>
                     </div>
                 </div>
@@ -70,7 +91,7 @@ document.addEventListener('DOMContentLoaded', () => {
             <div class="book-scaler">
                 <div class="book-right-page"></div>
                 <div class="page-flipper flipper-cover">
-                    <div class="face-front cover-dark">
+                    <div class="face-front cover-admin">
                         <i class="bi bi-shield-lock" style="font-size: 5rem; color: white;"></i>
                         <h2 style="font-family: 'Lora', serif; font-weight: bold; color: white; margin-top: 1rem; text-align: center;">Buku Admin</h2>
                     </div>
@@ -119,7 +140,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     
                     // Fade out after zoom plays
                     setTimeout(() => {
-                        wrapper.classList.remove('active');
+                        wrapper.classList.add('fade-out-wrapper');
                         triggerAnimations();
                     }, 400);
                 }, 850); // After flip finishes
@@ -145,6 +166,8 @@ document.addEventListener('DOMContentLoaded', () => {
             
             nextFrame(() => {
                 wrapper.classList.remove('instant');
+                wrapper.classList.remove('instant');
+                removeAntiFlicker();
                 // Book is already open and zoomed out. Wait for click.
                 attachEnterSiteListener();
             });
@@ -157,6 +180,7 @@ document.addEventListener('DOMContentLoaded', () => {
             
             nextFrame(() => {
                 wrapper.classList.remove('instant');
+                removeAntiFlicker();
                 
                 // 1. Slide Up
                 setTimeout(() => {
@@ -166,14 +190,19 @@ document.addEventListener('DOMContentLoaded', () => {
                     setTimeout(() => {
                         wrapper.classList.remove('closed'); 
                         
-                        // 3. Zoom In & Fade Out
+                        // 3. Flip Title Page (The second page turn!)
                         setTimeout(() => {
-                            wrapper.classList.remove('zoomed-out');
+                            wrapper.classList.add('turning-left');
+                            
+                            // 4. Zoom In & Fade Out
                             setTimeout(() => {
-                                wrapper.classList.remove('active');
-                                triggerAnimations();
-                            }, 400);
-                        }, 850); // Wait for open
+                                wrapper.classList.remove('zoomed-out');
+                                setTimeout(() => {
+                                    wrapper.classList.add('fade-out-wrapper');
+                                    triggerAnimations();
+                                }, 400);
+                            }, 850); // Wait for title page to flip
+                        }, 850); // Wait for cover to open
                     }, 600); // Wait for slide up
                 }, 50);
             });
@@ -186,6 +215,7 @@ document.addEventListener('DOMContentLoaded', () => {
             
             nextFrame(() => {
                 wrapper.classList.remove('instant');
+                removeAntiFlicker();
                 
                 // 1. Slide Up
                 setTimeout(() => {
@@ -199,7 +229,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         setTimeout(() => {
                             wrapper.classList.remove('zoomed-out');
                             setTimeout(() => {
-                                wrapper.classList.remove('active');
+                                wrapper.classList.add('fade-out-wrapper');
                                 triggerAnimations();
                             }, 400);
                         }, 850); // Wait for open
@@ -214,6 +244,7 @@ document.addEventListener('DOMContentLoaded', () => {
             
             nextFrame(() => {
                 wrapper.classList.remove('instant');
+                removeAntiFlicker();
                 
                 // No flip needed here! Just zoom in
                 setTimeout(() => {
@@ -221,7 +252,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     
                     // Wait for zoom to play before fading out
                     setTimeout(() => {
-                        wrapper.classList.remove('active'); // Fade out wrapper
+                        wrapper.classList.add('fade-out-wrapper'); // Fade out wrapper
                         triggerAnimations();
                     }, 400);
                 }, 100); // Small delay to let the page settle
@@ -234,6 +265,8 @@ document.addEventListener('DOMContentLoaded', () => {
             
             nextFrame(() => {
                 wrapper.classList.remove('instant');
+                wrapper.classList.remove('instant');
+                removeAntiFlicker();
                 
                 // No flip needed here! Just zoom in
                 setTimeout(() => {
@@ -241,7 +274,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     
                     // Wait for zoom to play before fading out
                     setTimeout(() => {
-                        wrapper.classList.remove('active'); // Fade out wrapper
+                        wrapper.classList.add('fade-out-wrapper'); // Fade out wrapper
                         triggerAnimations();
                     }, 400);
                 }, 100);
@@ -255,7 +288,13 @@ document.addEventListener('DOMContentLoaded', () => {
         wrapper.innerHTML = HTML_TEMPLATES['public-cover'];
         
         nextFrame(() => {
+            // Step 1: Enable transitions
             wrapper.classList.remove('instant');
+            wrapper.classList.remove('fade-out-wrapper');
+            wrapper.classList.remove('slide-out');
+            
+            // Step 2: Reveal
+            removeAntiFlicker();
             
             // Wait a moment before automatically opening the book
             setTimeout(() => {
@@ -269,6 +308,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     else {
         // No transition happening, fire immediately
+        removeAntiFlicker();
         triggerAnimations();
     }
 
@@ -364,3 +404,4 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 });
+

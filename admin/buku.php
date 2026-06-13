@@ -13,30 +13,40 @@
         
         <!-- Form Pencarian & Filter -->
         <form method="GET" action="" class="mb-3">
-            <div class="row g-2">
-                <div class="col-md-5">
-                    <input type="text" class="form-control" name="cari" placeholder="Cari Judul Buku atau Pengarang..." value="<?php echo isset($_GET['cari']) ? $_GET['cari'] : ''; ?>">
-                </div>
-                <div class="col-md-5">
-                    <select class="form-select select2" name="filter_genre">
-                        <option value="">-- Semua Genre --</option>
-                        <?php 
-                        $q_genre = mysqli_query($koneksi, "SELECT * FROM genre ORDER BY nama_genre ASC");
-                        while($g = mysqli_fetch_array($q_genre)):
-                        ?>
-                            <option value="<?php echo $g['id_genre']; ?>" <?php echo (isset($_GET['filter_genre']) && $_GET['filter_genre'] == $g['id_genre']) ? 'selected' : ''; ?>>
-                                <?php echo $g['nama_genre']; ?>
-                            </option>
-                        <?php endwhile; ?>
-                    </select>
-                </div>
-                <div class="col-md-2">
-                    <div class="d-flex gap-2">
-                        <button class="btn btn-primary w-100" type="submit"><i class="bi bi-search"></i> Cari</button>
-                        <?php if((isset($_GET['cari']) && $_GET['cari'] != '') || (isset($_GET['filter_genre']) && $_GET['filter_genre'] != '')): ?>
-                            <a href="buku.php" class="btn btn-danger" title="Reset"><i class="bi bi-x-lg"></i></a>
-                        <?php endif; ?>
+            <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
+                <div class="d-flex flex-column flex-md-row gap-2 w-100" style="max-width: 800px;">
+                    <div class="flex-grow-1">
+                        <input type="text" class="form-control" name="cari" placeholder="Cari Judul Buku atau Pengarang..." value="<?php echo isset($_GET['cari']) ? $_GET['cari'] : ''; ?>">
                     </div>
+                    <div class="flex-grow-1" style="min-width: 200px;">
+                        <select class="form-select select2" name="filter_genre" data-placeholder="Filter genre...">
+                            <option value="">-- Semua Genre --</option>
+                            <?php 
+                            $q_genre = mysqli_query($koneksi, "SELECT * FROM genre ORDER BY nama_genre ASC");
+                            while($g = mysqli_fetch_array($q_genre)):
+                            ?>
+                                <option value="<?php echo $g['id_genre']; ?>" <?php echo (isset($_GET['filter_genre']) && $_GET['filter_genre'] == $g['id_genre']) ? 'selected' : ''; ?>>
+                                    <?php echo $g['nama_genre']; ?>
+                                </option>
+                            <?php endwhile; ?>
+                        </select>
+                    </div>
+                    <div>
+                        <div class="d-flex gap-2">
+                            <button class="btn btn-primary" type="submit"><i class="bi bi-search"></i> Cari</button>
+                            <?php if((isset($_GET['cari']) && $_GET['cari'] != '') || (isset($_GET['filter_genre']) && $_GET['filter_genre'] != '')): ?>
+                                <a href="buku.php" class="btn btn-danger" title="Reset"><i class="bi bi-x-lg"></i></a>
+                            <?php endif; ?>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="d-flex align-items-center gap-2 border-start ps-3">
+                    <label class="form-label mb-0 text-muted small fw-bold">Urutkan:</label>
+                    <select class="form-select form-select-sm border-secondary" name="sort_waktu" onchange="this.form.submit()" style="width: 130px; cursor: pointer;">
+                        <option value="terbaru" <?php echo (isset($_GET['sort_waktu']) && $_GET['sort_waktu'] == 'terlama') ? '' : 'selected'; ?>>Waktu Terbaru</option>
+                        <option value="terlama" <?php echo (isset($_GET['sort_waktu']) && $_GET['sort_waktu'] == 'terlama') ? 'selected' : ''; ?>>Waktu Terlama</option>
+                    </select>
                 </div>
             </div>
         </form>
@@ -71,6 +81,12 @@
                         // Tambahkan JOIN khusus untuk filter
                         $join_genre = "INNER JOIN buku_genre bg_filter ON b.id_buku = bg_filter.id_buku AND bg_filter.id_genre = '$id_genre'";
                     }
+                    
+                    // Cek urutan
+                    $order_by = "b.tgl_ditambahkan DESC";
+                    if(isset($_GET['sort_waktu']) && $_GET['sort_waktu'] == 'terlama') {
+                        $order_by = "b.tgl_ditambahkan ASC";
+                    }
 
                     // Susun Query Utama dengan GROUP_CONCAT untuk menggabungkan genre
                     $sql = "SELECT b.*, GROUP_CONCAT(g.nama_genre SEPARATOR ', ') as daftar_genre 
@@ -82,7 +98,7 @@
                     if(count($kondisi) > 0){
                         $sql .= " WHERE " . implode(" AND ", $kondisi);
                     }
-                    $sql .= " GROUP BY b.id_buku ORDER BY b.id_buku DESC";
+                    $sql .= " GROUP BY b.id_buku ORDER BY $order_by";
 
                     $data = mysqli_query($koneksi, $sql);
                     
@@ -95,8 +111,8 @@
                     <tr>
                         <td><?php echo $no++; ?></td>
                         <td class="text-center">
-                            <?php if($d['cover'] != '' && file_exists('../assets/img/covers/'.$d['cover'])): ?>
-                                <img src="../assets/img/covers/<?php echo $d['cover']; ?>" alt="Cover" class="img-thumbnail" style="max-height: 80px;">
+                            <?php if($d['cover'] != '' && file_exists('../uploads/covers/'.$d['cover'])): ?>
+                                <img src="../uploads/covers/<?php echo $d['cover']; ?>" alt="Cover" class="img-thumbnail" style="max-height: 80px;">
                             <?php else: ?>
                                 <div class="bg-secondary text-white rounded d-flex justify-content-center align-items-center mx-auto" style="width:50px; height:70px;">
                                     <i class="bi bi-book fs-4"></i>
@@ -125,8 +141,10 @@
                             <?php endif; ?>
                         </td>
                         <td>
-                            <button onclick="openModalEdit(<?php echo $d['id_buku']; ?>)" class="btn btn-sm btn-warning mb-1"><i class="bi bi-pencil-square"></i> Edit</button>
-                            <button onclick="hapusBuku(<?php echo $d['id_buku']; ?>)" class="btn btn-sm btn-danger mb-1"><i class="bi bi-trash"></i> Hapus</button>
+                            <div class="d-grid gap-1">
+                                <button onclick="openModalEdit(<?php echo $d['id_buku']; ?>)" class="btn btn-sm btn-warning text-start"><i class="bi bi-pencil-square"></i> Edit</button>
+                                <button onclick="hapusBuku(<?php echo $d['id_buku']; ?>)" class="btn btn-sm btn-danger text-start"><i class="bi bi-trash"></i> Hapus</button>
+                            </div>
                         </td>
                     </tr>
                     <?php } ?>
@@ -188,7 +206,7 @@
                 <div class="row border-top pt-4 mt-3">
                     <div class="col-md-6 mb-3">
                         <label class="form-label fw-bold">Daftar Genre Buku</label>
-                        <select class="form-select select2" name="genre[]" id="genre_select" multiple="multiple" required style="width: 100%;">
+                        <select class="form-select select2" name="genre[]" id="genre_select" multiple="multiple" data-placeholder="Ketik atau pilih genre..." required style="width: 100%;">
                             <?php 
                             $q_genre2 = mysqli_query($koneksi, "SELECT * FROM genre ORDER BY nama_genre ASC");
                             while($g = mysqli_fetch_array($q_genre2)): 
@@ -216,6 +234,8 @@
   </div>
 </div>
 
+<?php include 'footer.php'; ?>
+
 <script>
 let modalBuku;
 
@@ -226,27 +246,6 @@ document.addEventListener('DOMContentLoaded', function() {
         dropdownParent: $('#modalFormBuku')
     });
 });
-
-function previewImage(input) {
-    if (input.files && input.files[0]) {
-        var reader = new FileReader();
-        reader.onload = function(e) {
-            document.getElementById('previewCover').src = e.target.result;
-            document.getElementById('previewCover').classList.remove('d-none');
-        }
-        reader.readAsDataURL(input.files[0]);
-    } else {
-        document.getElementById('previewCover').classList.add('d-none');
-    }
-}
-
-function showAlert(type, message) {
-    const alertHtml = \`<div class="alert alert-\${type} alert-dismissible fade show">
-        \${message}
-        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-    </div>\`;
-    document.getElementById('alertContainer').innerHTML = alertHtml;
-}
 
 function reloadTableData() {
     fetch(window.location.href)
@@ -273,7 +272,7 @@ function openModalTambah() {
 }
 
 function openModalEdit(id) {
-    fetch('api_buku.php?action=get&id=' + id)
+    fetch('api/api_buku.php?action=get&id=' + id)
         .then(res => res.json())
         .then(res => {
             if(res.status === 'success') {
@@ -290,7 +289,7 @@ function openModalEdit(id) {
                 $('#genre_select').val(data.genres).trigger('change');
                 
                 if(data.cover) {
-                    document.getElementById('previewCover').src = '../assets/img/covers/' + data.cover;
+                    document.getElementById('previewCover').src = '../uploads/covers/' + data.cover;
                     document.getElementById('previewCover').classList.remove('d-none');
                 } else {
                     document.getElementById('previewCover').classList.add('d-none');
@@ -317,7 +316,7 @@ function simpanBuku(e) {
     const genres = $('#genre_select').val();
     formData.set('genre', genres);
 
-    fetch('api_buku.php?action=save', {
+    fetch('api/api_buku.php?action=save', {
         method: 'POST',
         body: formData
     })
@@ -337,25 +336,36 @@ function simpanBuku(e) {
 }
 
 function hapusBuku(id) {
-    if(confirm('Yakin ingin menghapus data buku ini?')) {
-        const formData = new FormData();
-        formData.append('id', id);
-        
-        fetch('api_buku.php?action=delete', {
-            method: 'POST',
-            body: formData
-        })
-        .then(res => res.json())
-        .then(res => {
-            if(res.status === 'success') {
-                showAlert('success', res.message);
-                reloadTableData();
-            } else {
-                showAlert('danger', res.message);
-            }
-        });
-    }
+    Swal.fire({
+        title: 'Hapus Buku?',
+        text: "Yakin ingin menghapus data buku ini? Tindakan ini tidak dapat dibatalkan.",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#a8452c',
+        cancelButtonColor: '#6c757d',
+        confirmButtonText: 'Ya, Hapus!',
+        cancelButtonText: 'Batal',
+        reverseButtons: true
+    }).then((result) => {
+        if (result.isConfirmed) {
+            const formData = new FormData();
+            formData.append('id', id);
+            
+            fetch('api/api_buku.php?action=delete', {
+                method: 'POST',
+                body: formData
+            })
+            .then(res => res.json())
+            .then(res => {
+                if(res.status === 'success') {
+                    showAlert('success', res.message);
+                    reloadTableData();
+                } else {
+                    showAlert('danger', res.message);
+                }
+            });
+        }
+    });
 }
 </script>
 
-<?php include 'footer.php'; ?>

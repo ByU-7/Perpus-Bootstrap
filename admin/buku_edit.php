@@ -46,12 +46,12 @@ if(isset($_POST['update'])){
         if(in_array($ekstensi, $ekstensi_diperbolehkan) === true){
             if($ukuran < 2048000){ // Max 2MB
                 // Hapus cover lama jika ada file fisiknya
-                if($d['cover'] != "" && file_exists('../assets/img/covers/'.$d['cover'])){
-                    unlink('../assets/img/covers/'.$d['cover']);
+                if($d['cover'] != "" && file_exists('../uploads/covers/'.$d['cover'])){
+                    unlink('../uploads/covers/'.$d['cover']);
                 }
 
                 $nama_file = time() . '_' . $nama_file_asli;
-                move_uploaded_file($file_tmp, '../assets/img/covers/'.$nama_file);
+                move_uploaded_file($file_tmp, '../uploads/covers/'.$nama_file);
             } else {
                 echo "<script>alert('Ukuran file cover terlalu besar! Max 2MB'); window.history.back();</script>";
                 exit();
@@ -135,7 +135,7 @@ if(isset($_POST['update'])){
                 <div class="col-md-6 mb-3">
                     <label class="form-label fw-bold">Daftar Genre Buku</label>
                     <div class="text-muted small mb-2"><i class="bi bi-info-circle"></i> Anda bisa memilih lebih dari satu genre. Ketik untuk mencari.</div>
-                    <select class="form-select select2" name="genre[]" multiple="multiple" required>
+                    <select class="form-select select2" name="genre[]" multiple="multiple" data-placeholder="Ketik atau pilih genre..." required>
                         <?php while($g = mysqli_fetch_array($data_genre)): ?>
                             <option value="<?php echo $g['id_genre']; ?>" <?php if(in_array($g['id_genre'], $selected_genres)) echo 'selected'; ?>><?php echo $g['nama_genre']; ?></option>
                         <?php endwhile; ?>
@@ -144,8 +144,8 @@ if(isset($_POST['update'])){
                 <div class="col-md-6 mb-3">
                     <label class="form-label fw-bold">Ganti Cover Buku (Opsional)</label>
                     <div class="mb-2" id="cover-container">
-                        <?php if($d['cover'] != '' && file_exists('../assets/img/covers/'.$d['cover'])): ?>
-                            <img id="preview" src="../assets/img/covers/<?php echo $d['cover']; ?>" class="img-thumbnail shadow-sm rounded" style="max-height: 250px;">
+                        <?php if($d['cover'] != '' && file_exists('../uploads/covers/'.$d['cover'])): ?>
+                            <img id="preview" src="../uploads/covers/<?php echo $d['cover']; ?>" class="img-thumbnail shadow-sm rounded" style="max-height: 250px;">
                         <?php else: ?>
                             <img id="preview" src="#" alt="Preview" class="img-thumbnail shadow-sm rounded d-none" style="max-height: 250px;">
                             <div id="no-cover" class="bg-light border text-muted rounded d-flex justify-content-center align-items-center" style="width:150px; height:200px;"><i class="bi bi-image fs-1"></i></div>

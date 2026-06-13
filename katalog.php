@@ -31,13 +31,29 @@ if(count($where_clauses) > 0) {
     $where_sql = "WHERE " . implode(" AND ", $where_clauses);
 }
 
+// Konfigurasi Paginasi
+$limit = 12; // Jumlah buku per halaman
+$page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+$offset = ($page - 1) * $limit;
+
+// Menghitung Total Data untuk Paginasi
+$query_count = "SELECT COUNT(DISTINCT b.id_buku) as total 
+                FROM buku b
+                LEFT JOIN buku_genre bg ON b.id_buku = bg.id_buku
+                $where_sql";
+$result_count = mysqli_query($koneksi, $query_count);
+$row_count = mysqli_fetch_assoc($result_count);
+$total_data = $row_count['total'];
+$total_pages = ceil($total_data / $limit);
+
 $query = "SELECT b.*, GROUP_CONCAT(g.nama_genre SEPARATOR ', ') as daftar_genre 
           FROM buku b
           LEFT JOIN buku_genre bg ON b.id_buku = bg.id_buku
           LEFT JOIN genre g ON bg.id_genre = g.id_genre
           $where_sql
           GROUP BY b.id_buku 
-          ORDER BY b.judul_buku ASC";
+          ORDER BY b.judul_buku ASC
+          LIMIT $limit OFFSET $offset";
 
 $data_buku = mysqli_query($koneksi, $query);
 ?>
@@ -63,7 +79,7 @@ $data_buku = mysqli_query($koneksi, $query);
 
                         <!-- Collapse Filter Area -->
                         <div class="collapse mt-3 <?php echo ($genre_filter != '' || $status_filter != '') ? 'show' : ''; ?>" id="filterArea">
-                            <div class="card card-body border-0 shadow-sm" style="background-color: #fdfbf7; border-top: 3px solid #b8975a !important;">
+                            <div class="card card-body border-0 shadow-sm" style="background-color: #fdfbf7; border-top: 3px solid #e6a756 !important;">
                                 <div class="row g-4">
                                     <!-- Filter Genre (Dropdown) -->
                                     <div class="col-md-6">
@@ -123,7 +139,7 @@ $data_buku = mysqli_query($koneksi, $query);
                 
                 $delay = 100;
                 while($b = mysqli_fetch_array($data_buku)): 
-                    $cover_path = "assets/img/covers/" . $b['cover'];
+                    $cover_path = "uploads/covers/" . $b['cover'];
                     $has_cover = ($b['cover'] != "" && file_exists($cover_path));
                 ?>
                 <div class="col" data-aos="fade-up" data-aos-delay="<?php echo $delay; ?>">
@@ -143,7 +159,7 @@ $data_buku = mysqli_query($koneksi, $query);
                         </div>
                         <div class="book-info">
                             <h3 class="book-title serif-font"><?php echo $b['judul_buku']; ?></h3>
-                            <div class="book-author"><i class="bi bi-pen-fill" style="color:#b8975a;"></i> <?php echo $b['pengarang']; ?></div>
+                            <div class="book-author"><i class="bi bi-pen-fill" style="color:#e6a756;"></i> <?php echo $b['pengarang']; ?></div>
                             <div class="book-genre"><i class="bi bi-bookmark-fill me-1"></i><?php echo $b['daftar_genre'] ?: 'Umum'; ?></div>
                         </div>
                     </a>
@@ -154,60 +170,35 @@ $data_buku = mysqli_query($koneksi, $query);
                 endwhile; 
                 ?>
             </div>
+            <!-- UI Paginasi -->
+            <?php if($total_pages > 1): ?>
+            <nav aria-label="Page navigation" class="mt-5" data-aos="fade-up">
+                <ul class="pagination justify-content-center">
+                    <!-- Tombol Previous -->
+                    <li class="page-item <?php echo ($page <= 1) ? 'disabled' : ''; ?>">
+                        <a class="page-link" href="?page=<?php echo $page - 1; ?>&q=<?php echo urlencode($keyword); ?>&genre=<?php echo urlencode($genre_filter); ?>&status=<?php echo urlencode($status_filter); ?>" aria-label="Previous">
+                            <span aria-hidden="true">&laquo;</span>
+                        </a>
+                    </li>
+                    
+                    <!-- Angka Halaman -->
+                    <?php for($i = 1; $i <= $total_pages; $i++): ?>
+                        <li class="page-item <?php echo ($page == $i) ? 'active' : ''; ?>">
+                            <a class="page-link" style="<?php echo ($page == $i) ? 'background-color: #e6a756; border-color: #e6a756; color: #111a22;' : 'color: #e6a756;'; ?>" href="?page=<?php echo $i; ?>&q=<?php echo urlencode($keyword); ?>&genre=<?php echo urlencode($genre_filter); ?>&status=<?php echo urlencode($status_filter); ?>"><?php echo $i; ?></a>
+                        </li>
+                    <?php endfor; ?>
+                    
+                    <!-- Tombol Next -->
+                    <li class="page-item <?php echo ($page >= $total_pages) ? 'disabled' : ''; ?>">
+                        <a class="page-link" href="?page=<?php echo $page + 1; ?>&q=<?php echo urlencode($keyword); ?>&genre=<?php echo urlencode($genre_filter); ?>&status=<?php echo urlencode($status_filter); ?>" aria-label="Next">
+                            <span aria-hidden="true">&raquo;</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+            <?php endif; ?>
         </div>
     </section>
 
-    <!-- Modal Detail Buku -->
-    <div class="modal fade" id="detailBukuModal" tabindex="-1" aria-labelledby="detailBukuModalLabel" aria-hidden="true">
-      <div class="modal-dialog modal-lg modal-dialog-centered">
-        <div class="modal-content border-0 shadow-lg" style="border-radius: 8px; background-color: #fdfbf7;">
-          <div class="modal-header border-0 pb-0">
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
-          <div class="modal-body p-4 p-md-5 pt-0" id="detailBukuContent">
-            <!-- Konten akan dimuat via AJAX -->
-            <div class="text-center py-5">
-                <div class="spinner-border text-warning" role="status" style="color: #b8975a !important;">
-                    <span class="visually-hidden">Loading...</span>
-                </div>
-                <p class="mt-3 text-muted">Memuat detail buku...</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <script>
-    function openBookModal(id_buku) {
-        var modalEl = document.getElementById('detailBukuModal');
-        var modal = bootstrap.Modal.getInstance(modalEl);
-        if (!modal) {
-            modal = new bootstrap.Modal(modalEl);
-        }
-        var contentDiv = document.getElementById('detailBukuContent');
-        
-        // Tampilkan loading state
-        contentDiv.innerHTML = `
-            <div class="text-center py-5">
-                <div class="spinner-border text-warning" role="status" style="color: #b8975a !important;">
-                    <span class="visually-hidden">Loading...</span>
-                </div>
-                <p class="mt-3 text-muted">Memuat detail buku...</p>
-            </div>
-        `;
-        
-        modal.show();
-        
-        // Fetch data
-        fetch('api_detail_buku.php?id=' + id_buku)
-            .then(response => response.text())
-            .then(html => {
-                contentDiv.innerHTML = html;
-            })
-            .catch(error => {
-                contentDiv.innerHTML = '<div class="alert alert-danger">Terjadi kesalahan saat memuat data.</div>';
-            });
-    }
-    </script>
-
 <?php include 'footer_public.php'; ?>
+

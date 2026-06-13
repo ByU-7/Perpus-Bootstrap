@@ -29,7 +29,7 @@ if(isset($_POST['simpan'])){
         if(in_array($ekstensi, $ekstensi_diperbolehkan) === true){
             if($ukuran < 2048000){ // Max 2MB
                 $nama_file = time() . '_' . $nama_file_asli;
-                move_uploaded_file($file_tmp, '../assets/img/covers/'.$nama_file);
+                move_uploaded_file($file_tmp, '../uploads/covers/'.$nama_file);
             } else {
                 echo "<script>alert('Ukuran file cover terlalu besar! Max 2MB'); window.history.back();</script>";
                 exit();
@@ -108,7 +108,7 @@ if(isset($_POST['simpan'])){
                 <div class="col-md-6 mb-3">
                     <label class="form-label fw-bold">Daftar Genre Buku</label>
                     <div class="text-muted small mb-2"><i class="bi bi-info-circle"></i> Anda bisa memilih lebih dari satu genre. Ketik untuk mencari.</div>
-                    <select class="form-select select2" name="genre[]" multiple="multiple" required>
+                    <select class="form-select select2" name="genre[]" multiple="multiple" data-placeholder="Ketik atau pilih genre..." required>
                         <?php while($g = mysqli_fetch_array($data_genre)): ?>
                             <option value="<?php echo $g['id_genre']; ?>"><?php echo $g['nama_genre']; ?></option>
                         <?php endwhile; ?>

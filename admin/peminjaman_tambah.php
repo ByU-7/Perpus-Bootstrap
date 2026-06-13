@@ -42,7 +42,7 @@ if(isset($_POST['simpan'])){
             <div class="row">
                 <div class="col-md-6 mb-4">
                     <label class="form-label fw-bold">Pilih Anggota</label>
-                    <select class="form-select select2" name="id_anggota" required>
+                    <select class="form-select select2" name="id_anggota" data-placeholder="Ketik atau pilih anggota..." required>
                         <option value=""></option>
                         <?php while($a = mysqli_fetch_array($data_anggota)): ?>
                             <option value="<?php echo $a['id_anggota']; ?>">
@@ -54,7 +54,7 @@ if(isset($_POST['simpan'])){
                 
                 <div class="col-md-6 mb-4">
                     <label class="form-label fw-bold">Pilih Buku</label>
-                    <select class="form-select select2" name="id_buku" required>
+                    <select class="form-select select2" name="id_buku" data-placeholder="Ketik atau pilih buku..." required>
                         <option value=""></option>
                         <?php while($b = mysqli_fetch_array($data_buku)): ?>
                             <option value="<?php echo $b['id_buku']; ?>">

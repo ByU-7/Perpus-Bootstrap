@@ -1,5 +1,5 @@
 <?php
-include 'config/koneksi.php';
+include '../config/koneksi.php';
 
 if(!isset($_GET['id']) || empty($_GET['id'])) {
     echo "<div class='alert alert-danger'>ID Buku tidak ditemukan.</div>";
@@ -21,7 +21,7 @@ if(mysqli_num_rows($result) == 0) {
 }
 
 $b = mysqli_fetch_array($result);
-$cover_path = "assets/img/covers/" . $b['cover'];
+$cover_path = "uploads/covers/" . $b['cover'];
 $has_cover = ($b['cover'] != "" && file_exists($cover_path));
 ?>
 
@@ -37,7 +37,7 @@ $has_cover = ($b['cover'] != "" && file_exists($cover_path));
     </div>
     <div class="col-md-7">
         <h2 class="serif-font fw-bold mb-2" style="color: #1a252f;"><?php echo htmlspecialchars($b['judul_buku']); ?></h2>
-        <h5 class="text-muted mb-3" style="font-style: italic;"><i class="bi bi-pen-fill me-2" style="color: #b8975a;"></i><?php echo htmlspecialchars($b['pengarang']); ?></h5>
+        <h5 class="text-muted mb-3" style="font-style: italic;"><i class="bi bi-pen-fill me-2" style="color: #654321;"></i><?php echo htmlspecialchars($b['pengarang']); ?></h5>
         
         <div class="mb-4">
             <?php 
@@ -91,3 +91,4 @@ $has_cover = ($b['cover'] != "" && file_exists($cover_path));
         <?php endif; ?>
     </div>
 </div>
+

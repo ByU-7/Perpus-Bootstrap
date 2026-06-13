@@ -16,6 +16,44 @@ if(isset($_GET['pesan'])){
 }
 ?>
 
+<!-- Form Pencarian & Filter -->
+<div class="card shadow-sm mb-4">
+    <div class="card-body">
+        <form method="GET" action="" class="mb-0">
+            <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
+                <div class="d-flex flex-column flex-md-row gap-2 w-100" style="max-width: 800px;">
+                    <div class="flex-grow-1">
+                        <input type="text" class="form-control" name="cari" placeholder="Cari Nama Anggota atau Judul Buku..." value="<?php echo isset($_GET['cari']) ? htmlspecialchars($_GET['cari']) : ''; ?>">
+                    </div>
+                    <div class="flex-grow-1" style="min-width: 200px;">
+                        <select class="form-select select2" name="filter_status" data-placeholder="Filter status...">
+                            <option value="">-- Semua Status --</option>
+                            <option value="Dipinjam" <?php echo (isset($_GET['filter_status']) && $_GET['filter_status'] == 'Dipinjam') ? 'selected' : ''; ?>>Dipinjam</option>
+                            <option value="Kembali" <?php echo (isset($_GET['filter_status']) && $_GET['filter_status'] == 'Kembali') ? 'selected' : ''; ?>>Sudah Kembali</option>
+                        </select>
+                    </div>
+                    <div>
+                        <div class="d-flex gap-2">
+                            <button class="btn btn-primary" type="submit"><i class="bi bi-search"></i> Cari</button>
+                            <?php if(!empty($_GET['cari']) || !empty($_GET['filter_status'])): ?>
+                                <a href="peminjaman.php" class="btn btn-outline-secondary px-2"><i class="bi bi-x-lg"></i></a>
+                            <?php endif; ?>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="d-flex align-items-center gap-2 border-start ps-3">
+                    <label class="form-label mb-0 text-muted small fw-bold">Urutkan:</label>
+                    <select class="form-select form-select-sm border-secondary" name="sort_waktu" onchange="this.form.submit()" style="width: 130px; cursor: pointer;">
+                        <option value="terbaru" <?php echo (isset($_GET['sort_waktu']) && $_GET['sort_waktu'] == 'terlama') ? '' : 'selected'; ?>>Waktu Terbaru</option>
+                        <option value="terlama" <?php echo (isset($_GET['sort_waktu']) && $_GET['sort_waktu'] == 'terlama') ? 'selected' : ''; ?>>Waktu Terlama</option>
+                    </select>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
 <div class="card shadow-sm border-0">
     <div class="card-body p-0">
         <div class="table-responsive">
@@ -34,11 +72,34 @@ if(isset($_GET['pesan'])){
                 <tbody>
                     <?php 
                     $no = 1;
+                    $cari = isset($_GET['cari']) ? mysqli_real_escape_string($koneksi, $_GET['cari']) : '';
+                    $filter_status = isset($_GET['filter_status']) ? mysqli_real_escape_string($koneksi, $_GET['filter_status']) : '';
+                    
+                    $where = [];
+                    if($cari != ''){
+                        $where[] = "(a.nama_anggota LIKE '%$cari%' OR b.judul_buku LIKE '%$cari%')";
+                    }
+                    if($filter_status != ''){
+                        $where[] = "p.status = '$filter_status'";
+                    }
+                    
+                    $where_clause = "";
+                    if(count($where) > 0){
+                        $where_clause = " WHERE " . implode(" AND ", $where);
+                    }
+
+                    // Cek urutan
+                    $order_by = "p.id_pinjam DESC";
+                    if(isset($_GET['sort_waktu']) && $_GET['sort_waktu'] == 'terlama') {
+                        $order_by = "p.id_pinjam ASC";
+                    }
+
                     $sql = "SELECT p.*, a.nama_anggota, a.nim_nik, b.judul_buku, b.kode_buku 
                             FROM peminjaman p
                             INNER JOIN anggota a ON p.id_anggota = a.id_anggota
                             INNER JOIN buku b ON p.id_buku = b.id_buku
-                            ORDER BY p.id_pinjam DESC";
+                            $where_clause
+                            ORDER BY $order_by";
                     $data = mysqli_query($koneksi, $sql);
                     
                     if(mysqli_num_rows($data) == 0){
@@ -66,7 +127,9 @@ if(isset($_GET['pesan'])){
                     <tr>
                         <td class="ps-3"><?php echo $no++; ?></td>
                         <td>
-                            <strong><?php echo $d['nama_anggota']; ?></strong><br>
+                            <a href="#" onclick="viewAnggota(<?php echo $d['id_anggota']; ?>); return false;" class="text-decoration-none text-primary fw-bold">
+                                <?php echo $d['nama_anggota']; ?>
+                            </a><br>
                             <small class="text-muted"><?php echo $d['nim_nik']; ?></small>
                         </td>
                         <td>
@@ -92,7 +155,7 @@ if(isset($_GET['pesan'])){
                         </td>
                         <td class="pe-3 text-center">
                             <?php if($d['status'] == 'Dipinjam'): ?>
-                                <a href="peminjaman_kembali.php?id=<?php echo $d['id_pinjam']; ?>" class="btn btn-sm btn-success" onclick="return confirm('Proses pengembalian buku ini?')"><i class="bi bi-box-arrow-in-down-left"></i> Kembalikan</a>
+                                <a href="peminjaman_kembali.php?id=<?php echo $d['id_pinjam']; ?>" class="btn btn-sm btn-success" onclick="confirmAction(event, this.href, 'Proses Pengembalian?', 'Anda yakin ingin memproses pengembalian buku ini sekarang?')"><i class="bi bi-box-arrow-in-down-left"></i> Kembalikan</a>
                             <?php else: ?>
                                 <span class="text-muted small"><i class="bi bi-check2-all"></i> Selesai</span><br>
                                 <small class="text-muted" style="font-size: 0.7rem;">Tgl: <?php echo date('d/m/y', strtotime($d['tgl_dikembalikan'])); ?></small>
@@ -107,3 +170,4 @@ if(isset($_GET['pesan'])){
 </div>
 
 <?php include 'footer.php'; ?>
+

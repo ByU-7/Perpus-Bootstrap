@@ -1,19 +1,22 @@
 <style>
 .hover-gold { transition: all 0.3s ease; display: inline-block; color: #ced4da !important; }
-.hover-gold:hover { color: #b8975a !important; transform: translateX(8px); }
+.hover-gold:hover { color: #e6a756 !important; transform: translateX(8px); }
 .form-control::placeholder { color: rgba(255, 255, 255, 0.6) !important; font-style: italic; }
+.btn-social { transition: all 0.3s ease; color: #f8f9fa; border-color: #f8f9fa; background: transparent; }
+.btn-social:hover { background-color: #e6a756; border-color: #e6a756; color: #111a22; transform: translateY(-3px); box-shadow: 0 4px 10px rgba(230, 167, 86, 0.3); }
+#formSaran .form-control:focus { border-color: #e6a756; box-shadow: 0 0 0 0.25rem rgba(230, 167, 86, 0.25); background-color: rgba(255,255,255,0.05) !important; color: white; }
 </style>
     <!-- Footer -->
-    <footer id="tentang" style="background: linear-gradient(rgba(17, 26, 34, 0.95), rgba(17, 26, 34, 0.98)), url('https://images.unsplash.com/photo-1507842217343-583bb7270b66?auto=format&fit=crop&w=2000&q=80') center/cover; padding: 60px 0 20px 0; border-top: 5px solid #b8975a; color: #f8f9fa;">
+    <footer id="tentang" style="background: linear-gradient(rgba(17, 26, 34, 0.75), rgba(17, 26, 34, 0.85)), url('https://images.unsplash.com/photo-1507842217343-583bb7270b66?auto=format&fit=crop&w=2000&q=80') center/cover; padding: 60px 0 20px 0; border-top: 5px solid #e6a756; color: #f8f9fa;">
         <div class="container" data-aos="fade-up">
             <div class="row g-5 mb-4">
                 <div class="col-lg-4">
-                    <h4 class="text-white serif-font mb-4"><i class="bi bi-book-half text-warning me-2"></i>Perpus Bayu</h4>
+                    <h4 class="text-white serif-font mb-4"><i class="bi bi-book-half me-2" style="color: #d5d0c4;"></i>Perpus Bayu</h4>
                     <p style="line-height: 1.8; color: #ced4da;">Sistem Katalog Online (OPAC) Perpustakaan Akademik. Gunakan platform ini untuk mengeksplorasi koleksi rak kami dan memastikan status ketersediaan buku secara real-time.</p>
-                    <div class="d-flex gap-3 mt-4">
-                        <a href="#" class="btn btn-outline-light rounded-circle"><i class="bi bi-instagram"></i></a>
-                        <a href="#" class="btn btn-outline-light rounded-circle"><i class="bi bi-twitter-x"></i></a>
-                        <a href="#" class="btn btn-outline-light rounded-circle"><i class="bi bi-youtube"></i></a>
+                    <div class="d-flex flex-wrap gap-2 mt-4">
+                        <a href="https://instagram.com/byudstr777" target="_blank" class="btn btn-social rounded-pill px-3"><i class="bi bi-instagram me-2"></i>@byudstr777</a>
+                        <a href="https://tiktok.com/@byu_777" target="_blank" class="btn btn-social rounded-pill px-3"><i class="bi bi-tiktok me-2"></i>@byu_777</a>
+                        <a href="https://youtube.com/" target="_blank" class="btn btn-social rounded-pill px-3"><i class="bi bi-youtube me-2"></i>Perpus Bayu Official</a>
                     </div>
                 </div>
                 
@@ -28,19 +31,22 @@
                 
                 <div class="col-lg-5 col-md-6">
                     <h5 class="text-white serif-font mb-4">Saran & Masukan</h5>
-                    <form>
+                    <form id="formSaran">
                         <div class="row g-3">
                             <div class="col-md-6">
-                                <input type="text" class="form-control bg-transparent text-white border-secondary" placeholder="Nama Anda" style="border-radius: 8px; padding: 12px 15px;">
+                                <input type="text" name="nama" class="form-control bg-transparent text-white border-secondary" placeholder="Nama Anda" style="border-radius: 8px; padding: 12px 15px;" required>
                             </div>
                             <div class="col-md-6">
-                                <input type="email" class="form-control bg-transparent text-white border-secondary" placeholder="Alamat Email" style="border-radius: 8px; padding: 12px 15px;">
+                                <input type="email" name="email" class="form-control bg-transparent text-white border-secondary" placeholder="Alamat Email" style="border-radius: 8px; padding: 12px 15px;" required>
                             </div>
                             <div class="col-12">
-                                <textarea class="form-control bg-transparent text-white border-secondary" rows="3" placeholder="Tuliskan saran atau pertanyaan Anda..." style="border-radius: 8px; padding: 12px 15px;"></textarea>
+                                <textarea name="pesan" class="form-control bg-transparent text-white border-secondary" rows="3" placeholder="Tuliskan saran atau pertanyaan Anda..." style="border-radius: 8px; padding: 12px 15px;" required></textarea>
                             </div>
                             <div class="col-12">
-                                <button type="button" class="btn btn-warning fw-bold px-4 py-2" style="background-color: #b8975a; border: none; color: white; border-radius: 8px;">Kirim Pesan</button>
+                                <button type="submit" class="btn fw-bold px-4 py-2" id="btnKirimSaran" style="background-color: #e6a756; border: none; color: #111a22; border-radius: 8px;">
+                                    <span class="btn-text">Kirim Pesan</span>
+                                    <span class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
+                                </button>
                             </div>
                         </div>
                     </form>
@@ -55,70 +61,30 @@
     <script src="assets/js/bootstrap.bundle.min.js"></script>
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script src="assets/js/book-transition.js"></script>
-    <script>
-        // Inline Expanding Search Logic
-        const searchToggle = document.getElementById('navSearchToggle');
-        const searchWrapper = document.getElementById('navSearchWrapper');
-        const searchInput = document.getElementById('navSearchInput');
-        const searchIcon = document.getElementById('navSearchIcon');
-        const navMenu = document.getElementById('nav-links-menu');
+    <script src="assets/js/public.js"></script>
 
-        if(searchToggle) {
-            searchToggle.addEventListener('click', function(e) {
-                const isKatalog = this.getAttribute('data-is-katalog') === 'true';
-                
-                if(isKatalog) {
-                    // Jika di katalog.php, gulir ke form pencarian utama
-                    const catalogSearch = document.getElementById('catalogMainSearch');
-                    if(catalogSearch) {
-                        catalogSearch.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                        setTimeout(() => {
-                            catalogSearch.querySelector('input').focus();
-                        }, 500);
-                    }
-                } else {
-                    // Jika bukan di katalog, expand search inline
-                    e.preventDefault();
-                    if(searchWrapper.classList.contains('active')) {
-                        // Kalau sedang aktif tapi input kosong, tutup. Kalau ada isi, submit form.
-                        if(searchInput.value.trim() !== "") {
-                            document.getElementById('navSearchForm').submit();
-                        } else {
-                            closeSearch();
-                        }
-                    } else {
-                        // Buka pencarian
-                        searchWrapper.classList.add('active');
-                        navMenu.classList.add('fade-out');
-                        searchIcon.classList.remove('bi-search');
-                        searchIcon.classList.add('bi-x-lg');
-                        setTimeout(() => searchInput.focus(), 300);
-                    }
-                }
-            });
-        }
+    <!-- Modal Detail Buku -->
+    <div class="modal fade" id="detailBukuModal" tabindex="-1" aria-labelledby="detailBukuModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg" style="border-radius: 8px; background-color: #fdfbf7;">
+          <div class="modal-header border-0 pb-0">
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body p-4 p-md-5 pt-0" id="detailBukuContent">
+            <!-- Konten akan dimuat via AJAX -->
+            <div class="text-center py-5">
+                <div class="spinner-border text-warning" role="status" style="color: #654321 !important;">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+                <p class="mt-3 text-muted">Memuat detail buku...</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
 
-        function closeSearch() {
-            if(searchWrapper) {
-                searchWrapper.classList.remove('active');
-                navMenu.classList.remove('fade-out');
-                searchIcon.classList.remove('bi-x-lg');
-                searchIcon.classList.add('bi-search');
-                searchInput.value = '';
-            }
-        }
 
-        // Tutup pencarian jika klik di luar
-        document.addEventListener('click', function(e) {
-            if(searchWrapper && searchWrapper.classList.contains('active')) {
-                if(!searchWrapper.contains(e.target)) {
-                    closeSearch();
-                }
-            }
-        });
-
-        // AOS initialization is now handled by book-transition.js 
-        // to ensure it only runs after page transitions are complete.
-    </script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </body>
 </html>
+

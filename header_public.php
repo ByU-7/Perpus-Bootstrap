@@ -11,7 +11,8 @@ $current_page = basename($_SERVER['PHP_SELF']);
 <head>
     <script>
         if (sessionStorage.getItem('incomingTransition') || (!sessionStorage.getItem('splashShown') && (window.location.pathname.endsWith('/') || window.location.pathname.includes('index.php')))) {
-            document.write('<div id="anti-flicker-overlay" style="position:fixed; top:0; left:0; width:100vw; height:100vh; background:#1a252f; z-index:9999999;"></div>');
+            document.write('<style id="anti-flicker-style">body > *:not(#book-transition):not(script) { opacity: 0 !important; visibility: hidden !important; }</style>');
+            document.write('<div id="anti-flicker-overlay" style="position:fixed; top:0; left:0; width:100vw; height:100vh; background:linear-gradient(135deg, #2c3e50 0%, #1a252f 100%); z-index:-1;"></div>');
         }
     </script>
     <meta charset="UTF-8">
@@ -24,96 +25,14 @@ $current_page = basename($_SERVER['PHP_SELF']);
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;0,700;1,400&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="assets/css/book-transition.css">
-    <style>
-        html { scroll-behavior: smooth; }
-        body { font-family: 'Outfit', sans-serif; background-color: #fdfbf7; color: #333; overflow-x: hidden; }
-        .serif-font { font-family: 'Lora', serif; }
-        
-        /* Navbar Kustom */
-        .navbar-custom { background-color: rgba(26, 37, 47, 0.95) !important; backdrop-filter: blur(10px); transition: all 0.3s ease; border-bottom: 2px solid #b8975a; }
-        .navbar-custom .navbar-brand { font-family: 'Lora', serif; font-weight: 700; color: #b8975a !important; font-size: 1.5rem; letter-spacing: 1px; }
-        .navbar-custom .nav-item { display: flex; align-items: center; }
-        .navbar-custom .nav-link { position: relative; color: #e9ecef !important; font-weight: 500; text-transform: uppercase; font-size: 0.8rem; letter-spacing: 1px; padding: 10px 15px; transition: color 0.3s; text-align: center; line-height: 1.4; }
-        .navbar-custom .nav-link:hover, .navbar-custom .nav-link.active { color: #b8975a !important; }
-        .navbar-custom .nav-link::after {
-            content: ''; position: absolute; bottom: 0; left: 15px; right: 15px; height: 2px;
-            background-color: #b8975a; transform: scaleX(0); transition: transform 0.3s ease; transform-origin: left;
-        }
-        .navbar-custom .nav-link:hover::after, .navbar-custom .nav-link.active::after { transform: scaleX(1); }
-        .navbar-toggler { border: none; color: #b8975a; }
-        .navbar-toggler:focus { box-shadow: none; }
-
-        /* Inline Search Nav */
-        .nav-search-wrapper { position: relative; display: flex; align-items: center; justify-content: flex-end; margin-left: 15px; }
-        .nav-search-btn { background: transparent; border: none; color: white; font-size: 1.2rem; cursor: pointer; transition: color 0.3s; z-index: 2; }
-        .nav-search-btn:hover { color: #b8975a; }
-        
-        .nav-search-form { 
-            position: absolute; right: 0; top: 50%; transform: translateY(-50%); display: flex; flex-direction: column; 
-            width: 0; opacity: 0; transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
-            background: transparent; z-index: 1; padding-right: 35px; /* space for icon */
-        }
-        .nav-search-wrapper.active .nav-search-form { width: 340px; opacity: 1; }
-        .nav-search-wrapper.active .nav-search-btn { color: #b8975a; }
-        
-        .nav-search-input {
-            background: transparent; border: none;
-            color: white; width: 100%;
-            outline: none; font-size: 0.9rem;
-        }
-        .nav-search-input::placeholder { color: rgba(255,255,255,0.5); font-style: italic; }
-        .nav-search-input:focus { outline: none !important; box-shadow: none !important; background: transparent !important; color: white !important; }
-        
-        .nav-search-group {
-            display: flex; flex-wrap: nowrap; align-items: center;
-            border: 1px solid rgba(255,255,255,0.2); border-radius: 20px; 
-            background: rgba(255,255,255,0.1); width: 100%; overflow: hidden;
-            transition: all 0.3s ease;
-        }
-        .nav-search-group:focus-within {
-            border-color: #b8975a; background: rgba(255,255,255,0.15);
-            box-shadow: 0 0 0 0.2rem rgba(184, 151, 90, 0.25);
-        }
-        
-        /* Nav Menu Transition (to fade when search is active) */
-        #nav-links-menu { transition: opacity 0.3s ease; }
-        #nav-links-menu.fade-out { opacity: 0; pointer-events: none; }
-
-        /* Hero Section */
-        .hero {
-            padding: 120px 0 80px 0;
-            background: linear-gradient(rgba(17, 26, 34, 0.85), rgba(17, 26, 34, 0.95)), url('https://images.unsplash.com/photo-1541963463532-d68292c34b19?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80') center/cover;
-            color: white; text-align: center; border-bottom: 5px solid #b8975a;
-        }
-        .hero h1 { font-size: 3.5rem; font-weight: 700; margin-bottom: 20px; color: #fdfbf7; }
-        
-        /* Card Buku */
-        .book-card {
-            border: 1px solid #e9e5db; border-radius: 12px; overflow: hidden;
-            transition: all 0.3s ease; text-decoration: none; color: inherit;
-            display: flex; flex-direction: column; height: 100%; background: #ffffff;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.03);
-        }
-        .book-card:hover { transform: translateY(-10px); box-shadow: 0 15px 30px rgba(184, 151, 90, 0.15); }
-        .book-cover-container { width: 100%; padding-top: 140%; position: relative; background-color: #fdfbf7; overflow: hidden; border-bottom: 1px solid #f1ede1; }
-        .book-cover-container img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: contain; transition: transform 0.5s ease; padding: 15px; }
-        .book-card:hover .book-cover-container img { transform: scale(1.05); }
-        
-        .book-info { padding: 20px 15px; flex-grow: 1; display: flex; flex-direction: column; }
-        .book-title { font-size: 1.1rem; font-weight: 700; color: #1a252f; margin-bottom: 5px; line-height: 1.3; }
-        .book-card:hover .book-title { color: #b8975a; }
-        .book-author { font-size: 0.85rem; color: #6c757d; margin-bottom: 10px; font-weight: 500; }
-        .book-genre { font-size: 0.75rem; color: white; background-color: #1a252f; padding: 3px 10px; border-radius: 12px; display: inline-block; align-self: flex-start; margin-top: auto; }
-
-        body { padding-top: 76px; }
-    </style>
+    <link rel="stylesheet" href="assets/css/public.css">
 </head>
 <body>
 
     <!-- Sticky Navbar -->
     <nav class="navbar navbar-expand-lg navbar-dark navbar-custom py-3 fixed-top">
         <div class="container">
-            <a class="navbar-brand" href="index.php" data-out="page-backward-out" data-in="splash-screen-in"><i class="bi bi-book-half me-2"></i>Perpus Bayu</a>
+            <a class="navbar-brand" href="index.php" data-out="public-book-close" data-in="" onclick="sessionStorage.removeItem('splashShown');"><i class="bi bi-book-half me-2"></i>Perpus Bayu</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <i class="bi bi-list fs-2"></i>
             </button>
@@ -123,16 +42,16 @@ $current_page = basename($_SERVER['PHP_SELF']);
                         <a class="nav-link <?php echo $current_page == 'index.php' ? 'active' : ''; ?>" href="<?php echo $current_page == 'index.php' ? '#' : 'index.php'; ?>" <?php echo $current_page == 'index.php' ? '' : 'data-out="page-backward-out" data-in="page-backward-in"'; ?>>Beranda<br>Utama</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="index.php#terbaru">Koleksi<br>Terbaru</a>
+                        <a class="nav-link" href="index.php#terbaru" <?php echo $current_page == 'index.php' ? '' : 'data-out="page-backward-out" data-in="page-backward-in"'; ?>>Koleksi<br>Terbaru</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="index.php#populer">Buku<br>Populer</a>
+                        <a class="nav-link" href="index.php#populer" <?php echo $current_page == 'index.php' ? '' : 'data-out="page-backward-out" data-in="page-backward-in"'; ?>>Buku<br>Populer</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="index.php#tentang">Tentang<br>Kami</a>
+                        <a class="nav-link" href="index.php#kontak" <?php echo $current_page == 'index.php' ? '' : 'data-out="page-backward-out" data-in="page-backward-in"'; ?>>Tentang<br>Kami</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link <?php echo $current_page == 'katalog.php' ? 'active' : ''; ?>" href="katalog.php" data-out="page-forward-out" data-in="page-forward-in">Katalog<br>Lengkap</a>
+                        <a class="nav-link <?php echo $current_page == 'katalog.php' ? 'active' : ''; ?>" href="katalog.php" <?php echo $current_page == 'katalog.php' ? '' : 'data-out="page-forward-out" data-in="page-forward-in"'; ?>>Katalog<br>Lengkap</a>
                     </li>
                 </ul>
                 
@@ -144,12 +63,12 @@ $current_page = basename($_SERVER['PHP_SELF']);
                             
                             <button type="button" class="btn border-0 text-white-50 px-2" title="Filter Pencarian Lanjutan" data-bs-toggle="collapse" data-bs-target="#navFilterCollapse"><i class="bi bi-sliders"></i></button>
                             
-                            <button type="submit" class="btn border-0 pe-3" style="color: #b8975a;"><i class="bi bi-search"></i></button>
+                            <button type="submit" class="btn border-0 pe-3" style="color: #e6a756;"><i class="bi bi-search"></i></button>
                         </div>
                         
                         <!-- Advanced Filter Collapse -->
                         <div class="collapse w-100 mt-2" id="navFilterCollapse" style="position: absolute; top: 100%;">
-                            <div class="card card-body border-0 shadow-lg" style="background-color: #fdfbf7; border-top: 3px solid #b8975a !important; border-radius: 8px;">
+                            <div class="card card-body border-0 shadow-lg" style="background-color: #fdfbf7; border-top: 3px solid #e6a756 !important; border-radius: 8px;">
                                 <div class="mb-3">
                                     <label class="form-label text-muted small fw-bold text-uppercase"><i class="bi bi-bookmark-fill text-warning me-1"></i> Pilih Genre</label>
                                     <select name="genre" class="form-select border-secondary">
@@ -183,7 +102,8 @@ $current_page = basename($_SERVER['PHP_SELF']);
                     </button>
                 </div>
 
-                <a class="btn btn-outline-warning btn-sm px-4 rounded-pill fw-bold mt-3 mt-lg-0" href="admin/login.php" data-out="public-book-close" data-in="admin-book-open" style="border-color: #b8975a; color: #b8975a; position: relative; z-index: 10;">Admin</a>
+                <a class="btn btn-outline-warning btn-sm px-4 rounded-pill fw-bold mt-3 mt-lg-0" href="admin/login.php" data-out="public-book-close" data-in="admin-book-open" style="border-color: #e6a756; color: #e6a756; position: relative; z-index: 10;">Admin</a>
             </div>
         </div>
     </nav>
+

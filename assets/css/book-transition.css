@@ -5,8 +5,11 @@
     visibility: hidden; 
 }
 .book-transition-wrapper.active {
-    visibility: visible;
-    pointer-events: auto;
+    opacity: 1; visibility: visible; pointer-events: auto;
+}
+.book-transition-wrapper.fade-out-wrapper {
+    opacity: 0 !important; visibility: hidden !important; pointer-events: none !important;
+    transition: opacity 0.6s ease, visibility 0.6s ease !important;
 }
 .book-transition-wrapper.instant * {
     transition: none !important;
@@ -42,6 +45,9 @@
 .book-transition-wrapper.zoomed-out .book-scaler {
     transform: scale(0.85) translateY(0);
 }
+.book-transition-wrapper.zoomed-in .book-scaler {
+    transform: scale(3) translateY(10vh);
+}
 .book-transition-wrapper.slide-out .book-scaler,
 .book-transition-wrapper.slide-in-start .book-scaler {
     transform: scale(0.85) translateY(120vh) !important;
@@ -71,14 +77,14 @@
     -webkit-transform-style: preserve-3d;
     transform-style: preserve-3d;
     transform-origin: left center; 
-    transform: rotateY(0deg) translateZ(2px); /* Start on RIGHT */
+    transform: translateZ(2px) rotateY(0deg); /* Start on RIGHT */
     transition: transform 0.8s cubic-bezier(0.645, 0.045, 0.355, 1);
     z-index: 2;
     will-change: transform;
 }
 .book-transition-wrapper.turning-left .flipper-paper,
 .book-transition-wrapper.turned-left .flipper-paper {
-    transform: rotateY(-180deg) translateZ(-2px);
+    transform: translateZ(2px) rotateY(-180deg);
     z-index: 3; /* Overrides cover's z-index: 2 when on the left side */
 }
 
@@ -111,13 +117,13 @@
     -webkit-transform-style: preserve-3d;
     transform-style: preserve-3d;
     transform-origin: left center; 
-    transform: rotateY(0deg) translateZ(2px); /* Start on RIGHT, slightly above cover */
+    transform: translateZ(2px) rotateY(0deg); /* Start on RIGHT, slightly above cover */
     transition: transform 0.8s cubic-bezier(0.645, 0.045, 0.355, 1);
     z-index: 1; /* Below the cover */
     will-change: transform;
 }
 .book-transition-wrapper.turning-left .flipper-title-page {
-    transform: rotateY(-180deg) translateZ(-2px);
+    transform: translateZ(2px) rotateY(-180deg);
     z-index: 3; /* Overrides cover's z-index: 2 when on the left side */
 }
 
@@ -127,7 +133,7 @@
     -webkit-transform-style: preserve-3d;
     transform-style: preserve-3d;
     transform-origin: left center; 
-    transform: rotateY(-180deg); /* Start OPEN */
+    transform: translateZ(-4px) rotateY(-180deg); /* Start OPEN */
     transition: transform 0.8s cubic-bezier(0.645, 0.045, 0.355, 1);
     z-index: 2;
     will-change: transform;
@@ -136,26 +142,25 @@
 /* When closing the book */
 .book-transition-wrapper.closed .flipper-cover,
 .book-transition-wrapper.closing .flipper-cover {
-    transform: rotateY(0deg);
+    transform: translateZ(4px) rotateY(0deg);
 }
 
 /* (Removed duplicated face-front, face-back block) */
 
-.cover-gold {
-    background: linear-gradient(90deg, #8e7240 0%, #a0814a 3%, #b8975a 12%, #b8975a 100%);
+.cover-public {
+    background: linear-gradient(90deg, #b07e3e 0%, #c48c45 3%, #e6a756 12%, #e6a756 100%);
     border-radius: 0 10px 10px 0;
-    /* Removed inset shadow, replaced with linear-gradient to create a convex 3D spine */
-    box-shadow: 5px 5px 15px rgba(0,0,0,0.2); 
+    box-shadow: 5px 5px 15px rgba(0,0,0,0.3); 
     display: flex; align-items: center; justify-content: center; flex-direction: column;
-    border-left: 5px solid #735b31; 
+    border-left: 5px solid #8f6531; 
 }
 
-.cover-dark {
-    background: linear-gradient(90deg, #0d1318 0%, #131b23 3%, #1a252f 12%, #1a252f 100%);
+.cover-admin {
+    background: linear-gradient(90deg, #7a2e1a 0%, #8c3822 3%, #a8452c 12%, #a8452c 100%);
     border-radius: 0 10px 10px 0;
-    box-shadow: 5px 5px 15px rgba(0,0,0,0.4); 
+    box-shadow: 5px 5px 15px rgba(0,0,0,0.3); 
     display: flex; align-items: center; justify-content: center; flex-direction: column;
-    border-left: 5px solid #080c10; 
+    border-left: 5px solid #612211; 
 }
 
 .cover-inside {
@@ -242,3 +247,23 @@
     transform: translateY(0);
     transition: opacity 0.8s ease 0.6s, transform 0.8s ease 0.6s; /* Delayed fade IN */
 }
+
+/* Skeleton Loader Utility Classes */
+.skeleton {
+    background: linear-gradient(90deg, #e2e8f0 25%, #cbd5e1 50%, #e2e8f0 75%);
+    background-size: 200% 100%;
+    animation: skeleton-loading 1.5s infinite;
+    border-radius: 4px;
+}
+@keyframes skeleton-loading {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+}
+.skeleton-text { height: 1.2rem; margin-bottom: 0.5rem; width: 100%; border-radius: 4px; }
+.skeleton-text.short { width: 60%; }
+.skeleton-text.long { width: 90%; }
+.skeleton-title { height: 2rem; margin-bottom: 1rem; width: 70%; border-radius: 4px; }
+.skeleton-img { width: 100%; height: 200px; border-radius: 8px; }
+.skeleton-avatar { width: 120px; height: 120px; border-radius: 8px; }
+.skeleton-badge { width: 80px; height: 25px; border-radius: 50px; display: inline-block; }
+

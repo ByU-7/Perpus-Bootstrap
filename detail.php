@@ -21,7 +21,7 @@ if(mysqli_num_rows($result) == 0) {
 }
 
 $b = mysqli_fetch_array($result);
-$cover_path = "assets/img/covers/" . $b['cover'];
+$cover_path = "uploads/covers/" . $b['cover'];
 $has_cover = ($b['cover'] != "" && file_exists($cover_path));
 ?>
 
@@ -42,7 +42,7 @@ $has_cover = ($b['cover'] != "" && file_exists($cover_path));
                     </div>
                     <div class="col-md-8">
                         <h1 class="serif-font fw-bold mb-3" style="font-size: 2.5rem; line-height: 1.2;"><?php echo $b['judul_buku']; ?></h1>
-                        <h4 class="text-muted mb-4" style="font-style: italic;"><i class="bi bi-pen-fill me-2" style="color: #b8975a;"></i><?php echo $b['pengarang']; ?></h4>
+                        <h4 class="text-muted mb-4" style="font-style: italic;"><i class="bi bi-pen-fill me-2" style="color: #654321;"></i><?php echo $b['pengarang']; ?></h4>
                         
                         <div class="mb-4">
                             <?php 
@@ -109,3 +109,4 @@ $has_cover = ($b['cover'] != "" && file_exists($cover_path));
     </div>
 
 <?php include 'footer_public.php'; ?>
+

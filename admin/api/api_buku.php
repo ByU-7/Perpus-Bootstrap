@@ -1,11 +1,11 @@
 <?php
 session_start();
-include '../config/koneksi.php';
+include '../../config/koneksi.php';
 
 header('Content-Type: application/json');
 
 // Cek autentikasi sederhana (harus sudah login)
-if(!isset($_SESSION['status_login']) || $_SESSION['status_login'] != true){
+if(!isset($_SESSION['status']) || $_SESSION['status'] != "login"){
     echo json_encode(['status' => 'error', 'message' => 'Unauthorized']);
     exit();
 }
@@ -70,7 +70,7 @@ if($action == 'save') {
         if(in_array($ekstensi, $ekstensi_diperbolehkan)){
             if($ukuran < 2048000){ // Max 2MB
                 $nama_file = time() . '_' . $nama_file_asli;
-                move_uploaded_file($file_tmp, '../assets/img/covers/'.$nama_file);
+                move_uploaded_file($file_tmp, '../uploads/covers/'.$nama_file);
             } else {
                 $upload_sukses = false;
                 $pesan_error = "Ukuran cover max 2MB.";
@@ -121,8 +121,8 @@ if($action == 'save') {
         if($nama_file != "") {
             $sql_update .= ", cover='$nama_file'";
             // Hapus file lama
-            if(!empty($lama['cover']) && file_exists('../assets/img/covers/'.$lama['cover'])) {
-                unlink('../assets/img/covers/'.$lama['cover']);
+            if(!empty($lama['cover']) && file_exists('../uploads/covers/'.$lama['cover'])) {
+                unlink('../uploads/covers/'.$lama['cover']);
             }
         }
         $sql_update .= " WHERE id_buku='$id_buku'";
@@ -160,8 +160,8 @@ if($action == 'delete') {
     
     if($q) {
         // Hapus file fisik cover
-        if(!empty($lama['cover']) && file_exists('../assets/img/covers/'.$lama['cover'])) {
-            unlink('../assets/img/covers/'.$lama['cover']);
+        if(!empty($lama['cover']) && file_exists('../uploads/covers/'.$lama['cover'])) {
+            unlink('../uploads/covers/'.$lama['cover']);
         }
         echo json_encode(['status' => 'success', 'message' => 'Buku berhasil dihapus']);
     } else {

@@ -21,24 +21,34 @@ if(isset($_GET['pesan'])){
         
         <!-- Form Pencarian & Filter -->
         <form method="GET" action="" class="mb-3">
-            <div class="row g-2">
-                <div class="col-md-6">
-                    <input type="text" class="form-control" name="cari" placeholder="Cari Nama Anggota atau NIM/NIK..." value="<?php echo isset($_GET['cari']) ? $_GET['cari'] : ''; ?>">
-                </div>
-                <div class="col-md-4">
-                    <select class="form-select" name="filter_status">
-                        <option value="">-- Semua Status --</option>
-                        <option value="Regular" <?php echo (isset($_GET['filter_status']) && $_GET['filter_status'] == 'Regular') ? 'selected' : ''; ?>>Regular</option>
-                        <option value="Khusus" <?php echo (isset($_GET['filter_status']) && $_GET['filter_status'] == 'Khusus') ? 'selected' : ''; ?>>Khusus</option>
-                    </select>
-                </div>
-                <div class="col-md-2">
-                    <div class="d-flex gap-2">
-                        <button class="btn btn-primary w-100" type="submit"><i class="bi bi-search"></i> Cari</button>
-                        <?php if((isset($_GET['cari']) && $_GET['cari'] != '') || (isset($_GET['filter_status']) && $_GET['filter_status'] != '')): ?>
-                            <a href="anggota.php" class="btn btn-danger" title="Reset Filter"><i class="bi bi-x-lg"></i></a>
-                        <?php endif; ?>
+            <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
+                <div class="d-flex flex-column flex-md-row gap-2 w-100" style="max-width: 800px;">
+                    <div class="flex-grow-1">
+                        <input type="text" class="form-control" name="cari" placeholder="Cari Nama Anggota atau NIM/NIK..." value="<?php echo isset($_GET['cari']) ? $_GET['cari'] : ''; ?>">
                     </div>
+                    <div class="flex-grow-1" style="min-width: 200px;">
+                        <select class="form-select" name="filter_status">
+                            <option value="">-- Semua Status --</option>
+                            <option value="Regular" <?php echo (isset($_GET['filter_status']) && $_GET['filter_status'] == 'Regular') ? 'selected' : ''; ?>>Regular</option>
+                            <option value="Khusus" <?php echo (isset($_GET['filter_status']) && $_GET['filter_status'] == 'Khusus') ? 'selected' : ''; ?>>Khusus</option>
+                        </select>
+                    </div>
+                    <div>
+                        <div class="d-flex gap-2">
+                            <button class="btn btn-primary" type="submit"><i class="bi bi-search"></i> Cari</button>
+                            <?php if((isset($_GET['cari']) && $_GET['cari'] != '') || (isset($_GET['filter_status']) && $_GET['filter_status'] != '')): ?>
+                                <a href="anggota.php" class="btn btn-danger" title="Reset"><i class="bi bi-x-lg"></i></a>
+                            <?php endif; ?>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="d-flex align-items-center gap-2 border-start ps-3">
+                    <label class="form-label mb-0 text-muted small fw-bold">Urutkan:</label>
+                    <select class="form-select form-select-sm border-secondary" name="sort_waktu" onchange="this.form.submit()" style="width: 130px; cursor: pointer;">
+                        <option value="terbaru" <?php echo (isset($_GET['sort_waktu']) && $_GET['sort_waktu'] == 'terlama') ? '' : 'selected'; ?>>Waktu Terbaru</option>
+                        <option value="terlama" <?php echo (isset($_GET['sort_waktu']) && $_GET['sort_waktu'] == 'terlama') ? 'selected' : ''; ?>>Waktu Terlama</option>
+                    </select>
                 </div>
             </div>
         </form>
@@ -72,13 +82,19 @@ if(isset($_GET['pesan'])){
                         $status = mysqli_real_escape_string($koneksi, $_GET['filter_status']);
                         $kondisi[] = "status_keanggotaan = '$status'";
                     }
+                    
+                    // Cek urutan
+                    $order_by = "id_anggota DESC";
+                    if(isset($_GET['sort_waktu']) && $_GET['sort_waktu'] == 'terlama') {
+                        $order_by = "id_anggota ASC";
+                    }
 
                     // Susun Query SQL
                     $sql = "SELECT * FROM anggota";
                     if(count($kondisi) > 0){
                         $sql .= " WHERE " . implode(" AND ", $kondisi);
                     }
-                    $sql .= " ORDER BY id_anggota DESC";
+                    $sql .= " ORDER BY $order_by";
 
                     $data = mysqli_query($koneksi, $sql);
                     
@@ -92,7 +108,11 @@ if(isset($_GET['pesan'])){
                     <tr>
                         <td><?php echo $no++; ?></td>
                         <td><?php echo $d['nim_nik']; ?></td>
-                        <td><?php echo $d['nama_anggota']; ?></td>
+                        <td>
+                            <a href="#" onclick="viewAnggota(<?php echo $d['id_anggota']; ?>); return false;" class="text-decoration-none fw-bold text-primary">
+                                <?php echo $d['nama_anggota']; ?>
+                            </a>
+                        </td>
                         <td><?php echo $d['jk'] == 'L' ? 'Laki-laki' : 'Perempuan'; ?></td>
                         <td><?php echo $d['no_telp']; ?></td>
                         <td>
@@ -103,8 +123,8 @@ if(isset($_GET['pesan'])){
                             <?php endif; ?>
                         </td>
                         <td>
-                            <a href="anggota_edit.php?id=<?php echo $d['id_anggota']; ?>" class="btn btn-sm btn-warning"><i class="bi bi-pencil-square"></i></a>
-                            <a href="anggota_hapus.php?id=<?php echo $d['id_anggota']; ?>" class="btn btn-sm btn-danger" onclick="return confirm('Yakin ingin menghapus data ini?')"><i class="bi bi-trash"></i></a>
+                            <a href="anggota_edit.php?id=<?php echo $d['id_anggota']; ?>" class="btn btn-sm btn-warning" title="Edit"><i class="bi bi-pencil-square"></i></a>
+                            <a href="anggota_hapus.php?id=<?php echo $d['id_anggota']; ?>" class="btn btn-sm btn-danger" title="Hapus" onclick="confirmAction(event, this.href, 'Hapus Data?', 'Yakin ingin menghapus data ini? Tindakan ini tidak dapat dibatalkan.')"><i class="bi bi-trash"></i></a>
                         </td>
                     </tr>
                     <?php } ?>
@@ -115,3 +135,4 @@ if(isset($_GET['pesan'])){
 </div>
 
 <?php include 'footer.php'; ?>
+

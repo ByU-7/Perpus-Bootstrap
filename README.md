@@ -40,5 +40,16 @@ Modul paling kompleks yang mengotomatisasi beberapa logika bisnis:
 2. **Due Date Automation:** Sistem otomatis menghitung batas waktu pengembalian (Masa Pinjam: 7 Hari) dengan fungsi `strtotime()`.
 3. **Dynamic Penalty Calculation (Denda):** Tabel peminjaman dapat menghitung denda keterlambatan secara dinamis. Jika status="Dipinjam" dan tanggal hari ini melewati batas waktu, sistem otomatis mengalikan jumlah hari keterlambatan dengan tarif denda (Rp 1.000/hari) tanpa perlu menyimpan perhitungan sementara ke database hingga buku benar-benar dikembalikan.
 
+### Fase 5: Portal Pengunjung & Peningkatan Pengalaman Pengguna (UX)
+Membangun antarmuka terpisah untuk pengunjung perpustakaan (Public Front-End) dengan pengalaman *Single Page Application* (SPA) yang dinamis:
+1. **Navigasi Mulus (Seamless Navigation):** Memanfaatkan AJAX untuk memuat konten secara asinkron tanpa *reload* halaman penuh (SPA-like experience) dipadukan dengan animasi transisi 3D yang mulus.
+2. **Desain Modern:** Memisahkan struktur CSS dan JS untuk area publik dan admin, serta menerapkan skema warna elegan dengan dukungan fitur-fitur seperti *Glassmorphism* dan interaksi mikro (Hover Effects).
+3. **Fitur Interaktif:** Menambahkan katalog buku interaktif dengan modal dinamis dan fitur pengiriman "Kotak Saran" secara *real-time* ke panel admin.
+
+### Fase 6: Filter Tingkat Lanjut & Optimalisasi Performa
+Menyempurnakan fungsi panel admin:
+1. **Sistem Pengurutan Dinamis:** Mengimplementasikan fitur pengurutan data otomatis (Terbaru/Terlama) menggunakan `onchange` event di halaman Buku, Anggota, Peminjaman, dan Saran.
+2. **Refaktorisasi Struktur Direktori:** Menyusun ulang aset untuk kebersihan struktur proyek (contoh: pemisahan `admin.css`, `public.css`, dan merapikan direktori *database* serta direktori *uploads*).
+
 ## 💡 Kesimpulan Pembelajaran (*Key Takeaways*)
-Pembuatan aplikasi perpustakaan ini tidak sekadar membuat form CRUD, melainkan mengasah kemampuan logika transaksional (pengurangan stok, hitung mundur denda), manajemen *file upload*, dan desain *user interface* yang benar-benar responsif menyesuaikan perangkat pengguna.
+Pembuatan aplikasi perpustakaan ini tidak sekadar membuat form CRUD, melainkan mengasah kemampuan logika transaksional (pengurangan stok, hitung mundur denda), manajemen *file upload*, integrasi arsitektur SPA dengan AJAX, dan desain *user interface* yang benar-benar modern serta responsif menyesuaikan perangkat pengguna.
